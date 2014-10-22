@@ -1,0 +1,78 @@
+<style>
+h3 {
+    font-size: 1.875em;
+    font-weight: normal;
+    margin: 0;
+    padding-top: 10px;
+}
+.omny-theme {
+    color: #363C45;
+    margin-top: 30px;
+    text-align: center;
+}
+.omny-theme-img {
+    background-image: url('http://i58.tinypic.com/2ufvqpz.jpg');
+    background-size: cover;
+    min-height: 250px;
+}
+.omny-theme-actions {
+    background-color: #DDD;
+}
+.omny-theme-button-wrapper {
+    padding: 20px 0 30px 0;
+}
+.omny-theme-button {
+    border: 2px solid #4C5562;
+    color: #4C5562;
+    margin: 0 5px;
+    padding: 5px;
+}
+.omny-theme-button:hover {
+    border: 2px solid #363C45;
+    color: #363C45;
+    cursor: pointer;
+}
+@media (min-width: 800px) {
+    h3 {
+        padding-top: 60px;
+    }
+    .omny-theme {
+        position: relative;
+    }
+    .omny-theme-img {
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 50%;
+    }
+    .omny-theme-actions {
+        min-height: 250px;
+        margin-left: 50%;
+    }
+}
+@media (min-width: 1400px) {
+    .omny-theme {
+        float: left;
+        padding-right: 20px;
+        width: 50%;
+    }
+}
+</style>
+<h1>Themes</h1>
+<div ng-if="themes" ng-repeat="theme in themes">
+    <div class="omny-theme">
+        <div class="omny-theme-img" style="background-image: url('/global/themes/current/{{theme.name}}/screenshots/main.png');">
+        </div>
+        <div class="omny-theme-actions">
+            <h3>{{theme.name}}</h3>
+            <div class="omny-theme-button-wrapper">
+                <span class="omny-theme-button">Details</span>
+                <span class="omny-theme-button">Demo</span>
+                <span ng-click="setDefault(theme.name)" class="omny-theme-button">Install</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-if="!themes">
+    Loading
+</div>

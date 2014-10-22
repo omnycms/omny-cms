@@ -1,0 +1,198 @@
+<style>
+#omny-module-sidebar {
+    background-color: #232323;
+    display: none;
+    left: 0;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 240px;
+    z-index: 20000;
+    -moz-box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+    -webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+    box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+}
+
+.omny-menu-bar {
+    background: #FFF;
+    display: block;
+    height: 2px;
+    margin: 4px 0;
+    width: 22px;
+}
+.omny-module-menu {
+    background-color: #232323;
+    -moz-box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+    -webkit-box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+    box-shadow: 0 0 15px 0 rgba(0,0,0,0.8);
+    color: #FFF;
+    cursor: pointer;
+    left: 0;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    text-align: center;
+    z-index: 19999;
+}
+.omny-module {
+    background-color: #363636;
+    border: 1px solid #000;
+    color: #DDD;
+    cursor: pointer;
+    float: left;
+    height: 100px;
+    margin: 5px;
+    overflow: hidden;
+    text-align: center;
+    width: 100px;
+    -moz-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.omny-menu-actions {
+    margin: 20px 5px 0 0;
+    text-align: right;
+}
+.omny-open-sidebar {
+    left: 240px;
+}
+.omny-current-module-section {
+    position: relative;
+    outline: 1px dashed #1693A5;
+}
+.omny-button {
+    background: #2790B0;
+    border: 1px solid #1F758F;
+    border-radius: 3px;
+    -moz-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    -webkit-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.375em 0.75em;
+    position: relative;
+    text-align: center;
+}
+.omny-button:hover {
+    background: #4196B0;
+    text-decoration: none;
+}
+.omny-button:active {
+    -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    top: 1px;
+}
+.ui-state-highlight {
+    height: 1.5em;
+    min-height: 20px;
+    line-height: 1.2em;
+}
+.omny-module-section {
+    border-style: dashed;
+    border-width: 1px;
+}
+
+.omny-editable-module {
+    position: relative;
+}
+
+.omny-editable-module:hover .omny-module-options {
+    cursor: pointer;
+    display: block !important;
+}
+.omny-drag-handle {
+    background: #404040;
+    border: 1px solid #070707;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    color: #E5E5E5;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    right: 35px;
+    text-align: center;
+    text-shadow: 0 1px 0 #000;
+    top: 0;
+    width: 30px;
+    z-index: 10000;
+}
+.omny-delete-module {
+    background: #404040;
+    border: 1px solid #070707;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    color: #E5E5E5;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-shadow: 0 1px 0 #000;
+    top: 0;
+    width: 30px;
+    z-index: 10000;
+}
+
+.omny-drag-handle:hover, .omny-delete-module:hover {
+    background: #4C4C4C;
+    -moz-box-shadow: 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    -webkit-box-shadow: 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    box-shadow: 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+}
+
+.omny-drag-handle:active, .omny-delete-module:active {
+    background: #000;
+}
+
+.omny-edit-section {
+    /*position: absolute;
+    right: 0;
+    z-index: 10000;*/
+    background: #404040;
+    border: 1px solid #070707;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    box-shadow: 0 1px 0 rgba(255,255,255,.1), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    color: #E5E5E5;
+    cursor: pointer;
+    display: block !important;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    position: absolute;
+    right: 35px;
+    text-shadow: 0 1px 0 #000;
+    top: 0;
+    z-index: 10000;
+}
+</style>
+<div style="display: none;" id="omny-sidebar">
+    <div class="omny-module-menu" ng-click="toggleSidebar()">
+        <span class="omny-menu-bar"></span>
+        <span class="omny-menu-bar"></span>
+        <span class="omny-menu-bar"></span>
+    </div>
+    <div id="omny-module-sidebar">
+        <div class="clearfix">
+            <div ng-repeat="module in modules">
+                <div class="omny-module" module="{{module.module}}">
+                    <span>{{module.name}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="omny-menu-actions">
+            <button class="omny-button" ng-click="savePage()">Save</button>
+            <a ng-href="{{pageLink}}" target="_blank"><button class="omny-button">View</button></a>
+        </div>
+    </div>
+</div>
+<div ng-if="pageHtml" dynamic="pageHtml" style="height: 100%;"></div>

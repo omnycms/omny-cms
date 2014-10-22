@@ -1,0 +1,6 @@
+[
+    {"name":"HTML", "module" :"Omny.Html"},
+    {"name":"Menu", "module" :"Omny.Menu"},
+    {"name":"Photo", "module" :"Omny.Photo"},
+    {"name":"Youtube", "module" :"Omny.Youtube"}
+]

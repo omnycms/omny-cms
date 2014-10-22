@@ -1,0 +1,11 @@
+<li ng-repeat="page in pages">
+    <div class="omny-site-list-item">
+        {{page.title}}
+        <span class="omny-site-list-buttons">
+            <a class="omny-button-primary-sm" ng-href="/site/page.html?page={{page.editLink}}&site={{site}}">Edit</a>
+            <input type="button" class="omny-button-primary-sm" ng-click="openDialog(page)" value="Add Child Page" />
+        </span>
+    </div>
+
+    <ul class="omny-site-nested" ng-controller="OmnyChildLinks" ng-include="'/version/4/js/modules/PageManager/Links.html'" ng-if="page.children" pages="page.children" site="site"></ul>
+</li>

@@ -1,0 +1,4 @@
+<li ng-repeat="menuItem in menuitems">
+    <a ng-href="{{menuItem.link}}">{{menuItem.title}}</a>
+    <ul ng-controller="OmnyMenuLinks" onload="refresh()" ng-include="'/version/2/js/modules/Menu/Menu.html'" ng-if="menuItem.children" menuitems="menuItem.children"></ul>
+</li>

@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h2 class="modal-title">Create new page</h2>
+</div>
+<div class="modal-body">
+    <form id="pageCreationForm" name="form">
+        <div class="form-group">
+            <label for="pageName">Page Name:</label>
+            <input class="form-control" id="pageName" type="text" name="pageName" ng-model="newPage.pageName" />
+        </div>
+        <div class="form-group">
+            <label for="automaticUrl">Set URL automatically:</label>
+            <input type="checkbox" id="automaticUrl" ng-model="newPage.automaticUrl" />
+            <br />
+            <span ng-show="!newPage.automaticUrl">
+                <label for="url">URL:</label>
+                <input class="form-control" id="url" url type="text" name="url" required ng-model="newPage.url" />
+            </span>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <input type="button" class="omny-button-default" ng-click="cancel()" value="Cancel" />
+    <input type="button" class="omny-button-primary" ng-click="create()" value="Create Page" />
+</div>
