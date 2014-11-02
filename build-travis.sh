@@ -1,2 +1,3 @@
-cd omnycms/omny-cms/omny-all
+ls
+cd omny-all
 mvn install

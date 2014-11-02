@@ -1,4 +1,3 @@
-cd omnycms/omny-cms
 mkdir output
 
 cd omny-all/target
