@@ -26,5 +26,12 @@
             <file>file:/Users/al/NetBeansProjects/omnyangular/public_html/config.js</file>
         </group>
         <group name="Omny Community"/>
+        <group name="Omny">
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageManager/PageManager.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageMaster/PageMaster.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageMaster/PageMaster.html</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/Html/Html.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/Html/Html.html</file>
+        </group>
     </open-files>
 </project-private>

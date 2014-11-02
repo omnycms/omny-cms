@@ -52,9 +52,9 @@ define(['jquery','utilities/AuthTokenManager','utilities/QueryStringReader'],
                 } else if (window.location.hostname.indexOf(".omny.me") > 0) {
                     return window.location.hostname.substring(0, window.location.hostname.indexOf(".omny.me"));
                 } else if (window.location.hostname.indexOf("local")==0) { 
-                    return "www";
+                    return "admin.special";
                 } else if(window.location.hostname =="www.omny.ca") {
-                    return "www";
+                    return "admin.special";
                 }else {
                     return window.location.hostname;
                 }

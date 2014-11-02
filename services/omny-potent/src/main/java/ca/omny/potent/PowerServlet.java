@@ -80,8 +80,9 @@ public class PowerServlet extends HttpServlet {
         AccessRule rule = permissionResolver.getMostRelevantAccessRule(route, req.getMethod(), configuration);
         permissionResolver.injectParameters(host, req.getRequestURI(), queryStringParameters, rule);
         
-        boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, securityToken);
         String uid = siteOwnerMapper.getUid(securityToken);
+        boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, uid);
+        boolean isSiteUser = siteOwnerMapper.isSiteUser(host, uid);
         
         boolean permitted = false;
         switch(rule.getAuthorizationLevel()) {
@@ -94,6 +95,10 @@ public class PowerServlet extends HttpServlet {
                     break;
                 }
                 if(securityToken==null) {
+                    permitted = false;
+                    break;
+                }
+                if(!isSiteUser && !host.equals("admin.special")) {
                     permitted = false;
                     break;
                 }

@@ -29,7 +29,7 @@ public class OmnyHandler extends AbstractHandler {
     Gson gson = new Gson();
     
     public OmnyHandler() {
-        router = new RoutingTree<OmnyApi>("");
+        router = new RoutingTree<>("");
         weld = new Weld();
         container = weld.initialize();
         apis = container.instance().select(OmnyApi.class);

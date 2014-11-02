@@ -9,8 +9,7 @@ public class SiteOwnerMapper {
     @Inject
     IDocumentQuerier querier;
     
-    public boolean isSiteOwner(String hostname, String token) {
-        String uid = this.getUid(token);
+    public boolean isSiteOwner(String hostname, String uid) {
         String key = querier.getKey("sites",hostname);
         Map site = querier.get(key, Map.class);
         if(site!=null && site.containsKey("userId")) {
@@ -26,5 +25,10 @@ public class SiteOwnerMapper {
             return session.get("userId").toString();
         }
         return null;
+    }
+    
+    public boolean isSiteUser(String hostname,String uid) {
+        String key = querier.getKey("site_data",hostname,"site_data",uid);
+        return querier.get(key,Map.class)!=null;
     }
 }
