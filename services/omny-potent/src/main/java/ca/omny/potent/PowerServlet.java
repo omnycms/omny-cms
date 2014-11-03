@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ca.omny.potent.ext.ExtensibleProxy;
 import ca.omny.potent.mappers.OmnyRouteMapper;
+import java.net.URL;
 
 @ApplicationScoped
 public class PowerServlet extends HttpServlet {
@@ -57,8 +58,11 @@ public class PowerServlet extends HttpServlet {
         if(host==null) {
             host = req.getHeader("Hostname");
         }
-        if(host==null) {
+        if(host==null && req.getHeader("Host")!=null) {
             host = req.getHeader("Host").substring(0,req.getHeader("Host").indexOf(":"));
+        } else {
+            URL url = new URL(req.getRequestURI());
+            host = url.getHost();
         }
         String rootDomain = host.substring(host.indexOf(".")+1);
         String key = querier.getKey("mapped_domains",rootDomain);
