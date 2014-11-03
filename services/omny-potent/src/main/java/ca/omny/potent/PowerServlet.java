@@ -61,8 +61,7 @@ public class PowerServlet extends HttpServlet {
         if(host==null && req.getHeader("Host")!=null) {
             host = req.getHeader("Host").substring(0,req.getHeader("Host").indexOf(":"));
         } else {
-            URL url = new URL(req.getRequestURI());
-            host = url.getHost();
+            host = req.getServerName();
         }
         String rootDomain = host.substring(host.indexOf(".")+1);
         String key = querier.getKey("mapped_domains",rootDomain);
