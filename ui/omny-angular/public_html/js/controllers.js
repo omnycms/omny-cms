@@ -59,8 +59,8 @@ omnyControllers.controller('OmnyDynamicController', ['$scope', '$http', 'Page',
                 },
             })
                     .success(function(data) {
-                        
-                        var cssFile = "//"+window.location.hostname+":"+window.location.port+"/themes/" + data.themeName + "/theme.css";
+                        var port = window.location.port?":"+window.location.port:"";
+                        var cssFile = "//"+window.location.hostname+port+"/themes/" + data.themeName + "/theme.css";
                         console.log(cssFile);
                         var head = document.getElementsByTagName('head')[0];
                         var link = document.createElement('link');
