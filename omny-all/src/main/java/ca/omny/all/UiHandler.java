@@ -37,6 +37,10 @@ public class UiHandler extends AbstractHandler {
     @Override
     public void handle(String string, Request rqst, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String requestUrl = request.getRequestURI();
+        if(requestUrl.equals("/")) {
+            response.sendRedirect("/default.html");
+            return;
+        }
         if(requestUrl.startsWith("/version")) {
             requestUrl = requestUrl.substring(requestUrl.indexOf("/",1));
             requestUrl = requestUrl.substring(requestUrl.indexOf("/",1));
