@@ -37,7 +37,7 @@ public class PageHelper {
 
     public Collection<String> getPages(String path, String host) {
         String suffix = "Data.json";
-       
+        
         Collection<String> files = storageSystem.listFiles(path, true, suffix, host);
 
         Collection<String> pages = new LinkedList<String>();
