@@ -143,7 +143,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader','lib/notify.
                     })
                             .success(function(data) {
                                 
-                                var cssFile = "http://"+apiRequester.getFullHostname()+"/themes/" + data.themeName + "/theme.css";
+                                var cssFile = "//"+apiRequester.getFullHostname()+"/themes/" + data.themeName + "/theme.css";
                                 console.log(cssFile);
                                 var head = document.getElementsByTagName('head')[0];
                                 var link = document.createElement('link');
