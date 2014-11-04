@@ -163,7 +163,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader','lib/notify.
                                             $scope.$apply(function() {
                                                 $scope.pageHtml = mustacheApplier.replaceText(data.themeHtml, sectionData);
                                             });
-                                            dependencyLoader.loadDependency("http://"+apiRequester.getFullHostname()+"/themes/" + data.themeName + "/theme.js", function(theme) {
+                                            dependencyLoader.loadDependency("//"+apiRequester.getFullHostname()+"/themes/" + data.themeName + "/theme.js", function(theme) {
                                                 $scope.$apply(function() {
                                                     $scope.init();
                                                 });
