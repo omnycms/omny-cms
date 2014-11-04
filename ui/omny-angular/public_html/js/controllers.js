@@ -75,6 +75,7 @@ omnyControllers.controller('OmnyDynamicController', ['$scope', '$http', 'Page',
                         renderer.renderModules($scope, data['templateModules'], data['pageModules'], function(sectionData) {
 
                             omnyApiRequester.apiRequest("sites", omnyApiRequester.getHostname(), {
+                                site: "www",
                                 success: function(siteData) {
                                     sectionData.site = siteData;
                                     document.title = siteData.siteName +" - "+ data.page.title;
