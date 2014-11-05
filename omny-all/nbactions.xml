@@ -50,6 +50,8 @@
             <properties>
                 <exec.args>-classpath %classpath ca.omny.all.OmnyAllInOneServer</exec.args>
                 <exec.executable>java</exec.executable>
+                <Env.omny_db_type>storage</Env.omny_db_type>
+                <Env.omny_static_location>/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html</Env.omny_static_location>
             </properties>
         </action>
     </actions>
