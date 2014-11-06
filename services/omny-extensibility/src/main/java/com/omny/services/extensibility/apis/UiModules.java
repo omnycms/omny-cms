@@ -82,12 +82,14 @@ public class UiModules implements OmnyApi {
                     ZipInputStream zis = new ZipInputStream(file.getInputStream());
                     //get the zipped file list entry
                     for (ZipEntry ze = zis.getNextEntry(); ze != null; ze = zis.getNextEntry()) {
-                        String fileName = ze.getName();
-                        String key = String.format(format, provider, module, version, fileName);
-                        File tempFile = File.createTempFile("uitemp", fileName);
-                        IOUtils.copy(zis, new FileOutputStream(tempFile));
-                        s3Client.putObject(config.getBucket(), key, tempFile);
-                        tempFile.delete();
+                        if(!ze.isDirectory()) {
+                            String fileName = ze.getName();
+                            String key = String.format(format, provider, module, version, fileName);
+                            File tempFile = File.createTempFile("uitemp", fileName);
+                            IOUtils.copy(zis, new FileOutputStream(tempFile));
+                            s3Client.putObject(config.getBucket(), key, tempFile);
+                            tempFile.delete();
+                        }
                     }
                 }
             }
