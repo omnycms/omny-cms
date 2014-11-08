@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 
@@ -59,7 +60,6 @@ public class ContentLocation implements OmnyApi {
         }
         queryParameters.put("file", prefix + file);
         if (request.getHeader("Send-File") != null||request.getQueryString().contains("sendFile")) {
-            Response.ResponseBuilder ok = Response.ok();
             MetaData metaData = storageSystem.getMetaData(prefix+file,requestResponseManager.getRequestHostname());
             Date lastModified = new Date(metaData.getLastModified()*1000);
             String ifModified = request.getHeader("If-Modified-Since");
@@ -79,9 +79,10 @@ public class ContentLocation implements OmnyApi {
             if(fileContents==null) {
                 throw new NotFoundException();
             }
-            ok.header("Cache-Control", "public; max-age=30");
-            ok.header("Last-Modified", dateFormat.format(lastModified));
-            ok.header("Content-Type", mimedata.getContentTypeFromName(file));
+            HttpServletResponse response = requestResponseManager.getResponse();
+            response.addHeader("Cache-Control", "public; max-age=30");
+            response.addHeader("Last-Modified", dateFormat.format(lastModified));
+            response.addHeader("Content-Type", mimedata.getContentTypeFromName(file));
             if(fileContents instanceof String) {
                 return new ApiResponse(fileContents.toString(), 200);
             }
