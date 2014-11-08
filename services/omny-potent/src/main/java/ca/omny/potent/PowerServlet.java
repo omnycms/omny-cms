@@ -58,6 +58,9 @@ public class PowerServlet extends HttpServlet {
         if(host==null) {
             host = req.getHeader("Hostname");
         }
+        if(host==null) {
+            host = req.getServerName();
+        }
         if(host==null && req.getHeader("Host")!=null) {
             int end = req.getHeader("Host").indexOf(":");
             if(end==-1) {
@@ -65,9 +68,7 @@ public class PowerServlet extends HttpServlet {
             }
             host = req.getHeader("Host").substring(0,end);
         } 
-        if(host==null) {
-            host = req.getServerName();
-        }
+        
 
         String rootDomain = host.substring(host.indexOf(".")+1);
         String key = querier.getKey("mapped_domains",rootDomain);
