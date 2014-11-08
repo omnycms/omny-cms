@@ -58,16 +58,23 @@ public class PowerServlet extends HttpServlet {
         if(host==null) {
             host = req.getHeader("Hostname");
         }
-        if(host==null) {
-            host = req.getServerName();
-        }
         if(host==null && req.getHeader("Host")!=null) {
             int end = req.getHeader("Host").indexOf(":");
             if(end==-1) {
                 end = req.getHeader("Host").length();
             }
             host = req.getHeader("Host").substring(0,end);
-        } 
+        }
+        if(host==null && req.getHeader(":host")!=null) {
+            int end = req.getHeader(":host").indexOf(":");
+            if(end==-1) {
+                end = req.getHeader(":host").length();
+            }
+            host = req.getHeader("Host").substring(0,end);
+        }
+        if(host==null) {
+            host = req.getServerName();
+        }
         
 
         String rootDomain = host.substring(host.indexOf(".")+1);
