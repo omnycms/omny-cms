@@ -70,7 +70,7 @@ public class PowerServlet extends HttpServlet {
             if(end==-1) {
                 end = req.getHeader(":host").length();
             }
-            host = req.getHeader("Host").substring(0,end);
+            host = req.getHeader(":host").substring(0,end);
         }
         if(host==null) {
             host = req.getServerName();
