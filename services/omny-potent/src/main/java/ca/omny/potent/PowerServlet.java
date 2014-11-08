@@ -68,6 +68,7 @@ public class PowerServlet extends HttpServlet {
         if(host==null) {
             host = req.getServerName();
         }
+
         String rootDomain = host.substring(host.indexOf(".")+1);
         String key = querier.getKey("mapped_domains",rootDomain);
         String match = querier.get(key, String.class);
@@ -79,6 +80,7 @@ public class PowerServlet extends HttpServlet {
         if (alias != null) {
             host=alias;
         }
+        System.out.println("processing request for "+host);
         Map<String, String> queryStringParameters = this.getQueryStringParameters(req.getQueryString());
         String securityToken = queryStringParameters.get("access_token");
         
