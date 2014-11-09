@@ -16,8 +16,14 @@ var omnyApp = angular.module('omnyApp', [
   'ui.bootstrap'
 ]);
 
-omnyApp.config(['$routeProvider', '$locationProvider', '$compileProvider', '$controllerProvider',
-  function($routeProvider, $locationProvider, $compileProvider, $controllerProvider) {
+omnyApp.config(['$routeProvider', '$locationProvider', '$compileProvider', '$controllerProvider','$sceDelegateProvider',
+  function($routeProvider, $locationProvider, $compileProvider, $controllerProvider,$sceDelegateProvider) {
+      $sceDelegateProvider.resourceUrlWhitelist([
+        // Allow same origin resource loads.
+        'self',
+        // Allow loading from our assets domain.  Notice the difference between * and **.
+        'https://modules.omny.ca/**'
+      ]);
     window.directiveMaker = $compileProvider;
     window.controllerMaker = $controllerProvider;
     $locationProvider.html5Mode(true);
