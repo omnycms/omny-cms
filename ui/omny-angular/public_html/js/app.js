@@ -50,7 +50,7 @@ requirejs.config({
     paths: {
         jquery: 'lib/jquery',
         themes: 'themes',
-        extras: "http://omny.ca/modules"
+        ext: "https://modules.omny.ca"
     },
     shim: {
         "skel": {

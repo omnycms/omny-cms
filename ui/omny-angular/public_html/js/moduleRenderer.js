@@ -21,6 +21,10 @@ moduleRenderer.factory('moduleRenderer', ['$q','dependencyLoader',function($q,de
         if(omnyClass.indexOf("Omny.")==0) {
             omnyClass = omnyClass.substring(5);
         }
+        if(omnyClass.indexOf("ext.")==0) {
+            omnyClass = omnyClass.substring(4);
+            return "ext/"+omnyClass;
+        } 
         
         return "modules/"+omnyClass+"/"+omnyClass;
     }
