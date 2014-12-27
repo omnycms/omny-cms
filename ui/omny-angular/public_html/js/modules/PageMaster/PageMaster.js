@@ -15,7 +15,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader','lib/notify.
             
             var dragHandle = '<div style="display: none;" ng-if="editable" class="omny-module-options"><span class="omny-drag-handle glyphicon glyphicon-move"></span><span onclick="deleteModule(this)" class="omny-delete-module glyphicon glyphicon-remove"></span></div>';
             
-            directiveMaker.directive('omnyPageMaster', ['$compile', '$modal', function($compile, $modal) {
+            directiveMaker.directive('omnyPageMaster', ['$compile', '$q', '$modal', function($compile, $q, $modal) {
                     return {
                         restrict: 'E',
                         templateUrl: versioned("/js/modules/PageMaster/PageMaster.html"),
@@ -43,14 +43,17 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader','lib/notify.
                                     stop: function(event, ui) {
                                         if (ui.item.hasClass("omny-module")) {
                                             var guid = "pre" + window.simpleguid();
-                                            var moduleText = new window.moduleBuilders[ui.item.attr("module")]().getSample(guid);
-
-                                            var x = document.createElement("div");
-                                            $(x).html(moduleText);
-                                            var module = $(x).find(".omny-editable-module");
-                                            module.prepend(dragHandle);
-                                            $compile(x)(window.omnyData);
-                                            ui.item.replaceWith(x);
+                                            var moduleText = new window.moduleBuilders[ui.item.attr("module")]().getSample(guid,$q);
+                                            $q.when(moduleText).then(function(moduleText) {
+                                                var x = document.createElement("div");
+                                                $(x).html(moduleText);
+                                                var module = $(x).find(".omny-editable-module");
+                                                
+                                                $compile(x)(window.omnyData);
+                                                module.prepend(dragHandle);
+                                                ui.item.replaceWith(x);
+                                            });
+                                            
                                             
                                         }
                                     }
@@ -131,6 +134,32 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader','lib/notify.
                                     dependencyLoader.loadDependency(renderer.getFileName(module.module), callbackBuilder(module));
                                 }
                             });
+                    apiRequester.apiRequest("extensibility","ui/devmodules", {
+                        type: "GET",
+                        processData: false,
+                        contentType: 'application/json',
+                        success: function(devmodules) {
+                            var devModuleName = "DevModule";
+                            dependencyLoader.loadDependency(renderer.getFileName(devModuleName), function(devModuleConstructor) {
+                                for (var i = 0; i < devmodules.length; i++) {
+                                    var module = devmodules[i];
+                                    module.module = module.url;
+                                    module.name = decodeURIComponent(module.name);
+                                    var callbackBuilder = function(module) {
+                                        return function() {
+                                            var mod = new devModuleConstructor();
+                                            mod.data.url = module.url;
+                                            return mod;
+                                        }
+                                    };
+                                    window.moduleBuilders[module.module] = callbackBuilder(module);
+                                }
+                            });
+                            $scope.devmodules = devmodules;
+                            
+                        }
+                     });
+                                
                     $http({
                         method: 'GET',
                         url: '/api/v1.0/pages/detailed',

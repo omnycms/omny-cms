@@ -189,6 +189,13 @@
                 </div>
             </div>
         </div>
+        <div class="clearfix">
+            <div ng-repeat="module in devmodules">
+                <div class="omny-module" module="{{module.module}}">
+                    <span>{{module.name}}</span>
+                </div>
+            </div>
+        </div>
         <div class="omny-menu-actions">
             <button class="omny-button" ng-click="savePage()">Save</button>
             <a ng-href="{{pageLink}}" target="_blank"><button class="omny-button">View</button></a>

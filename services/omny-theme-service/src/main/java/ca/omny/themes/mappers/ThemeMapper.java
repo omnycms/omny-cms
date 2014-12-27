@@ -58,12 +58,12 @@ public class ThemeMapper {
     }
     
     public void setDefaultTheme(String site, String theme) {
-        String key = querier.getKey("default_theme",site);
+        String key = querier.getKey("site_data",site,"default_theme");
         querier.set(key, theme);
     }
     
     public String getDefaultTheme(String site) {
-        String key = querier.getKey("default_theme",site);
+        String key = querier.getKey("site_data",site,"default_theme");
         return querier.get(key, String.class);
     }
 }

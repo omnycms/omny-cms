@@ -96,16 +96,18 @@ public class LocalStorage implements IStorage {
                     return new String(bytes);
                 }
                 return bytes;
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(LocalStorage.class.getName()).log(Level.INFO, null, "file does not exist " + fullPath);
             } catch (IOException ex) {
-                Logger.getLogger(LocalStorage.class.getName()).log(Level.INFO, null, ex);
+                Logger.getLogger(LocalStorage.class.getName()).log(Level.FINEST, null, ex);
             }
         }
         try {
             return IOUtils.toString(new FileInputStream(rootFolder + "/" + fullPath));
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(LocalStorage.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(LocalStorage.class.getName()).log(Level.INFO, null, "file does not exist " + fullPath);
         } catch (IOException ex) {
-            Logger.getLogger(LocalStorage.class.getName()).log(Level.INFO, null, ex);
+            Logger.getLogger(LocalStorage.class.getName()).log(Level.FINEST, null, ex);
         }
         return null;
     }

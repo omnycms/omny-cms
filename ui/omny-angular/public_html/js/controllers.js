@@ -8,6 +8,7 @@ omnyControllers.directive('dynamic', function($compile) {
             scope.$watch(attrs.dynamic, function(html) {
                 ele.html(html);
                 $compile(ele.contents())(scope);
+                
             });
         }
     };

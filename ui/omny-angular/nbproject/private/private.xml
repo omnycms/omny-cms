@@ -27,11 +27,18 @@
         </group>
         <group name="Omny Community"/>
         <group name="Omny">
-            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageManager/PageManager.js</file>
-            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageMaster/PageMaster.js</file>
             <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageMaster/PageMaster.html</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/jsLoader.js</file>
             <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/Html/Html.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/controllers.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/require.js</file>
             <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/Html/Html.html</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/moduleRenderer.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/PageMaster/PageMaster.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/DevModule/DevModule.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/index.html</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/modules/Text/Text.js</file>
+            <file>file:/Users/al/NetBeansProjects/OmnyCommunity/ui/omny-angular/public_html/js/app.js</file>
         </group>
     </open-files>
 </project-private>

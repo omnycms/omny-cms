@@ -40,7 +40,7 @@ public class ThemeMapper {
     }
     
     public String getDefaultTheme(String hostname) {
-        String key = querier.getKey("default_theme",hostname);
+        String key = querier.getKey("site_data",hostname,"default_theme");
         String themeName = querier.get(key, String.class);
         if(themeName==null) {
             themeName = querier.get("default_theme", String.class);

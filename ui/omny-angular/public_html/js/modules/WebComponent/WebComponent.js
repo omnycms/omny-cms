@@ -1,6 +1,6 @@
 define(['lib/ckeditor/ckeditor'],
     function(ckeditor) {
-        function Html() {
+        function WebComponent() {
             this.getDirectivePromise = function(data,$q) {
                 var deferred = $q.defer();
                 
@@ -42,7 +42,7 @@ define(['lib/ckeditor/ckeditor'],
                 $scope.editable = data.editable;
         }]);
         
-        return Html;
+        return WebComponent;
     }
 );
 

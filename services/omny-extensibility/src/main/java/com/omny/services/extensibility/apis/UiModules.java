@@ -91,6 +91,7 @@ public class UiModules implements OmnyApi {
                             tempFile.delete();
                         }
                     }
+                    return new ApiResponse("", 200);
                 }
             }
         } catch (FileUploadException ex) {
