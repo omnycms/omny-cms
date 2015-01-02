@@ -42,16 +42,22 @@ public class DynamoDb implements IDocumentQuerier {
     @Inject
     public DynamoDb(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
-        config = gson.fromJson(configurationReader.getConfigurationString("awsStorage"), DynamoDbConfig.class);
+        config = gson.fromJson(configurationReader.getConfigurationString("dynamo_config"), DynamoDbConfig.class);
+        table = config.getTable();
         client = new AmazonDynamoDBClient(config);
     }
 
     private String getHashKey(String key) {
-        return key.substring(0, key.indexOf("/"));
+        int index = key.indexOf("/");
+        if (index == -1) {
+            index = key.length();
+        }
+        return key.substring(0, index);
     }
 
     private String getSubkey(String key) {
-        return key.substring(0, key.indexOf("/"));
+        int index = key.indexOf("/");
+        return key.substring(index + 1);
     }
 
     private String getStartKey(String prefix) {
@@ -68,6 +74,7 @@ public class DynamoDb implements IDocumentQuerier {
         String rangeKey = getSubkey(key);
         keys.put(DYNAMO_HASH_KEY_NAME, new AttributeValue(hashKey));
         keys.put(DYNAMO_RANGE_KEY_NAME, new AttributeValue(rangeKey));
+
         return keys;
     }
 
@@ -90,7 +97,11 @@ public class DynamoDb implements IDocumentQuerier {
 
     @Override
     public <T> T get(String key, Class<T> type) {
-        String stringValue = this.getRaw(key).toString();
+        Object o = this.getRaw(key);
+        if (o == null) {
+            return null;
+        }
+        String stringValue = o.toString();
         return gson.fromJson(stringValue, type);
     }
 
@@ -107,20 +118,23 @@ public class DynamoDb implements IDocumentQuerier {
     }
 
     private <T> Collection<T> getRange(String start, String end, Class<T> type, boolean allowStale) {
-        String table = this.getHashKey(start);
-        QueryRequest request = new QueryRequest(table);
+        String hashKey = this.getHashKey(start);
+        String actualStart = this.getSubkey(start);
+        String actualEnd = this.getSubkey(end);
+        QueryRequest request = new QueryRequest(hashKey);
+        request.withTableName(table);
         Condition primaryKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ)
-                .withAttributeValueList(new AttributeValue().withS(table));
+                .withAttributeValueList(new AttributeValue().withS(hashKey));
         request.addKeyConditionsEntry(DYNAMO_HASH_KEY_NAME, primaryKeyCondition);
         Condition rangeCondition = new Condition()
                 .withComparisonOperator(ComparisonOperator.BETWEEN)
-                .withAttributeValueList(new AttributeValue().withS(start).withS(end));
+                .withAttributeValueList(new AttributeValue().withS(actualStart), new AttributeValue().withS(actualEnd));
         request.addKeyConditionsEntry(DYNAMO_RANGE_KEY_NAME, rangeCondition);
         QueryResult result = client.query(request);
         Collection<T> results = new LinkedList<>();
 
         for (Map<String, AttributeValue> map : result.getItems()) {
-            String value = map.get(DYNAMO_RANGE_KEY_NAME).getS();
+            String value = map.get("value").getS();
             results.add(gson.fromJson(value, type));
         }
         return results;
@@ -157,7 +171,12 @@ public class DynamoDb implements IDocumentQuerier {
     @Override
     public Object getRaw(String key) {
         Map<String, AttributeValue> keys = this.getKeys(key);
-        AttributeValue value = client.getItem(table, keys).getItem().get("value");
+        Map<String, AttributeValue> item = client.getItem(table, keys).getItem();
+        if (item == null) {
+            return null;
+        }
+        AttributeValue value = item.get("value");
+
         String stringValue = value.getS();
         return stringValue;
     }
@@ -165,12 +184,15 @@ public class DynamoDb implements IDocumentQuerier {
     @Override
     public <T> Collection<KeyValuePair<T>> multiGet(Collection<String> keys, Class<T> type) {
         BatchGetItemRequest request = new BatchGetItemRequest();
+        Collection<Map<String, AttributeValue>> keyList = new LinkedList<>();
         for (String key : keys) {
-            request.addRequestItemsEntry(table,
-                    new KeysAndAttributes()
-                    .withKeys(this.getKeys(key))
-            );
+            Map<String, AttributeValue> idKeys = this.getKeys(key);
+            keyList.add(idKeys);
         }
+        request.addRequestItemsEntry(table,
+                new KeysAndAttributes()
+                .withKeys(keyList)
+        );
         BatchGetItemResult response = client.batchGetItem(request);
         List<Map<String, AttributeValue>> values = response.getResponses().get(table);
         Collection<KeyValuePair<T>> results = new LinkedList<>();
@@ -186,12 +208,16 @@ public class DynamoDb implements IDocumentQuerier {
     @Override
     public <T> Collection<T> multiGetCollection(Collection<String> keys, Class<T> type) {
         BatchGetItemRequest request = new BatchGetItemRequest();
+        Collection<Map<String, AttributeValue>> keyList = new LinkedList<>();
         for (String key : keys) {
-            request.addRequestItemsEntry(table,
-                    new KeysAndAttributes()
-                    .withKeys(this.getKeys(key))
-            );
+            Map<String, AttributeValue> idKeys = this.getKeys(key);
+            keyList.add(idKeys);
         }
+        request.addRequestItemsEntry(table,
+                new KeysAndAttributes()
+                .withKeys(keyList)
+        );
+
         BatchGetItemResult response = client.batchGetItem(request);
         List<Map<String, AttributeValue>> values = response.getResponses().get(table);
         Collection<T> results = new LinkedList<>();
