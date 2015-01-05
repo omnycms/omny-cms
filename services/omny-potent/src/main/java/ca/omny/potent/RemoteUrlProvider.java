@@ -32,7 +32,7 @@ public class RemoteUrlProvider {
             String value = db.get(key, String.class);
             List<RemoteHost> hosts = new Gson().fromJson(value, type);
             RemoteHost remoteHost = hosts.get((int)(Math.random()*hosts.size()));
-            return remoteHost.getProtocol()+"://"+remoteHost.getHostname()+":"+remoteHost.getPort()+route;
+            return remoteHost.getProtocol()+"://"+remoteHost.getHostname()+":"+remoteHost.getPort()+route+ "?" + req.getQueryString();
         }
         String host = "http://127.0.0.1:8077";
         if (configurationReader.getConfigurationString("proxyHost") != null) {
