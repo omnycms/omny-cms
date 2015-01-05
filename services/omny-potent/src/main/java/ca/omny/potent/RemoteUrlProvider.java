@@ -32,7 +32,9 @@ public class RemoteUrlProvider {
     public String getRemoteUrl(String route, HttpServletRequest req) {  
         String decodedQueryString = req.getQueryString();
         try {
-            decodedQueryString = URLDecoder.decode(decodedQueryString, "UTF-8");
+            if(decodedQueryString != null) {
+                decodedQueryString = URLDecoder.decode(decodedQueryString, "UTF-8");
+            }
         } catch (UnsupportedEncodingException ex) {
         }
         if(configurationReader.getSimpleConfigurationString("omny_route_dynamic") != null) {
