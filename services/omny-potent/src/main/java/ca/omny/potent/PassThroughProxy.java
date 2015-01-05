@@ -24,27 +24,20 @@ public class PassThroughProxy {
     public static final String HOST_HEADER = "X-Origin";
 
     @Inject
-    OmnyRouteMapper routeMapper;
-
-    @Inject
     IDocumentQuerier querier;
 
     @Inject
     ConfigurationReader configurationReader;
+    
+    @Inject
+    RemoteUrlProvider remoteUrlProvider;
 
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
-        OmnyRouteConfiguration configuration = routeMapper.getConfiguration();
-        String route = OmnyRouteMapper.getProxyRoute(req);
-        OmnyEndpoint bestMatch = this.getBestMatch(route, configuration.getEndpoints());
-        if (bestMatch == null) {
+        String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
+        if(remoteUrl==null) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        String host = "http://127.0.0.1:8077";
-        if (configurationReader.getConfigurationString("proxyHost") != null) {
-            host = configurationReader.getConfigurationString("proxyHost");
-        }
-        String remoteUrl = host + bestMatch.getContextRoot() + route + "?" + req.getQueryString();
         URL url = new URL(remoteUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(req.getMethod());

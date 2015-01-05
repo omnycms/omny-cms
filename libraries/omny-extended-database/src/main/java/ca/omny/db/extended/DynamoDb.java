@@ -102,6 +102,9 @@ public class DynamoDb implements IDocumentQuerier {
             return null;
         }
         String stringValue = o.toString();
+        if (type.equals(String.class)) {
+            return (T) stringValue;
+        }
         return gson.fromJson(stringValue, type);
     }
 

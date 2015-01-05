@@ -29,7 +29,11 @@ public class ConfigurationReader {
     }
     
     public String getSimpleConfigurationString(String name) {
-        return this.getConfigurationString(name).replaceAll("\r", "").replaceAll("\n", "");
+        final String configurationString = this.getConfigurationString(name);
+        if(configurationString==null) {
+            return null;
+        }
+        return configurationString.replaceAll("\r", "").replaceAll("\n", "");
     }
     
     public static String readAll(InputStream stream) {

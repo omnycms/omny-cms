@@ -1,8 +1,6 @@
 package ca.omny.potent;
 
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.potent.models.AccessRule;
-import ca.omny.potent.models.SiteConfiguration;
 import ca.omny.potent.permissions.roles.IPermissionCheck;
 import ca.omny.potent.site.SiteConfigurationLoader;
 import java.io.IOException;
@@ -15,13 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ca.omny.potent.ext.ExtensibleProxy;
 import ca.omny.potent.mappers.OmnyRouteMapper;
-import java.net.URL;
 
 @ApplicationScoped
 public class PowerServlet extends HttpServlet {
     
     @Inject
     IPermissionCheck permissionChecker;
+    
+    @Inject
+    AuthorizationCheck authChecker;
     
     @Inject
     PermissionResolver permissionResolver;
@@ -52,8 +52,30 @@ public class PowerServlet extends HttpServlet {
     }
     
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException { 
+        String host = getHost(req);
+        System.out.println("processing request for "+host);
         
+        String route = OmnyRouteMapper.getProxyRoute(req);
+        Map<String, String> queryStringParameters = this.getQueryStringParameters(req.getQueryString());
+        String securityToken = queryStringParameters.get("access_token");
+        
+        String uid = siteOwnerMapper.getUid(securityToken);
+  
+        boolean permitted = authChecker.isAuthorized(host, uid, req, queryStringParameters);
+        if(permitted) {
+            proxy.proxyRequest(host,uid,req, resp);          
+        } else {
+            if(uid==null) {
+                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            }
+            resp.getWriter().write("Not Permitted");
+        }   
+    }
+
+    private String getHost(HttpServletRequest req) {
         String host = req.getHeader("X-Origin");
         if(host==null) {
             host = req.getHeader("Hostname");
@@ -68,8 +90,6 @@ public class PowerServlet extends HttpServlet {
         if(host==null) {
             host = req.getServerName();
         }
-        
-
         String rootDomain = host.substring(host.indexOf(".")+1);
         String key = querier.getKey("mapped_domains",rootDomain);
         String match = querier.get(key, String.class);
@@ -81,59 +101,7 @@ public class PowerServlet extends HttpServlet {
         if (alias != null) {
             host=alias;
         }
-        System.out.println("processing request for "+host);
-        Map<String, String> queryStringParameters = this.getQueryStringParameters(req.getQueryString());
-        String securityToken = queryStringParameters.get("access_token");
-        
-        SiteConfiguration configuration = siteConfigurationLoader.getConfiguration(host);
-        
-        String route = OmnyRouteMapper.getProxyRoute(req);
-        AccessRule rule = permissionResolver.getMostRelevantAccessRule(route, req.getMethod(), configuration);
-        permissionResolver.injectParameters(host, req.getRequestURI(), queryStringParameters, rule);
-        
-        String uid = siteOwnerMapper.getUid(securityToken);
-        boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, uid);
-        boolean isSiteUser = siteOwnerMapper.isSiteUser(host, uid);
-        
-        boolean permitted = false;
-        switch(rule.getAuthorizationLevel()) {
-            case AccessRule.UNAUTHENTICATED:
-                permitted = true;
-                break;
-            case AccessRule.AUTHENTICATED:
-                if(isSiteOwner) {
-                    permitted = true;
-                    break;
-                }
-                if(securityToken==null) {
-                    permitted = false;
-                    break;
-                }
-                if(!isSiteUser && !host.equals("admin.special")) {
-                    permitted = false;
-                    break;
-                }
-                permitted = rule.getPermissions()==null||permissionChecker.hasPermissions(host, rule.getPermissions(), securityToken);
-                break;
-            case AccessRule.OWNER:
-                permitted = isSiteOwner;
-                break;  
-        }
-        if(permitted) {
-            if(route.startsWith("/api/ext/")) {
-                extProxy.proxyRequest(uid, req, resp);
-            } else {
-                proxy.proxyRequest(host,uid,req, resp);
-            }
-            //resp.getWriter().write(req.getMethod());
-        } else {
-            if(uid==null) {
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            }
-            resp.getWriter().write("Not Permitted");
-        }   
+        return host;   
     }
      
     public Map<String,String> getQueryStringParameters(String queryString) {

@@ -5,7 +5,6 @@ import ca.omny.server.OmnyServer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jboss.weld.environment.se.Weld;
@@ -32,18 +31,14 @@ public class OmnyAllInOneServer {
         }
         context.addServlet(new ServletHolder(edgeServlet),"/*");
         
-        ResourceHandler resourceHandler = new ResourceHandler();
-        
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setWelcomeFiles(new String[]{ "index.html" });
-        resourceHandler.setEtags(true);
-
-        resourceHandler.setResourceBase(staticFilesDirectory);
-        
         UiHandler uiHandler = new UiHandler(staticFilesDirectory);
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { uiHandler,context });
+        Handler[] handlerList = new Handler[] { uiHandler,context };
+        if(System.getenv("omny_no_ui")!=null) {
+            handlerList = new Handler[] { context };
+        }
+        handlers.setHandlers(handlerList);
         edgeServer.setHandler(handlers);
         
         OmnyServer server = new OmnyServer();
