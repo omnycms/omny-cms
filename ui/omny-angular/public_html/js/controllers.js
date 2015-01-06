@@ -45,6 +45,9 @@ omnyControllers.controller('OmnyDynamicController', ['$scope', '$http', 'Page',
         Page.setTitle("Omny");
         $scope.omny = {"html": ""};
         var pageName = $location.path().substring(1);
+        if (pageName == "") {
+            pageName = "default.html";
+        }
         pageName = pageName.split(".");
         pageName = pageName[0];
         dependencyLoader.loadDependency("utilities/OmnyApiRequester", function(omnyApiRequester) {
