@@ -240,7 +240,12 @@ public class DynamoDb implements IDocumentQuerier {
     @Override
     public void set(String key, Object value) {
         Map<String, AttributeValue> keys = this.getKeys(key);
-        keys.put("value", new AttributeValue(gson.toJson(value)));
+        String val = null;
+        if(value instanceof String) {
+            keys.put("value", new AttributeValue(value.toString()));
+        } else {
+            keys.put("value", new AttributeValue(gson.toJson(value)));
+        }
         client.putItem(table, keys);
     }
 
