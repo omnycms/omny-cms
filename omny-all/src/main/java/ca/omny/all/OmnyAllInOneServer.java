@@ -48,7 +48,11 @@ public class OmnyAllInOneServer {
         }
         
         edgeServer.start();
-        server.createServer(port);
+        if(System.getenv("omny_route_dynamic")==null) {
+            server.createServer(port);
+        } else {
+            edgeServer.join();
+        }
         edgeServer.stop();
     }
 }

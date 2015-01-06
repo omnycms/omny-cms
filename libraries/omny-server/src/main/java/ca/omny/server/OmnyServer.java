@@ -12,11 +12,8 @@ public class OmnyServer {
         server.setStopAtShutdown(true);
         
         server.start();
-        System.out.println("Server started. Type q to stop");
+        System.out.println("Server started.");
         int read = System.in.read();
-        while(read != 'q') {
-            read = System.in.read();
-        }
-        server.stop();       
+        server.join();      
     }
 }
