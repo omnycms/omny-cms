@@ -13,7 +13,6 @@ public class OmnyServer {
         
         server.start();
         System.out.println("Server started.");
-        int read = System.in.read();
         server.join();      
     }
 }

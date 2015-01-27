@@ -27,8 +27,9 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader'],
                                             data: JSON.stringify({
                                                 name: themeName
                                             }),
+                                            contentType: "application/json",
                                             success: function(data) {
-                                                window.location =( '/newPage.html?page=default&site='+queryStringReader.getParameter("site"));
+                                                window.location = window.location.origin+('/newPage.html?page=default&site='+queryStringReader.getParameter("site"));
                                             }
                                         });
                                     }

@@ -26,7 +26,7 @@ define(['utilities/OmnyApiRequester'],
                                         data: JSON.stringify(newSite),
                                         contentType: 'application/json',
                                         success: function() {
-                                            window.location = ('/themes.html?default=true&site=' + newSite.subdomain);
+                                            window.location = window.location.origin+('/themes.html?default=true&site=' + newSite.subdomain);
                                         }, error: function(err) {
                                             console.log(err);
                                         }

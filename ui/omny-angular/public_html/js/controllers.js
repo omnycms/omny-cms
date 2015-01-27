@@ -54,7 +54,7 @@ omnyControllers.controller('OmnyDynamicController', ['$scope', '$http', 'Page',
             var ignoreSiteParameter = true;
             $http({
                 method: 'GET',
-                url: '/api/v1.0/pages/detailed',
+                url: window.location.origin+'/api/v1.0/pages/detailed',
                 headers: {
                     'X-Origin': omnyApiRequester.getHostname(ignoreSiteParameter)
                 },
@@ -86,7 +86,7 @@ omnyControllers.controller('OmnyDynamicController', ['$scope', '$http', 'Page',
                                     $scope.$apply(function() {
                                         $scope.omny.html = mustacheApplier.replaceText(data.themeHtml, sectionData);
                                     });
-                                    dependencyLoader.loadDependency("themes/" + data.themeName + "/theme.js", function(theme) {
+                                    dependencyLoader.loadDependency(window.location.origin+"/themes/" + data.themeName + "/theme.js", function(theme) {
                                         console.log(theme);
                                         $scope.$apply(function() {
                                             $scope.display = true;

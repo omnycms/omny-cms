@@ -4,32 +4,33 @@
         <title ng-bind="Page.title()"></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <base href="/default.html">
-        <link rel="stylesheet" href="/js/lib/jquery-ui/css/ui-lightness/jquery-ui.css" />
-        <script src="/config.js"></script>
-        <script src="/js/lib/react/react.js"></script>
-        <script src="/js/require.js"></script>
-        <script src="/js/lib/jquery.js"></script>
+        <base href="{{baseUrl}}/default.html">
+        <link rel="stylesheet" href="{{baseUrl}}/js/lib/jquery-ui/css/ui-lightness/jquery-ui.css" />
+        <script src="{{baseUrl}}/config.js"></script>
+        <script src="{{baseUrl}}/js/lib/react/react.js"></script>
+        <script src="{{baseUrl}}/js/require.js"></script>
+        <script src="{{baseUrl}}/js/lib/jquery.js"></script>
         <script>
             jQuery.ajaxSetup({ cache: true });
+            var omnyBaseUrl = "{{baseUrl}}";
         </script>
-        <script src="/js/lib/jquery-ui/js/jquery-ui.js"></script>
-        <script src="/js/angular.min.js"></script>
-        <script src="/js/angular-route.min.js"></script>
-        <script src="/js/guid.js"></script>
-        <script src="/js/app.js"></script>
-        <script src="/js/converters.js"></script>
-        <script src="/js/jsLoader.js"></script>
-        <script src="/js/moduleRenderer.js"></script>
-        <script src="/js/controllers.js"></script>
-        <script src="/js/services/RecursionHelper.js"></script>
-        <script src="/js/lib/bootstrap/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="/js/lib/bootstrap/css/bootstrap.css" />
-        <link rel="stylesheet" href="/js/lib/bootstrap/css/bootstrap-theme.css" />
-        <script src="/js/lib/smartmenus/jquery.smartmenus.js"></script>
-        <link rel="stylesheet" href="/js/lib/smartmenus/css/sm-core-css.css" />
-        <link rel="stylesheet" href="/js/lib/smartmenus/css/sm-clean/sm-clean.css" />
-        <script src="/js/services/ui-bootstrap.js"></script>
+        <script src="{{baseUrl}}/js/lib/jquery-ui/js/jquery-ui.js"></script>
+        <script src="{{baseUrl}}/js/angular.min.js"></script>
+        <script src="{{baseUrl}}/js/angular-route.min.js"></script>
+        <script src="{{baseUrl}}/js/guid.js"></script>
+        <script src="{{baseUrl}}/js/app.js"></script>
+        <script src="{{baseUrl}}/js/converters.js"></script>
+        <script src="{{baseUrl}}/js/jsLoader.js"></script>
+        <script src="{{baseUrl}}/js/moduleRenderer.js"></script>
+        <script src="{{baseUrl}}/js/controllers.js"></script>
+        <script src="{{baseUrl}}/js/services/RecursionHelper.js"></script>
+        <script src="{{baseUrl}}/js/lib/bootstrap/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{{baseUrl}}/js/lib/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="{{baseUrl}}/js/lib/bootstrap/css/bootstrap-theme.css" />
+        <script src="{{baseUrl}}/js/lib/smartmenus/jquery.smartmenus.js"></script>
+        <link rel="stylesheet" href="{{baseUrl}}/js/lib/smartmenus/css/sm-core-css.css" />
+        <link rel="stylesheet" href="{{baseUrl}}/js/lib/smartmenus/css/sm-clean/sm-clean.css" />
+        <script src="{{baseUrl}}/js/services/ui-bootstrap.js"></script>
         <style>ul { list-style: disc; }</style>    
 </head>
 <body>

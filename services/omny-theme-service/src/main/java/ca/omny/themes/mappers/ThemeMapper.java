@@ -1,7 +1,6 @@
 package ca.omny.themes.mappers;
 
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.service.client.DiscoverableServiceClient;
 import ca.omny.storage.GlobalStorage;
 import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;

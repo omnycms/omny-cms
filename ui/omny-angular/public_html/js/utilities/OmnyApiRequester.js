@@ -77,7 +77,7 @@ define(['jquery','utilities/AuthTokenManager','utilities/QueryStringReader'],
             }
 
             ApiRequester.apiRequest = function(module, path, request, version) {
-                var url = "/api/v1.0/" + module;
+                var url = window.location.origin+"/api/v1.0/" + module;
                 if(path!="") {
                     url +="/"+path;
                 }

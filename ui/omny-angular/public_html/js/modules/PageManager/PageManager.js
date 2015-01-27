@@ -27,7 +27,8 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader'],
                                     type: "POST",
                                     data: scope.newSite,
                                     success: function() {
-                                        window.location = ('/themes.html?default=true&site=' + scope.newSite.subdomain);
+                                       
+                                        window.location = window.location.origin+'/themes.html?default=true&site=' + scope.newSite.subdomain;
                                     }, error: function(err) {
                                         console.log(err);
                                     }
@@ -46,7 +47,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader'],
                                         newPage.url = getPageUrl(newPage.pageName);
                                     }
 
-                                    window.location = "/newPage.html?site=" + queryStringReader.getParameter("site") + "&page=" + newPage.url + "&title=" + newPage.pageName;
+                                    window.location = window.location.origin+"/newPage.html?site=" + queryStringReader.getParameter("site") + "&page=" + newPage.url + "&title=" + newPage.pageName;
                                 }, function() {
                                     console.log('Modal dismissed at: ' + new Date());
                                 });
@@ -91,7 +92,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader'],
                                     //newPage.url+=".html";
                                     console.log(newPage);
                                     console.log(page);
-                                    window.location = "/newPage.html?site=" + queryStringReader.getParameter("site") + "&page=" + newPage.url + "&title=" + newPage.pageName;
+                                    window.location = window.location.origin+"/newPage.html?site=" + queryStringReader.getParameter("site") + "&page=" + newPage.url + "&title=" + newPage.pageName;
                                 }, function() {
                                     console.log('Modal dismissed at: ' + new Date());
                                 });

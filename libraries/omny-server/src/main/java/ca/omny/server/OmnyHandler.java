@@ -71,8 +71,7 @@ public class OmnyHandler extends AbstractHandler {
                break;
             default:
                 apiResponse = api.getResponse(requestResponseManager);
-        }
-                
+        }    
         response.setStatus(apiResponse.getStatusCode());
         
         if(apiResponse.shouldEncodeAsJson()) {

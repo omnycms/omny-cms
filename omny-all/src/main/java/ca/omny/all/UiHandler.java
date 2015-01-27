@@ -1,7 +1,13 @@
 package ca.omny.all;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -68,7 +74,13 @@ public class UiHandler extends AbstractHandler {
             rqst.setRequestURI(redirect);
             rqst.setQueryString(queryString);
         }
-        
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, HEAD, PUT, POST, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+        if(request.getMethod().toUpperCase().equals("OPTIONS")) {
+            rqst.setHandled(true);
+            response.setStatus(200);
+        }
         if(!ui&&requestUrl.endsWith(".html")) {
             rqst.setHandled(true);
             response.setHeader("Content-Type", "text/html");
@@ -85,6 +97,17 @@ public class UiHandler extends AbstractHandler {
         }
         try {
             htmlFileContents = FileUtils.readFileToString(new File(contentRoot+"/index.html"));
+            MustacheFactory mf = new DefaultMustacheFactory();
+            Mustache compiledTemplate = mf.compile(new StringReader(htmlFileContents),"test");
+            StringWriter writer = new StringWriter();
+            String cdn = System.getenv("OMNY_UI_CDN");
+            if(cdn == null) {
+                cdn = "";
+            }
+            HashMap<String,String> parameters = new HashMap<String, String>();
+            parameters.put("baseUrl",cdn);
+            compiledTemplate.execute(writer, parameters);
+            htmlFileContents = writer.toString();
         } catch (IOException ex) {
             Logger.getLogger(UiHandler.class.getName()).log(Level.SEVERE, null, ex);
         }

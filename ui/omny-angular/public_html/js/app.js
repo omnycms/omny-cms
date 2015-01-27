@@ -22,8 +22,10 @@ omnyApp.config(['$routeProvider', '$locationProvider', '$compileProvider', '$con
         // Allow same origin resource loads.
         'self',
         // Allow loading from our assets domain.  Notice the difference between * and **.
-        'https://modules.omny.ca/**'
+        'https://modules.omny.ca/**',
+        omnyBaseUrl+"/**"
       ]);
+      
     window.directiveMaker = $compileProvider;
     window.controllerMaker = $controllerProvider;
     $locationProvider.html5Mode(true);

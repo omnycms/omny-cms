@@ -38,7 +38,7 @@ define(['utilities/OmnyApiRequester', 'utilities/QueryStringReader'],
                                 processData: false,
                                 contentType: 'application/json',
                                 success: function(data) {
-                                    window.location = "/site/page.html?site="+queryStringReader.getParameter("site")+"&page="+pageName;
+                                    window.location = window.location.origin+"/site/page.html?site="+queryStringReader.getParameter("site")+"&page="+pageName;
                                 }
                             });
                         }
