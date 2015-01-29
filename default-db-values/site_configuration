@@ -1,0 +1,69 @@
+{
+    "defaultRule": {
+        "authorizationLevel": "owner",
+        "pattern": "/*",
+        "method": "*"
+    },
+    "rules": [
+    	{
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/*",
+            "method": "OPTIONS"
+        },
+		{
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/auth/*",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/themes/installable",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/sites/sitemap",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/sites/robots",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/pages/detailed",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/content",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/sites/*",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/sites",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "unauthenticated",
+            "pattern": "/api/{{version}}/menus/*/entries",
+            "method": "GET"
+        },
+        {
+            "authorizationLevel": "authenticated",
+            "pattern": "/api/{{version}}/sites",
+            "method": "POST"
+        },
+        {
+            "authorizationLevel": "authenticated",
+            "pattern": "/api/{{version}}/sites/*",
+            "method": "*"
+        }
+    ]
+}

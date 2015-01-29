@@ -8,6 +8,7 @@ public class DatabaseConfigurationValues {
     Map<String,String> domainAliases;
     Collection<String> mappedDomains;
     GoogleCredentials googleCredentials;
+    boolean updateDefaultDbValues;
 
     public String getAdminEmail() {
         return adminEmail;
@@ -39,5 +40,13 @@ public class DatabaseConfigurationValues {
 
     public void setGoogleCredentials(GoogleCredentials googleCredentials) {
         this.googleCredentials = googleCredentials;
+    }
+
+    public boolean shouldUpdateDefaultDbValues() {
+        return updateDefaultDbValues;
+    }
+
+    public void setUpdateDefaultDbValues(boolean updateDefaultDbValues) {
+        this.updateDefaultDbValues = updateDefaultDbValues;
     }
 }
