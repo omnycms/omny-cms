@@ -1,6 +1,7 @@
 package ca.omny.configuration;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,6 +27,21 @@ public class ConfigurationReader {
         }
         
         return this.readFile(file);
+    }
+    
+    public static File findRootDirectory(String name) {
+        File currentFile = new File(".").getAbsoluteFile();
+        File searchFolder = new File(currentFile.getAbsolutePath()+"/"+name);
+        int maxSearch = 10;
+        while(!searchFolder.exists()) {
+            maxSearch--;
+            currentFile = currentFile.getParentFile();
+            searchFolder = new File(currentFile.getAbsolutePath()+"/"+name);
+            if(maxSearch<=0) {
+                return null;
+            }
+        }
+        return searchFolder.getAbsoluteFile();
     }
     
     public String getSimpleConfigurationString(String name) {

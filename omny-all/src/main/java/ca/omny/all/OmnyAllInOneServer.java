@@ -1,7 +1,13 @@
 package ca.omny.all;
 
+import ca.omny.all.configuration.DatabaseConfigurationValues;
+import ca.omny.all.configuration.DatabaseConfigurer;
 import ca.omny.potent.PowerServlet;
 import ca.omny.server.OmnyServer;
+import com.google.gson.Gson;
+import java.io.File;
+import java.io.FileInputStream;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -16,6 +22,14 @@ public class OmnyAllInOneServer {
         
         Weld weld = new Weld();
         WeldContainer container = weld.initialize();
+        if(args.length>1 &&args[0].equals("configure")) {
+            //read from JSON file
+            String configString = IOUtils.toString(new FileInputStream(new File(args[1])));
+            Gson gson = new Gson();
+            DatabaseConfigurationValues configurationValues = gson.fromJson(configString, DatabaseConfigurationValues.class);
+            DatabaseConfigurer configurer = container.instance().select(DatabaseConfigurer.class).get();
+            configurer.configure(configurationValues);
+        }
         int edgeRouterPort = 8080;
         if(System.getenv("omny_edge_port")!=null) {
             edgeRouterPort = Integer.parseInt(System.getenv("omny_edge_port"));
