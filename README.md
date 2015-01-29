@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/omnycms/omny-cms.svg?branch=master)](https://travis-ci.org/omnycms/omny-cms)
 Omny CMS
 ========
 
