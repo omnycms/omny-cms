@@ -1,0 +1,9 @@
+{
+  "endpoints": [
+    {
+      "pattern": "/api/*",
+      "name": "api",
+      "contextRoot": ""
+    }
+  ]
+}

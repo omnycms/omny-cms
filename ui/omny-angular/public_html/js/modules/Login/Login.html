@@ -27,6 +27,7 @@
             console.log(authResult);
             requirejs(['utilities/OmnyApiRequester'],
             function(apiRequester) {
+                
                 apiRequester.apiRequest("auth","login/google",{
                     data : {
                         "oauth_token": authResult['access_token']
@@ -34,7 +35,7 @@
                     success: function(sessionId) {
                         console.log(sessionId);
                         setCookie('access_token',sessionId,20*365);
-                        window.location = "/dashboard.html";
+                        window.location = window.location.origin+"/dashboard.html";
                     }
                 });
             });

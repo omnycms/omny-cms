@@ -26,7 +26,7 @@ public class LocalStorage implements IStorage {
     Gson gson = new Gson();
 
     public LocalStorage(String rootFolder) {
-        this.rootFolder = rootFolder;
+        this.rootFolder = rootFolder;    
     }
 
     @Override
