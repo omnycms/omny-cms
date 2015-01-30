@@ -1,0 +1,27 @@
+<div class="visible-xs navbar navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="offcanvas">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="title">{{site.siteName}}</div>
+        </div>
+    </div>
+</div>
+<div class="row-offcanvas row-offcanvas-left"> 
+    <div class="sidebar sidebar-offcanvas">
+        <div class="hidden-xs logo">{{site.siteName}}</div>
+        <hr class="hidden-xs" />
+        {{navigation}}
+        <hr />
+        <div class="copyright">
+            Design: <a href="http://html5up.net/" target="_blank">HTML5 UP</a>
+        </div>
+    </div>
+    <div class="content">
+        {{main}}
+	</div>
+</div>  

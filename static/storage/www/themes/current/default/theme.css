@@ -1,0 +1,190 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto);
+@import url(http://fonts.googleapis.com/css?family=Nixie+One);
+
+html {
+    font-size: 100%;
+}
+body {
+    color: #333;
+    font: normal 100%/1.5 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+a, a:active, a:link, a:visited {
+    color: #369;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+h1 {
+    border-bottom: 10px solid #EEE;
+    font-size: 2em;
+    margin: 0 0 0.5em 0;
+}
+#omny-sidebar {
+    background: #363C45;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    width: 240px;
+    z-index: 1000;
+}
+#omny-logo {
+    color: #FFF;
+    font-family: 'Nixie One', sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0.5em 0 1em 0;
+    text-align: center;
+}
+.omny-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.omny-nav li a {
+    border-bottom: 1px solid #282C33;
+    border-top: 1px solid #404752;
+    color: #FFF;
+    display: block;
+    padding: 0.7em;
+    text-decoration: none;
+}
+.omny-nav li a:hover {
+    background: #3E444F;
+}
+.omny-content {
+    margin-left: 240px;
+    padding: 1.25em;
+}
+.omny-button-primary {
+    background: #2790B0;
+    border: 1px solid #1F758F;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    -moz-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.375em 0.75em;
+    position: relative;
+    text-align: center;
+}
+a.omny-button-primary {
+	color: #FFF;
+}
+.omny-button-primary:hover {
+    background: #4196B0;
+    text-decoration: none;
+}
+.omny-button-primary:active {
+    -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    top: 1px;
+}
+.omny-button-default {
+	background: #EEE;
+    border: 1px solid #363C45;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    -moz-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    color: #363C45;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.375em 0.75em;
+    position: relative;
+    text-align: center;
+}
+a.omny-button-default {
+	color: #363C45;
+}
+.omny-button-default:hover {
+    background: #FFF;
+    text-decoration: none;
+}
+.omny-button-default:active {
+    -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    top: 1px;
+}
+
+#omny-website-list-container {
+    margin-top: 30px;
+}
+.omny-website-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.omny-website-list li {
+    background: #E5E5E5;
+    border: 1px solid #D5D5D5;
+    display: block;
+    margin-bottom: 1em;
+    padding: 1.875em 1.25em;
+    text-decoration: none;
+    position: relative;
+}
+.omny-website-list-buttons {
+    position: absolute;
+    right: 20px;
+    top: 24px;
+}
+
+.omny-site-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.omny-site-list-item {
+    background: #E5E5E5;
+    border: 1px solid #D5D5D5;
+    margin-bottom: 0.3125em;
+    padding: 0.625em;
+    position: relative;
+}
+.omny-site-list-buttons {
+    position: absolute;
+    right: 12px;
+    top: 6px;
+}
+.omny-site-nested {
+    list-style: none;
+    margin: 0;
+    padding-left: 1.25em;
+}
+.omny-button-primary-sm {
+    background: #2790B0;
+    border: 1px solid #1F758F;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    -moz-box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5), 0px 1px 1px rgba(23,36,45, 0.3);
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.1875em 0.375em;
+    position: relative;
+    text-align: center;
+}
+a.omny-button-primary-sm {
+	color: #FFF;
+}
+.omny-button-primary-sm:hover {
+    background: #4196B0;
+    text-decoration: none;
+}
+.omny-button-primary-sm:active {
+    -webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+    top: 1px;
+}

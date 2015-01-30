@@ -1,0 +1,10 @@
+{
+    "main": [
+        {
+            "data": {
+                "Html": "This is a simple sample page"
+            },
+            "omnyClass": "Html"
+        }
+    ]
+}
