@@ -73,6 +73,14 @@ public class UiHandler extends AbstractHandler {
             String queryString = "file="+file+"&sendFile";
             rqst.setRequestURI(redirect);
             rqst.setQueryString(queryString);
+        } else if (requestUrl.startsWith("/robots.txt")) {
+            String file = requestUrl.substring(1);
+            String redirect = "/api/v1.0/sites/robots";
+            rqst.setRequestURI(redirect);
+        } else if (requestUrl.startsWith("/sitemap.xml")) {
+            String file = requestUrl.substring(1);
+            String redirect = "/api/v1.0/sites/sitemap";
+            rqst.setRequestURI(redirect);
         }
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET, HEAD, PUT, POST, DELETE");
