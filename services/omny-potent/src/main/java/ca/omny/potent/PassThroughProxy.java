@@ -2,9 +2,8 @@ package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.potent.mappers.OmnyRouteMapper;
+import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.potent.models.OmnyEndpoint;
-import ca.omny.potent.models.OmnyRouteConfiguration;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
-public class PassThroughProxy {
+public class PassThroughProxy implements IOmnyProxyService {
 
     public static final String USER_HEADER = "X-UserId";
     public static final String HOST_HEADER = "X-Origin";
@@ -32,6 +31,7 @@ public class PassThroughProxy {
     @Inject
     RemoteUrlProvider remoteUrlProvider;
 
+    @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
         String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
         if(remoteUrl==null) {
@@ -87,5 +87,10 @@ public class PassThroughProxy {
             }
         }
         return null;
+    }
+
+    @Override
+    public String getRoutingPattern() {
+        return "/*";
     }
 }

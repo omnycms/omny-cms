@@ -1,4 +1,4 @@
-package ca.omny.potent.models;
+package ca.omny.extension.proxy;
 
 public class Permission {
     String path;

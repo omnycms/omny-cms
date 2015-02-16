@@ -1,5 +1,6 @@
 package ca.omny.potent.models;
 
+import ca.omny.extension.proxy.AccessRule;
 import java.util.Collection;
 
 public class SiteConfiguration {

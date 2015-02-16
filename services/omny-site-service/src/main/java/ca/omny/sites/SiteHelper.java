@@ -1,6 +1,5 @@
 package ca.omny.sites;
 
-import ca.omny.auth.sessions.SessionMapper;
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.service.client.DiscoverableServiceClient;
@@ -9,11 +8,8 @@ import ca.omny.sites.mappers.SiteMapper;
 import ca.omny.sites.models.SiteDetails;
 import ca.omny.sites.models.SiteUserAssociation;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
 
 public class SiteHelper {
     

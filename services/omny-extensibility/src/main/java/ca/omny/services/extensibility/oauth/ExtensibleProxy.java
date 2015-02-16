@@ -1,14 +1,14 @@
-package ca.omny.potent.ext;
+package ca.omny.services.extensibility.oauth;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.extension.proxy.IOmnyProxyService;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
-import ca.omny.potent.ext.models.Credentials;
-import ca.omny.potent.ext.models.ServiceCredentials;
-import ca.omny.potent.ext.models.UserCredentials;
-import ca.omny.potent.mappers.OmnyRouteMapper;
+import ca.omny.services.extensibility.oauth.models.Credentials;
+import ca.omny.services.extensibility.oauth.models.ServiceCredentials;
+import ca.omny.services.extensibility.oauth.models.UserCredentials;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -30,13 +30,14 @@ import org.scribe.model.Token;
 import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
-public class ExtensibleProxy {
+public class ExtensibleProxy implements IOmnyProxyService {
 
     @Inject
     IDocumentQuerier querier;
 
-    public void proxyRequest(String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
-        String route = OmnyRouteMapper.getProxyRoute(req);
+    @Override
+    public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
+        String route = getProxyRoute(req);
         String[] parts = route.substring(1).split("/");
         String organization = parts[2];
         String serviceName = parts[3];
@@ -202,5 +203,14 @@ public class ExtensibleProxy {
         Response response = request.send();
         
         return gson.fromJson(response.getBody(), Map.class).get("access_token").toString();
+    }
+
+    @Override
+    public String getRoutingPattern() {
+        return "/api/external/*";
+    }
+    
+    public static String getProxyRoute(HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
     }
 }

@@ -1,7 +1,8 @@
 package ca.omny.potent;
 
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.potent.permissions.roles.IPermissionCheck;
+import ca.omny.extension.proxy.IOmnyProxyService;
+import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.site.SiteConfigurationLoader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,8 +12,11 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import ca.omny.potent.ext.ExtensibleProxy;
 import ca.omny.potent.mappers.OmnyRouteMapper;
+import ca.omny.potent.models.ProxyRoute;
+import ca.omny.routing.IRoute;
+import ca.omny.routing.RoutingTree;
+import javax.enterprise.inject.Instance;
 
 @ApplicationScoped
 public class PowerServlet extends HttpServlet {
@@ -36,10 +40,22 @@ public class PowerServlet extends HttpServlet {
     PassThroughProxy proxy;
     
     @Inject
-    ExtensibleProxy extProxy;
+    IDocumentQuerier querier;
     
     @Inject
-    IDocumentQuerier querier;
+    Instance<IOmnyProxyService> proxyServices;
+    
+    RoutingTree<IOmnyProxyService> router;
+    
+    public void initializeRouter() {
+        if(router==null) {
+            router = new RoutingTree<>("");
+            for(IOmnyProxyService service: proxyServices) {
+                ProxyRoute route = new ProxyRoute(service);
+                router.addRoute(route);
+            }
+        }
+    }
 
     @Inject
     public void setPermissionChecker(IPermissionCheck permissionChecker) {
@@ -64,7 +80,10 @@ public class PowerServlet extends HttpServlet {
   
         boolean permitted = authChecker.isAuthorized(host, uid, req, queryStringParameters);
         if(permitted) {
-            proxy.proxyRequest(host,uid,req, resp);          
+            initializeRouter();
+            IRoute<IOmnyProxyService> r = router.matchPath(req.getRequestURI());
+            IOmnyProxyService proxyService = r.getObject();
+            proxyService.proxyRequest(host,uid,req, resp);          
         } else {
             if(uid==null) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

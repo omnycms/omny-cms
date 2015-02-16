@@ -1,4 +1,4 @@
-package ca.omny.potent.ext.models;
+package ca.omny.services.extensibility.oauth.models;
 
 public class Credentials {
     ServiceCredentials serviceCredentials;

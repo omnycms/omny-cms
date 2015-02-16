@@ -1,4 +1,4 @@
-package ca.omny.potent.models;
+package ca.omny.extension.proxy;
 
 import java.util.Collection;
 

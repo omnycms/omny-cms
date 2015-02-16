@@ -58,6 +58,18 @@
             <version>1.0</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>ca.omny</groupId>
+            <artifactId>RoutingTree</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>ca.omny</groupId>
+            <artifactId>ca.omny.ExtensionPoints</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

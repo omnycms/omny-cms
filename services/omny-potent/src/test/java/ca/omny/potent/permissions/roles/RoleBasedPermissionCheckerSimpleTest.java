@@ -2,7 +2,7 @@ package ca.omny.potent.permissions.roles;
 
 import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
 import ca.omny.potent.models.AssignedRole;
-import ca.omny.potent.models.Permission;
+import ca.omny.extension.proxy.Permission;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

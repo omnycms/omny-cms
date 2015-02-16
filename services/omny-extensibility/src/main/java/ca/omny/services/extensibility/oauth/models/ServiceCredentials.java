@@ -1,6 +1,6 @@
-package ca.omny.potent.ext.models;
+package ca.omny.services.extensibility.oauth.models;
 
-import ca.omny.potent.ext.DynamicOauth2Api;
+import ca.omny.services.extensibility.oauth.DynamicOauth2Api;
 import java.util.Map;
 
 public class ServiceCredentials {

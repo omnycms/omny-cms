@@ -1,4 +1,4 @@
-package ca.omny.potent.ext;
+package ca.omny.services.extensibility.oauth;
 
 import org.scribe.builder.api.DefaultApi20;
 import org.scribe.model.OAuthConfig;

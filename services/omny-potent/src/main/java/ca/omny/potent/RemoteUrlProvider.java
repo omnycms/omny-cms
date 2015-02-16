@@ -12,11 +12,8 @@ import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class RemoteUrlProvider {
     

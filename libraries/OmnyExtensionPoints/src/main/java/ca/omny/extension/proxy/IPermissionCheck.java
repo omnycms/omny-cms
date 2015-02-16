@@ -1,6 +1,5 @@
-package ca.omny.potent.permissions.roles;
+package ca.omny.extension.proxy;
 
-import ca.omny.potent.models.Permission;
 import java.util.Collection;
 
 public interface IPermissionCheck {

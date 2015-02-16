@@ -1,9 +1,9 @@
 package ca.omny.potent;
 
 import ca.omny.potent.mappers.OmnyRouteMapper;
-import ca.omny.potent.models.AccessRule;
+import ca.omny.extension.proxy.AccessRule;
 import ca.omny.potent.models.SiteConfiguration;
-import ca.omny.potent.permissions.roles.IPermissionCheck;
+import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.site.SiteConfigurationLoader;
 import java.io.IOException;
 import java.util.Map;
