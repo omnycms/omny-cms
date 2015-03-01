@@ -1,6 +1,8 @@
 package ca.omny.services.extensibility.oauth.models;
 
+import ca.omny.extension.proxy.AccessRule;
 import ca.omny.services.extensibility.oauth.DynamicOauth2Api;
+import java.util.Collection;
 import java.util.Map;
 
 public class ServiceCredentials {
@@ -12,6 +14,7 @@ public class ServiceCredentials {
     String refreshTokenUrl;
     DynamicOauth2Api apiConfig;
     String signatureType;
+    Collection<AccessRule> accessRules;
     
     public String getClientId() {
         return clientId;
@@ -75,5 +78,13 @@ public class ServiceCredentials {
 
     public void setSignatureType(String signatureType) {
         this.signatureType = signatureType;
+    }
+
+    public Collection<AccessRule> getAccessRules() {
+        return accessRules;
+    }
+
+    public void setAccessRules(Collection<AccessRule> accessRules) {
+        this.accessRules = accessRules;
     }
 }

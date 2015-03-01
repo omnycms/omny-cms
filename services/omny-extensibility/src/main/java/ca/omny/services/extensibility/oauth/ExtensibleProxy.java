@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import ca.omny.services.extensibility.oauth.models.Credentials;
 import ca.omny.services.extensibility.oauth.models.ServiceCredentials;
 import ca.omny.services.extensibility.oauth.models.UserCredentials;
+import com.omny.services.extensibility.mappers.OauthServiceCredentialMapper;
+import com.omny.services.extensibility.mappers.OauthUserCredentialMapper;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -34,6 +36,12 @@ public class ExtensibleProxy implements IOmnyProxyService {
 
     @Inject
     IDocumentQuerier querier;
+    
+    @Inject
+    OauthServiceCredentialMapper serviceCredentialMapper;
+    
+    @Inject
+    OauthUserCredentialMapper userCredentialMapper;
 
     @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
@@ -41,22 +49,21 @@ public class ExtensibleProxy implements IOmnyProxyService {
         String[] parts = route.substring(1).split("/");
         String organization = parts[2];
         String serviceName = parts[3];
-        String serviceCredentialKey = querier.getKey("ext","credentials",organization,serviceName);
-        ServiceCredentials serviceCredentials = querier.get(serviceCredentialKey, ServiceCredentials.class);
+        String configName = parts[4];
         
-        String userCredentialsKey = querier.getKey("ext","user_credentials",uid,organization,serviceName);
-        UserCredentials userCredentials = querier.get(userCredentialsKey, UserCredentials.class);
-        
+        ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName);
+
+        UserCredentials userCredentials = userCredentialMapper.getCredentials(hostHeader, organization, serviceName, configName);
+
         SignatureType signatureType = SignatureType.QueryString;
-        if(serviceCredentials.getSignatureType()!=null
-            &&serviceCredentials.getSignatureType().toLowerCase().equals("header")) {
+        if (serviceCredentials.getSignatureType() != null
+                && serviceCredentials.getSignatureType().toLowerCase().equals("header")) {
             signatureType = SignatureType.Header;
         }
-        
+
         ServiceBuilder builder = new ServiceBuilder()
                 .provider(serviceCredentials.getApiConfig())
                 .apiKey(serviceCredentials.getClientId())
-                //.signatureType(signatureType)
                 .apiSecret(serviceCredentials.getSecret());
 
         OAuthService service = builder.build();
@@ -68,7 +75,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
         Token accessToken = new Token(this.getRefreshedAccessToken(service, credentials), serviceCredentials.getSecret());
 
         Verb verb;
-        switch(req.getMethod().toLowerCase()) {
+        switch (req.getMethod().toLowerCase()) {
             case "post":
                 verb = Verb.POST;
                 break;
@@ -83,53 +90,52 @@ public class ExtensibleProxy implements IOmnyProxyService {
                 break;
         }
         String relative = this.getRelativeUrl(parts);
-        if(route.endsWith("/")) {
+        if (route.endsWith("/")) {
             relative += "/";
         }
-        String requestUrl = serviceCredentials.getApiPrefix()+relative+"?"+getSafeQueryString(req);
-        
+        String requestUrl = serviceCredentials.getApiPrefix() + relative + "?" + getSafeQueryString(req);
+
         OAuthRequest request = new OAuthRequest(verb, requestUrl);
-        if(signatureType==SignatureType.Header) {
-            request.addHeader("Authorization", "Bearer "+userCredentials.getAccessToken());
+        if (signatureType == SignatureType.Header) {
+            request.addHeader("Authorization", "Bearer " + userCredentials.getAccessToken());
         } else {
             service.signRequest(accessToken, request);
         }
         Response response = request.send();
-        
+
         for (String header : response.getHeaders().keySet()) {
-            if(isLegitHeader(header)) {
+            if (isLegitHeader(header)) {
                 resp.setHeader(header, response.getHeaders().get(header));
             }
         }
-        
+
         resp.setStatus(response.getCode());
-        String body =response.getBody();
-        //resp.setContentLength(body.getBytes().length);
+        String body = response.getBody();
         resp.getWriter().print(body);
-        
+
     }
-    
+
     public boolean isLegitHeader(String header) {
-        if(header==null) {
+        if (header == null) {
             return false;
         }
-        
+
         return header.equals("Content-Type");
     }
-    
+
     public static String getSafeQueryString(HttpServletRequest req) {
         Map<String, String> queryStringParameters = getQueryStringParameters(req.getQueryString());
         StringBuilder sb = new StringBuilder();
-        boolean started=false;
-        for(String parameter: queryStringParameters.keySet()) {
-            if(!parameter.equals("access_token")) {
-                if(started) {
+        boolean started = false;
+        for (String parameter : queryStringParameters.keySet()) {
+            if (!parameter.equals("access_token")) {
+                if (started) {
                     sb.append("&");
                 } else {
-                    started=true;
+                    started = true;
                 }
                 try {
-                    sb.append(parameter+"="+URLEncoder.encode(queryStringParameters.get(parameter).toString(), "UTF-8"));
+                    sb.append(parameter + "=" + URLEncoder.encode(queryStringParameters.get(parameter), "UTF-8"));
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(ExtensibleProxy.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -137,21 +143,21 @@ public class ExtensibleProxy implements IOmnyProxyService {
         }
         return sb.toString();
     }
-    
-    public static Map<String,String> getQueryStringParameters(String queryString) {
-        HashMap<String,String> params = new HashMap<String, String>();
-        if(queryString==null) {
+
+    public static Map<String, String> getQueryStringParameters(String queryString) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        if (queryString == null) {
             return params;
         }
-        for(String group: queryString.split("&")) {
+        for (String group : queryString.split("&")) {
             String[] parts = group.split("=");
-            if(parts.length==1) {
+            if (parts.length == 1) {
                 params.put(group, "true");
             } else {
                 params.put(parts[0], parts[1]);
             }
         }
-        
+
         return params;
     }
 
@@ -165,13 +171,13 @@ public class ExtensibleProxy implements IOmnyProxyService {
     }
 
     public String getRefreshedAccessToken(OAuthService service, Credentials credentials) {
-        if(credentials.getUserCredentials().getRefreshToken()==null) {
+        if (credentials.getUserCredentials().getRefreshToken() == null) {
             return credentials.getUserCredentials().getAccessToken();
         }
-        
+
         //OAuthRequest request = new OAuthRequest(Verb.POST, "https://accounts.google.com/o/oauth2/token");
         Verb verb;
-        switch(credentials.getServiceCredentials().getRefreshWebMethod().toLowerCase()) {
+        switch (credentials.getServiceCredentials().getRefreshWebMethod().toLowerCase()) {
             case "post":
                 verb = Verb.POST;
                 break;
@@ -184,24 +190,24 @@ public class ExtensibleProxy implements IOmnyProxyService {
         }
         OAuthRequest request = new OAuthRequest(verb, credentials.getServiceCredentials().getRefreshTokenUrl());
         Gson gson = new Gson();
-        
+
         String parameterString = gson.toJson(credentials.getServiceCredentials().getRefreshParameters());
         MustacheFactory mf = new DefaultMustacheFactory();
-        
-        Mustache template = mf.compile(new StringReader(parameterString),"test");
+
+        Mustache template = mf.compile(new StringReader(parameterString), "test");
         StringWriter writer = new StringWriter();
         template.execute(writer, credentials);
         String result = writer.toString();
         Map parameters = gson.fromJson(result, Map.class);
-        for(Object key: parameters.keySet()) {
-            if(verb==Verb.GET) {
+        for (Object key : parameters.keySet()) {
+            if (verb == Verb.GET) {
                 request.addQuerystringParameter(key.toString(), parameters.get(key).toString());
             } else {
                 request.addBodyParameter(key.toString(), parameters.get(key).toString());
             }
         }
         Response response = request.send();
-        
+
         return gson.fromJson(response.getBody(), Map.class).get("access_token").toString();
     }
 
@@ -209,7 +215,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
     public String getRoutingPattern() {
         return "/api/external/*";
     }
-    
+
     public static String getProxyRoute(HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());
     }

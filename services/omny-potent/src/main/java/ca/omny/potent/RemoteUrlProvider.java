@@ -2,6 +2,7 @@ package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.OmnyEndpoint;
 import ca.omny.potent.models.OmnyRouteConfiguration;
@@ -12,10 +13,12 @@ import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-public class RemoteUrlProvider {
+@Alternative
+public class RemoteUrlProvider implements IRemoteUrlProvider {
     
     @Inject
     ConfigurationReader configurationReader;
@@ -25,7 +28,13 @@ public class RemoteUrlProvider {
     
     @Inject
     OmnyRouteMapper routeMapper;
-    
+
+    public RemoteUrlProvider(ConfigurationReader configurationReader, IDocumentQuerier db, OmnyRouteMapper routeMapper) {
+        this.configurationReader = configurationReader;
+        this.db = db;
+        this.routeMapper = routeMapper;
+    }
+
     public String getRemoteUrl(String route, HttpServletRequest req) {  
         String decodedQueryString = req.getQueryString();
         try {
@@ -59,7 +68,7 @@ public class RemoteUrlProvider {
         return remoteUrl;
     }
     
-    public OmnyEndpoint getBestMatch(String route, Collection<OmnyEndpoint> endpoints) {
+    private OmnyEndpoint getBestMatch(String route, Collection<OmnyEndpoint> endpoints) {
         for (OmnyEndpoint endpoint : endpoints) {
             String pattern = endpoint.getPattern().replace("*", "");
             if (route.startsWith(pattern)) {
@@ -67,5 +76,10 @@ public class RemoteUrlProvider {
             }
         }
         return null;
+    }
+
+    @Override
+    public String getId() {
+        return "default";
     }
 }
