@@ -84,6 +84,9 @@ public class PermissionResolver {
     }
     
     public boolean moreSpecific(AccessRule newRule, AccessRule baseRule) {
+        if(baseRule.getMethod().equals("*")&&!newRule.getMethod().equals("*")) {
+            return true;
+        }
         String[] newParts = newRule.getPattern().split("/");
         String[] baseParts = baseRule.getPattern().split("/");
         for(int i=0; i<newParts.length&&i<baseParts.length; i++) {
@@ -95,7 +98,7 @@ public class PermissionResolver {
                 return true;
             }
         }
-        return false;
+        return newParts.length>baseParts.length;
     }
     
     public boolean isVariable(String input) {
