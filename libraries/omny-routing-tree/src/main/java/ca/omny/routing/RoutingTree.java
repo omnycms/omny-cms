@@ -26,12 +26,12 @@ public class RoutingTree<T> {
         return matchPath(p);
     }
 
-    IRoute<T> matchPath(ArrayList<String> parts) {
-        if (parts.size() == 0) {
-            return this.getBestRouteByWildcard(0);
-        }
-        if (parts.get(0).equals("")) {
+    IRoute<T> matchPath(ArrayList<String> parts) { 
+        if (!parts.isEmpty() && parts.get(0).equals("")) {
             parts.remove(0);
+        }  
+        if (parts.isEmpty()) {
+            return this.getBestRouteByWildcard(0);
         }
 
         String part = parts.get(0);
@@ -79,6 +79,9 @@ public class RoutingTree<T> {
         if (childrenPages.containsKey("*")) {
             IRoute<T> route = childrenPages.get("*");
             if (this.hasWildcardParameters(route.getPath(), offset + 1)) {
+                return route;
+            }
+            if(this.endsInTrueWildCard(route)) {
                 return route;
             }
         }

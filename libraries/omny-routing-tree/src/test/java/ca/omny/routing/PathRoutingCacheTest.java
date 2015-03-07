@@ -76,6 +76,10 @@ public class PathRoutingCacheTest {
         //{c} will be null but match on /a/{b}/{c}
         result = instance.matchPath("/a/x");
         assertEquals(catchA1, result);
+        
+        //ensures can drop up a level for ending in wildcard
+        result = instance.matchPath("/a");
+        assertEquals(catchA, result);
     }
 
 

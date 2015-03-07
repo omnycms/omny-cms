@@ -68,7 +68,7 @@ public class PermissionResolver {
         String[] routeParts = route.split("/");
         
         if(ruleParts.length>routeParts.length) {
-            return false;
+            return this.isSameWithWildCard(ruleParts, routeParts);
         }
         
         if(routeParts.length>ruleParts.length&&!isVariable(ruleParts[ruleParts.length-1])) {
@@ -80,6 +80,24 @@ public class PermissionResolver {
                 return false;
             }
         }
+        return true;
+    }
+    
+    private boolean isSameWithWildCard(String[] ruleParts, String[] routeParts) {
+        if(routeParts.length!=ruleParts.length-1) {
+            return false;
+        }
+        
+        if(!isVariable(ruleParts[ruleParts.length-1])) {
+            return false;
+        }
+        
+        for(int i=0; i<routeParts.length; i++) {
+            if(!routeParts[i].equals(ruleParts[i])) {
+                return false;
+            }
+        }
+        
         return true;
     }
     
