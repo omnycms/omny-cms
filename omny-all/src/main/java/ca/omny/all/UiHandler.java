@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -104,14 +106,18 @@ public class UiHandler extends AbstractHandler {
             return;
         }
         try {
-            htmlFileContents = FileUtils.readFileToString(new File(contentRoot+"/index.html"));
-            MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache compiledTemplate = mf.compile(new StringReader(htmlFileContents),"test");
-            StringWriter writer = new StringWriter();
             String cdn = System.getenv("OMNY_UI_CDN");
             if(cdn == null) {
                 cdn = "";
+                htmlFileContents = FileUtils.readFileToString(new File(contentRoot+"/index.html"));
+            } else {
+                URL url = new URL(cdn+"/index.html");
+                htmlFileContents = IOUtils.toString(url);
             }
+            MustacheFactory mf = new DefaultMustacheFactory();
+            Mustache compiledTemplate = mf.compile(new StringReader(htmlFileContents),"test");
+            StringWriter writer = new StringWriter();
+            
             HashMap<String,String> parameters = new HashMap<String, String>();
             parameters.put("baseUrl",cdn);
             compiledTemplate.execute(writer, parameters);
