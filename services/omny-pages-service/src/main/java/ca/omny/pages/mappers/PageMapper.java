@@ -28,6 +28,7 @@ public class PageMapper {
         Gson gson = new Gson();
         String versionFolder = preview?"drafts":"current";
         String pagePath = String.format("pages/%s/%sData.json", versionFolder,pageName);
+        System.out.println("fetching data for "+pagePath+" "+host);
         String pageContent = storageSystem.getFileContents(pagePath, host);
         Page page = gson.fromJson(pageContent, Page.class);
         
