@@ -127,7 +127,13 @@ public class UiHandler extends AbstractHandler {
     }
     
     private String getRealSite(String site) {
-        String key = querier.getKey("domain_aliases", site);
+        String rootDomain = site.substring(site.indexOf(".")+1);
+        String key = querier.getKey("mapped_domains",rootDomain);
+        String match = querier.get(key, String.class);
+        if(match!=null) {
+            site = site.substring(0,site.indexOf("."));
+        }
+        key = querier.getKey("domain_aliases", site);
         String alias = querier.get(key, String.class);
         if (alias != null) {
             site=alias;
