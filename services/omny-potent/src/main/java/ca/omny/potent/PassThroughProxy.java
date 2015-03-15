@@ -6,17 +6,33 @@ import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.models.OmnyEndpoint;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.AbstractHttpMessage;
 
 public class PassThroughProxy implements IOmnyProxyService {
 
@@ -32,42 +48,68 @@ public class PassThroughProxy implements IOmnyProxyService {
     @Inject
     IRemoteUrlProvider remoteUrlProvider;
 
+    CloseableHttpClient httpclient = HttpClients.createDefault();
+    
     @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
-        String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
-        if(remoteUrl==null) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        URL url = new URL(remoteUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(req.getMethod());
-
-        Enumeration headerNames = req.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            if (!headerName.equals(USER_HEADER) && !headerName.equals(HOST_HEADER)) {
-                String headerValue = req.getHeader(headerName);
-                connection.addRequestProperty(headerName, headerValue);
-            }
-        }
-        connection.addRequestProperty(HOST_HEADER, hostHeader);
-        connection.addRequestProperty(USER_HEADER, uid);
-        if (!req.getMethod().toLowerCase().equals("get")) {
-            connection.setDoOutput(true);
-            IOUtils.copy(req.getInputStream(), connection.getOutputStream());
-        }
         try {
-            IOUtils.copy(connection.getInputStream(), resp.getOutputStream());
-        } catch (IOException e) {
-        }
-        Map<String, List<String>> headerFields = connection.getHeaderFields();
-        for (String header : headerFields.keySet()) {
-            if (header != null) {
-                resp.addHeader(header, headerFields.get(header).get(0));
+            String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
+            
+            if(remoteUrl==null) {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
             }
+            URIBuilder uriBuilder = new URIBuilder(remoteUrl);
+            String method = req.getMethod();
+            AbstractHttpMessage message = this.getMessage(method, uriBuilder.build(), req);
+            
+            Enumeration headerNames = req.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String headerName = headerNames.nextElement().toString();
+                if (!headerName.equals(USER_HEADER) && !headerName.equals(HOST_HEADER)) {
+                    String headerValue = req.getHeader(headerName);
+                    message.addHeader(headerName, headerValue);
+                }
+            }
+            message.addHeader(HOST_HEADER, hostHeader);
+            message.addHeader(USER_HEADER, uid);
+            CloseableHttpResponse response = httpclient.execute((HttpUriRequest)message);
+            try {
+                HttpEntity entity = response.getEntity();
+                Header[] allHeaders = response.getAllHeaders();
+                for(Header header: allHeaders) {
+                    resp.addHeader(header.getName(), header.getValue());
+                }
+                IOUtils.copy(entity.getContent(), resp.getOutputStream());
+            } finally {
+                response.close();
+            }
+            
+            resp.setStatus(response.getStatusLine().getStatusCode());
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(PassThroughProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
-        resp.setStatus(connection.getResponseCode());
+    }
+    
+    public AbstractHttpMessage getMessage(String method, URI uri, HttpServletRequest req) throws IOException {
+        if(method.toLowerCase().equals("get")) {
+            return new HttpGet(uri);
+        } else if(method.toLowerCase().equals("post")) {
+             HttpPost post = new HttpPost(uri);
+             post.setEntity(new InputStreamEntity(req.getInputStream()));
+             return post;
+        } else if(method.toLowerCase().equals("put")) {
+            HttpPut put = new HttpPut(uri);
+            put.setEntity(new InputStreamEntity(req.getInputStream()));
+            return put;
+        } else if(method.toLowerCase().equals("delete")) {
+            HttpDelete httpDelete = new HttpDelete(uri);
+            return httpDelete;
+        }  else if(method.toLowerCase().equals("options")) {
+            HttpOptions httpOptions = new HttpOptions(uri);
+            return httpOptions;
+        }
+        return null;
     }
     
     public String getSimpleOrigin(String origin) {
