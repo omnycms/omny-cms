@@ -1,14 +1,21 @@
 package ca.omny.all;
 
+import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.request.management.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -25,10 +32,11 @@ public class UiHandler extends AbstractHandler {
     String htmlFileContents;
     String contentRoot;
     ResourceHandler resourceHandler;
+    IDocumentQuerier querier;
 
-    public UiHandler(String contentRoot) {
+    public UiHandler(String contentRoot, IDocumentQuerier querier) {
         this.contentRoot = contentRoot;
-        
+        this.querier = querier;
         String staticFilesDirectory = ".";
         if(System.getenv("omny_static_location")!=null) {
             staticFilesDirectory = System.getenv("omny_static_location");
@@ -95,10 +103,64 @@ public class UiHandler extends AbstractHandler {
             rqst.setHandled(true);
             response.setHeader("Content-Type", "text/html");
             populateHtmlContents();
-            response.getWriter().write(htmlFileContents);
+            RequestResponseManager manager = new RequestResponseManager();
+            manager.setRequest(request);
+            String pageContents = this.getHtml(manager.getRequestHostname(), request.getRequestURI());
+            response.getWriter().write(pageContents);
         } else {
             resourceHandler.handle(requestUrl, rqst, request, response);
         }
+    }
+    
+    public String getHtml(String site, String page) {
+        site = this.getRealSite(site);
+        page = page.substring(1,page.lastIndexOf(".html"));
+        Map pageHtml = getPageHtml(site,page);
+        String body = pageHtml.get("body").toString();
+        String head = pageHtml.get("head").toString();
+        
+        //make api call to /api/v1.0/pages/pagehtml
+        
+        String formatted = htmlFileContents.replace("</head>", head+"</head>");
+        formatted = formatted.replace("</body>", body+"</body>");
+        return formatted;
+    }
+    
+    private String getRealSite(String site) {
+        String key = querier.getKey("domain_aliases", site);
+        String alias = querier.get(key, String.class);
+        if (alias != null) {
+            site=alias;
+        }
+        return site;
+    }
+    
+    private Map getPageHtml(String site, String page) {
+        Gson gson = new Gson();
+        String result = this.getPageContents(site, page);
+        return gson.fromJson(result, Map.class);
+    }
+    
+    private String getPageContents(String site, String page) {
+        try {
+            int port = 8077;
+            if(System.getenv("omny_all_port")!=null) {
+                port = Integer.parseInt(System.getenv("omny_all_port"));
+            }
+            URL url = new URL("http://localhost:"+port+"/api/v1.0/pages/basehtml?page="+page);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.addRequestProperty("X-Origin", site);
+            
+            return IOUtils.toString(connection.getInputStream());
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(UiHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ProtocolException ex) {
+            Logger.getLogger(UiHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(UiHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     public void populateHtmlContents() {

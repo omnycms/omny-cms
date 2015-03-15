@@ -74,18 +74,19 @@ public class PassThroughProxy implements IOmnyProxyService {
             message.addHeader(HOST_HEADER, hostHeader);
             message.addHeader(USER_HEADER, uid);
             CloseableHttpResponse response = httpclient.execute((HttpUriRequest)message);
+            resp.setStatus(response.getStatusLine().getStatusCode());
             try {
                 HttpEntity entity = response.getEntity();
                 Header[] allHeaders = response.getAllHeaders();
                 for(Header header: allHeaders) {
                     resp.addHeader(header.getName(), header.getValue());
                 }
-                IOUtils.copy(entity.getContent(), resp.getOutputStream());
+                if(entity!=null) {
+                    IOUtils.copy(entity.getContent(), resp.getOutputStream());
+                }
             } finally {
                 response.close();
             }
-            
-            resp.setStatus(response.getStatusLine().getStatusCode());
         } catch (URISyntaxException ex) {
             Logger.getLogger(PassThroughProxy.class.getName()).log(Level.SEVERE, null, ex);
         }

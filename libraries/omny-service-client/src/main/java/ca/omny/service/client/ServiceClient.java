@@ -58,7 +58,9 @@ public class ServiceClient {
       
     public String getApiResponse(String method, String path, String hostname, String token, Map<String,String> queryParameters, Map<String, Object> postParameters, Object formBody, Map<String, String> headers) throws FileNotFoundException {
         UriBuilder builder = UriBuilder.fromUri(path);
-        builder.queryParam("access_token", token);
+        if(token!=null) {
+            builder.queryParam("access_token", token);
+        }
         if(queryParameters!=null) {
             for(String parameter: queryParameters.keySet()) {
                 builder.queryParam(parameter, queryParameters.get(parameter));

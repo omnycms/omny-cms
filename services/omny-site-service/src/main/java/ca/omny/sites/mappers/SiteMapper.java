@@ -23,7 +23,7 @@ public class SiteMapper {
     }
     
     public SiteDetails getSite(String site) {
-        String key = key = querier.getKey("site_data", site, "site_details");
+        String key = querier.getKey("site_data", site, "site_details");
         return querier.get(key,SiteDetails.class);
     }
     

@@ -2,6 +2,7 @@ package ca.omny.all;
 
 import ca.omny.all.configuration.DatabaseConfigurationValues;
 import ca.omny.all.configuration.DatabaseConfigurer;
+import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.potent.PowerServlet;
 import ca.omny.server.OmnyServer;
 import com.google.gson.Gson;
@@ -44,8 +45,8 @@ public class OmnyAllInOneServer {
             staticFilesDirectory = System.getenv("omny_static_location");
         }
         context.addServlet(new ServletHolder(edgeServlet),"/*");
-        
-        UiHandler uiHandler = new UiHandler(staticFilesDirectory);
+        IDocumentQuerier querier = container.instance().select(IDocumentQuerier.class).get();
+        UiHandler uiHandler = new UiHandler(staticFilesDirectory, querier);
 
         HandlerList handlers = new HandlerList();
         Handler[] handlerList = new Handler[] { uiHandler,context };
