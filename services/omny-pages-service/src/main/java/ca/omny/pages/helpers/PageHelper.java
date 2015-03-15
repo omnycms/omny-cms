@@ -114,8 +114,10 @@ public class PageHelper {
                 sections.add(group);
             }
         }
-        HashMap<String, String> sectionContent = this.getSectionContent(pageDetails, sections);
-        sectionContent.put("site.siteName", siteDetails.get("siteName").toString());
+        HashMap<String, Object> sectionContent = this.getSectionContent(pageDetails, sections);
+        sectionContent.put("site", siteDetails);
+        
+        themeHtml.replaceAll("site\\.siteName", siteDetails.get("siteName").toString());
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(themeHtml),"template");
@@ -152,8 +154,8 @@ public class PageHelper {
     
     
     
-    private HashMap<String, String> getSectionContent(PageDetails details, List<String> sections) {
-        HashMap<String, String> sectionContent = new HashMap<String, String>();
+    private HashMap<String, Object> getSectionContent(PageDetails details, List<String> sections) {
+        HashMap<String, Object> sectionContent = new HashMap<>();
         for(String section: sections) {
             sectionContent.put(section, this.getSectionContent(details, section));
         }
