@@ -1,0 +1,20 @@
+machine:
+  services:
+    - docker
+  environment:
+    AWS_DEFAULT_REGION: us-east-1
+
+dependencies:
+  override:
+    - ./build-travis.sh
+    - docker info
+    - docker build -t alamarre/omnycms .
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - ./bundle.sh $CIRCLE_SHA1
+      - ./publish.sh $CIRCLE_SHA1
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push alamarre/omnycms
