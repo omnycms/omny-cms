@@ -8,7 +8,7 @@ dependencies:
   override:
     - ./build.sh
     - docker info
-    - docker build -t alamarre/omnycms .
+    - docker build -t alamarre/omnycms:$CIRCLE_SHA1 .
 
 deployment:
   hub:
@@ -17,4 +17,4 @@ deployment:
       - ./bundle.sh $CIRCLE_SHA1
       - ./publish.sh $CIRCLE_SHA1
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push alamarre/omnycms
+      - docker push alamarre/omnycms:$CIRCLE_SHA1
