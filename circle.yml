@@ -6,7 +6,7 @@ machine:
 
 dependencies:
   override:
-    - ./build-travis.sh
+    - ./build.sh
     - docker info
     - docker build -t alamarre/omnycms .
 
