@@ -1,0 +1,11 @@
+language: java
+jdk:
+- openjdk7
+env:
+  global:
+    - AWS_DEFAULT_REGION="us-east-1"
+    - secure: 5pv0JgYDTV8IdoV9nqcSqdY861j6gNpGCmvSVF/xtaPh6cynUyMlrYfNvUTzWsm2DPB+vyJzSc2RwxvXPUoa3G5/Q0YqvrKRuA06ODmI+aUEBwDLZ4PzbBKOJfkmKmio9dkNR3/qRRYDlwEOCZJ1i9vcFJ0t14XFD4J1M9H4eQ6vqcLnrNvIqlccpnuOp0fIzOpqp2s4PFdtvzCpslrDFGccTaO+iwjP2EkxaxreRcRGNJfCriHmLn99272HS5bY2R3O9XN0nSxyPiz2KnqBSGGvq0zn/2QAKuKeYE8KxIrmU+MQbng5Z8/tbrMR0eO1nqBSIdB4Lveoy+OzJBs8VA==
+script:
+- ./build-travis.sh
+- ./bundle.sh $TRAVIS_BUILD_NUMBER
+- ./publish.sh $TRAVIS_BUILD_NUMBER
