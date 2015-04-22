@@ -27,7 +27,7 @@
         <module>services/omny-potent</module>
         <module>services/omny-storage-service</module>
         <module>services/omny-extensibility</module>
-        <module>libraries/OmnyExtensionPoints</module>
+        <module>libraries/omny-extension-points</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
