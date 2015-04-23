@@ -2,32 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ca.omny</groupId>
-    <artifactId>Omny</artifactId>
+    <artifactId>omny</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>libraries/omny-auth</module>
-        <module>libraries/omny-exceptions</module>
-        <module>libraries/omny-document-database-querier</module>
-        <module>libraries/omny-logger</module>
-        <module>libraries/omny-request-management</module>
-        <module>libraries/omny-service-client</module>
-        <module>libraries/omny-service-discovery</module>
-        <module>libraries/omny-storage</module>
+        <module>libraries</module>
  	<module>services/omny-pages-service</module>
         <module>services/omny-content-service</module>
         <module>services/omny-auth-service</module>
-        <module>libraries/omny-server</module>
         <module>services/omny-menu-service</module>
         <module>services/omny-site-service</module>
         <module>services/omny-theme-service</module>
-        <module>libraries/omny-routing-tree</module>
-        <module>libraries/omny-extended-database</module>
-        <module>libraries/omny-configuration-reader</module>
         <module>services/omny-potent</module>
         <module>services/omny-storage-service</module>
         <module>services/omny-extensibility</module>
-        <module>libraries/omny-extension-points</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
