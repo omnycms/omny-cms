@@ -2,4 +2,4 @@
 Omny CMS
 ========
 
-Omny is an open source CMS designed to support building web applications
+Omny is an open source CMS designed to support building web applications.
