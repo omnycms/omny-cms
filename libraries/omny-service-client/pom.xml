@@ -47,12 +47,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyAuth</artifactId>
+            <artifactId>omny-auth</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyLogger</artifactId>
+            <artifactId>omny-logger</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -54,7 +54,7 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyAuth</artifactId>
+            <artifactId>omny-auth</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>

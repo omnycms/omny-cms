@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ca.omny</groupId>
-    <artifactId>OmnyLogger</artifactId>
+    <artifactId>omny-logger</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>ca.omny.OmnyLogger</name>
+    <name>ca.omny.omny-logger</name>
     <description>Provides the ability to manage application specific logging separately from its dependencies.</description>
     <url>http://about.omny.me</url>
 
