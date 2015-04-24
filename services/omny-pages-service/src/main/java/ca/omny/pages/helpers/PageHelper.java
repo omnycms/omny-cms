@@ -106,7 +106,7 @@ public class PageHelper {
         Map siteDetails = this.getSiteDetails(hostname);
         headBuilder.append("<title>"+siteDetails.get("siteName")+" - "+pageDetails.getPage().getTitle()+"</title>");
         headBuilder.append(this.getCss(themeName));
-        headBuilder.append(this.getScriptContent(pageDetails));
+        headBuilder.append(this.getScriptContent(pageDetails,themeName));
         while (matcher.find()) {
             String group = matcher.group();
             if(!group.equals("site.siteName")) {
@@ -140,11 +140,12 @@ public class PageHelper {
         return null;
     }
     
-    private String getScriptContent(PageDetails details) {
+    private String getScriptContent(PageDetails details, String themeName) {
         Gson gson = new Gson();
         return "<script>"+
                 "var omnyPageModules="+gson.toJson(details.getPageModules())+";"+
                 "var omnyTemplateModules="+gson.toJson(details.getTemplateModules())+";"+
+                "require([\"themes/" + themeName + "/theme\"]);"+
                 "</script>";
     }
     
