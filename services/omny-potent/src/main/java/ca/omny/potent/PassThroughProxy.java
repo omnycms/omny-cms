@@ -38,50 +38,53 @@ public class PassThroughProxy implements IOmnyProxyService {
 
     public static final String USER_HEADER = "X-UserId";
     public static final String HOST_HEADER = "X-Origin";
+    public static final String CONTENT_LENGTH_HEADER = "Content-Length";
 
     @Inject
     IDocumentQuerier querier;
 
     @Inject
     ConfigurationReader configurationReader;
-    
+
     @Inject
     IRemoteUrlProvider remoteUrlProvider;
 
     CloseableHttpClient httpclient = HttpClients.createDefault();
-    
+
     @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
         try {
             String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
-            
-            if(remoteUrl==null) {
+
+            if (remoteUrl == null) {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             URIBuilder uriBuilder = new URIBuilder(remoteUrl);
             String method = req.getMethod();
             AbstractHttpMessage message = this.getMessage(method, uriBuilder.build(), req);
-            
+
             Enumeration headerNames = req.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String headerName = headerNames.nextElement().toString();
-                if (!headerName.equals(USER_HEADER) && !headerName.equals(HOST_HEADER)) {
+                if (!headerName.equals(USER_HEADER)
+                        && !headerName.equals(HOST_HEADER)
+                        && !headerName.equals(CONTENT_LENGTH_HEADER)) {
                     String headerValue = req.getHeader(headerName);
                     message.addHeader(headerName, headerValue);
                 }
             }
             message.addHeader(HOST_HEADER, hostHeader);
             message.addHeader(USER_HEADER, uid);
-            CloseableHttpResponse response = httpclient.execute((HttpUriRequest)message);
+            CloseableHttpResponse response = httpclient.execute((HttpUriRequest) message);
             resp.setStatus(response.getStatusLine().getStatusCode());
             try {
                 HttpEntity entity = response.getEntity();
                 Header[] allHeaders = response.getAllHeaders();
-                for(Header header: allHeaders) {
+                for (Header header : allHeaders) {
                     resp.addHeader(header.getName(), header.getValue());
                 }
-                if(entity!=null) {
+                if (entity != null) {
                     IOUtils.copy(entity.getContent(), resp.getOutputStream());
                 }
             } finally {
@@ -91,28 +94,29 @@ public class PassThroughProxy implements IOmnyProxyService {
             Logger.getLogger(PassThroughProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public AbstractHttpMessage getMessage(String method, URI uri, HttpServletRequest req) throws IOException {
-        if(method.toLowerCase().equals("get")) {
-            return new HttpGet(uri);
-        } else if(method.toLowerCase().equals("post")) {
-             HttpPost post = new HttpPost(uri);
-             post.setEntity(new InputStreamEntity(req.getInputStream()));
-             return post;
-        } else if(method.toLowerCase().equals("put")) {
-            HttpPut put = new HttpPut(uri);
-            put.setEntity(new InputStreamEntity(req.getInputStream()));
-            return put;
-        } else if(method.toLowerCase().equals("delete")) {
-            HttpDelete httpDelete = new HttpDelete(uri);
-            return httpDelete;
-        }  else if(method.toLowerCase().equals("options")) {
-            HttpOptions httpOptions = new HttpOptions(uri);
-            return httpOptions;
+        switch (method.toLowerCase()) {
+            case "get":
+                return new HttpGet(uri);
+            case "post":
+                HttpPost post = new HttpPost(uri);
+                post.setEntity(new InputStreamEntity(req.getInputStream()));
+                return post;
+            case "put":
+                HttpPut put = new HttpPut(uri);
+                put.setEntity(new InputStreamEntity(req.getInputStream()));
+                return put;
+            case "delete":
+                HttpDelete httpDelete = new HttpDelete(uri);
+                return httpDelete;
+            case "options":
+                HttpOptions httpOptions = new HttpOptions(uri);
+                return httpOptions;
         }
         return null;
     }
-    
+
     public String getSimpleOrigin(String origin) {
         if (origin.contains("://")) {
             origin = origin.substring(origin.indexOf("://") + 3);
