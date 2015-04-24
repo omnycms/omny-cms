@@ -39,7 +39,7 @@ public class PassThroughProxy implements IOmnyProxyService {
     public static final String USER_HEADER = "X-UserId";
     public static final String HOST_HEADER = "X-Origin";
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
-
+    public static final String[] AUTO_HEADERS = {USER_HEADER, HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
     @Inject
     IDocumentQuerier querier;
 
@@ -67,9 +67,7 @@ public class PassThroughProxy implements IOmnyProxyService {
             Enumeration headerNames = req.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 String headerName = headerNames.nextElement().toString();
-                if (!headerName.equals(USER_HEADER)
-                        && !headerName.equals(HOST_HEADER)
-                        && !headerName.equals(CONTENT_LENGTH_HEADER)) {
+                if (!shouldNotSetHeader(headerName)) {
                     String headerValue = req.getHeader(headerName);
                     message.addHeader(headerName, headerValue);
                 }
@@ -93,6 +91,16 @@ public class PassThroughProxy implements IOmnyProxyService {
         } catch (URISyntaxException ex) {
             Logger.getLogger(PassThroughProxy.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private boolean shouldNotSetHeader(String headerName) {
+        headerName = headerName.toLowerCase();
+        for(String s: AUTO_HEADERS) {
+            if(s.toLowerCase().equals(headerName)) {
+                return true;
+            }
+        }
+        return false;    
     }
 
     public AbstractHttpMessage getMessage(String method, URI uri, HttpServletRequest req) throws IOException {
