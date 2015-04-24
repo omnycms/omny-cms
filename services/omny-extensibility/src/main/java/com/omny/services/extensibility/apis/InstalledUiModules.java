@@ -28,7 +28,7 @@ public class InstalledUiModules implements OmnyApi {
         String creator = requestResponseManager.getPathParameter("creator");
         String name = requestResponseManager.getPathParameter("module");
         String site = requestResponseManager.getRequestHostname();
-        if(name!=null) {
+        if(name!=null&&!name.isEmpty()) {
             return new ApiResponse(moduleMapper.getConfiguration(site, creator, name), 200);
         }
         Collection<InstalledUiModuleConfiguration> configurations = moduleMapper.listConfigurations(site);

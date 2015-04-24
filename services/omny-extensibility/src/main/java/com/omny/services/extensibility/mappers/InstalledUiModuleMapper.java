@@ -22,6 +22,9 @@ public class InstalledUiModuleMapper {
     }
     
     public Collection<InstalledUiModuleConfiguration> getVersioned(Collection<InstalledUiModuleConfiguration> configurations) {
+        if(configurations.isEmpty()) {
+            return new LinkedList<>();
+        }
         List<String> keys = new LinkedList<>();
         for(InstalledUiModuleConfiguration configuration: configurations) {
             String key = querier.getKey("default_module_version", configuration.getCreator(), configuration.getName());
