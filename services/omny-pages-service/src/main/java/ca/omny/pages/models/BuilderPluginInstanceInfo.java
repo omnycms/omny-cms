@@ -5,6 +5,7 @@ public class BuilderPluginInstanceInfo {
     String version;
     Object data;
     String omnyClass;
+    String url;
 
     public String getModule() {
         return module;
@@ -43,6 +44,14 @@ public class BuilderPluginInstanceInfo {
         module.setModule(this.module);
         module.setVersion(version);
         return module;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
     
     public String toString() {
