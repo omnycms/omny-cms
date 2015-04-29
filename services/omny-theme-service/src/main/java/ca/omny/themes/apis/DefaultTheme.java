@@ -23,7 +23,8 @@ public class DefaultTheme implements OmnyApi{
     }
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String defaultTheme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname());
+        return new ApiResponse(defaultTheme, 200);
     }
 
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
