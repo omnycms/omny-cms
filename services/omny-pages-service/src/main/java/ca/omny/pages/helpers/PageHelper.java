@@ -145,7 +145,7 @@ public class PageHelper {
         return "<script>"+
                 "var omnyPageModules="+gson.toJson(details.getPageModules())+";"+
                 "var omnyTemplateModules="+gson.toJson(details.getTemplateModules())+";"+
-                "require([\"themes/" + themeName + "/theme\"],function(theme){ theme.load();});"+
+                "require([\"themes/" + themeName + "/theme\"],function(theme){ if(theme.load) { theme.load(); }});"+
                 "</script>";
     }
     
