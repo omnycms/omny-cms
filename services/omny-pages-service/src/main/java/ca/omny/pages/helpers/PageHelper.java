@@ -129,7 +129,7 @@ public class PageHelper {
         HashMap<String, Object> sectionContent = this.getSectionContent(pageDetails, sections);
         sectionContent.put("site", siteDetails);
         
-        themeHtml.replaceAll("site\\.siteName", siteDetails.get("siteName").toString());
+        themeHtml = themeHtml.replaceAll("site\\.siteName", siteDetails.get("siteName").toString());
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache mustache = mf.compile(new StringReader(themeHtml),"template");
