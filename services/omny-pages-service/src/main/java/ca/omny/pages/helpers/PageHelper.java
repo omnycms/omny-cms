@@ -167,12 +167,12 @@ public class PageHelper {
         String site ="";
         if(prefix==null) {
             prefix = "";
-        } else {
-            site=hostname+"/";
         }
         if(themeName.startsWith("global/")) {
             prefix += "/global";
             themeName = themeName.substring("global/".length());
+        } else if (prefix.isEmpty()) {
+            site=hostname+"/";
         }
         
         return prefix+"/themes/"+site+themeName+"/theme";
