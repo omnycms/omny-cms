@@ -93,7 +93,7 @@ public class PageHelper {
         }
        
         String templateModuleLocation = templateMapper.getTemplateLocation(shortThemeName, page.getTemplateName(), hostname, preview);
-        String siteForTemplate = shortThemeName.startsWith("site/") ? hostname : globalTheme ? "www" : hostname;
+        String siteForTemplate = page.getTemplateName().startsWith("site/") ? hostname : globalTheme ? "www" : hostname;
         Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, siteForTemplate);
 
         //Collection<Module> dependencies = moduleMapper.getAllDependencies(pageModules, templateModules);
