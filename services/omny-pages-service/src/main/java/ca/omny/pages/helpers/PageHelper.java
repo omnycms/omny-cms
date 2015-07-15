@@ -117,8 +117,8 @@ public class PageHelper {
         
         Map siteDetails = this.getSiteDetails(hostname);
         headBuilder.append("<title>"+siteDetails.get("siteName")+" - "+pageDetails.getPage().getTitle()+"</title>");
-        headBuilder.append(this.getCss(themeName));
-        headBuilder.append(this.getScriptContent(pageDetails,themeName));
+        headBuilder.append(this.getCss(themeName,hostname));
+        headBuilder.append(this.getScriptContent(pageDetails,themeName, hostname));
         while (matcher.find()) {
             String group = matcher.group();
             if(!group.equals("site.siteName")) {
@@ -152,31 +152,34 @@ public class PageHelper {
         return null;
     }
     
-    private String getScriptContent(PageDetails details, String themeName) {
+    private String getScriptContent(PageDetails details, String themeName, String hostname) {
         Gson gson = new Gson();
         
         return "<script>"+
                 "var omnyPageModules="+gson.toJson(details.getPageModules())+";"+
                 "var omnyTemplateModules="+gson.toJson(details.getTemplateModules())+";"+
-                "require([\""+getThemeLocation(themeName)+".js\"],function(theme){ if(theme && theme.load) { theme.load(); }});"+
+                "require([\""+getThemeLocation(themeName, hostname)+".js\"],function(theme){ if(theme && theme.load) { theme.load(); }});"+
                 "</script>";
     }
     
-    private String getThemeLocation(String themeName) {
+    private String getThemeLocation(String themeName, String hostname) {
         String prefix = configurationReader.getSimpleConfigurationString("OMNY_THEME_ROOT");
+        String site ="";
         if(prefix==null) {
             prefix = "";
+        } else {
+            site=hostname+"/";
         }
         if(themeName.startsWith("global/")) {
             prefix += "/global";
             themeName = themeName.substring("global/".length());
         }
         
-        return prefix+"/themes/"+themeName+"/theme";
+        return prefix+"/themes/"+site+themeName+"/theme";
     }
     
-    private String getCss(String themeName) {
-        return "<link rel=\"stylesheet\" href=\""+getThemeLocation(themeName)+".css\" />";
+    private String getCss(String themeName, String hostname) {
+        return "<link rel=\"stylesheet\" href=\""+getThemeLocation(themeName, hostname)+".css\" />";
     }
     
     private HashMap<String, Object> getSectionContent(PageDetails details, List<String> sections) {
