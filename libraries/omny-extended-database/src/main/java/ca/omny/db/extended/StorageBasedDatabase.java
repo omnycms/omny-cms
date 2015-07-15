@@ -41,6 +41,9 @@ public class StorageBasedDatabase implements IDocumentQuerier {
     @Override
     public <T> T get(String key, Class<T> type) {
         String fileContents = storage.getFileContents(DB_PREFIX+key);
+        if (type.equals(String.class)) {
+            return (T) fileContents;
+        }
         return gson.fromJson(fileContents, type);
     }
     
@@ -93,7 +96,7 @@ public class StorageBasedDatabase implements IDocumentQuerier {
 
     @Override
     public void set(String key, Object value, int expires) {
-        storage.saveFile(DB_PREFIX+key, value);
+        this.set(key, value);
     }
 
     @Override

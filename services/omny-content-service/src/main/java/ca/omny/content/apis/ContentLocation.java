@@ -47,6 +47,7 @@ public class ContentLocation implements OmnyApi {
         HttpServletRequest request =  requestResponseManager.getRequest();
         Map<String, String> queryParameters = new HashMap<String, String>();
         String prefix = "published/default/";
+        String hostname = requestResponseManager.getRequestHostname();
         if (file.contains("?")) {
             file = file.substring(0, file.indexOf("?"));
         }
@@ -57,6 +58,10 @@ public class ContentLocation implements OmnyApi {
         if(file.startsWith("global/")) {
             prefix = "site-files/";
             file = file.substring(7);
+            if(file.startsWith("themes/")) {
+                file = "themes/current"+file.substring("themes".length());
+            }
+            hostname="www";
         }
         queryParameters.put("file", prefix + file);
         if (request.getHeader("Send-File") != null||request.getQueryString().contains("sendFile")) {
@@ -75,7 +80,7 @@ public class ContentLocation implements OmnyApi {
                     Logger.getLogger(ContentLocation.class.getName()).log(Level.SEVERE, null, ex);
                 } 
             }
-            Object fileContents = storageSystem.getFileContents(prefix + file, requestResponseManager.getRequestHostname(), file.endsWith(".json"));
+            Object fileContents = storageSystem.getFileContents(prefix + file, hostname, file.endsWith(".json"));
             if(fileContents==null) {
                 throw new NotFoundException();
             }

@@ -1,5 +1,6 @@
 package ca.omny.pages.helpers;
 
+import ca.omny.configuration.ConfigurationReader;
 import ca.omny.pages.mappers.ModuleMapper;
 import ca.omny.pages.mappers.PageMapper;
 import ca.omny.pages.mappers.PageTemplateMapper;
@@ -53,6 +54,9 @@ public class PageHelper {
     
     @Inject
     DiscoverableServiceClient serviceClient;
+    
+    @Inject 
+    ConfigurationReader configurationReader;
 
     public Collection<String> getPages(String path, String host) {
         String suffix = "Data.json";
@@ -77,10 +81,18 @@ public class PageHelper {
 
         String pageModuleLocation = "pages/current/" + pageName + "Modules.json";
         Map<String, Collection<BuilderPluginInstanceInfo>> pageModules = moduleMapper.getModules(pageModuleLocation, hostname);
-
+        
+        boolean globalTheme = themeName.startsWith("global/");
+        String shortThemeName = themeName;
+        if(globalTheme) {
+            shortThemeName = themeName.substring("global/".length());
+        }
+        
         String versionFolder = preview ? "drafts" : "current";
-        String templateModuleLocation = "themes/" + versionFolder + "/" + themeName + "/templates/" + page.getTemplateName() + "/modules.json";
-        Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, hostname);
+        String templateModuleLocation = "themes/" + versionFolder + "/" + shortThemeName + "/templates/" + page.getTemplateName() + "/modules.json";
+        
+        
+        Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, globalTheme?"www":hostname);
 
         //Collection<Module> dependencies = moduleMapper.getAllDependencies(pageModules, templateModules);
         details.setPage(page);
@@ -142,18 +154,30 @@ public class PageHelper {
     
     private String getScriptContent(PageDetails details, String themeName) {
         Gson gson = new Gson();
+        
         return "<script>"+
                 "var omnyPageModules="+gson.toJson(details.getPageModules())+";"+
                 "var omnyTemplateModules="+gson.toJson(details.getTemplateModules())+";"+
-                "require([\"themes/" + themeName + "/theme\"],function(theme){ if(theme.load) { theme.load(); }});"+
+                "require([\""+getThemeLocation(themeName)+".js\"],function(theme){ if(theme && theme.load) { theme.load(); }});"+
                 "</script>";
     }
     
-    private String getCss(String themeName) {
-        return "<link rel=\"stylesheet\" href=\"/themes/" + themeName + "/theme.css\" />";
+    private String getThemeLocation(String themeName) {
+        String prefix = configurationReader.getSimpleConfigurationString("OMNY_THEME_ROOT");
+        if(prefix==null) {
+            prefix = "";
+        }
+        if(themeName.startsWith("global/")) {
+            prefix += "/global";
+            themeName = themeName.substring("global/".length());
+        }
+        
+        return prefix+"/themes/"+themeName+"/theme";
     }
     
-    
+    private String getCss(String themeName) {
+        return "<link rel=\"stylesheet\" href=\""+getThemeLocation(themeName)+".css\" />";
+    }
     
     private HashMap<String, Object> getSectionContent(PageDetails details, List<String> sections) {
         HashMap<String, Object> sectionContent = new HashMap<>();

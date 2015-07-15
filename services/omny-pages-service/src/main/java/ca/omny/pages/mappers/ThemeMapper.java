@@ -22,10 +22,13 @@ public class ThemeMapper {
 
     public String getThemeHtml(String themeName, String host, boolean preview) throws MalformedURLException, IOException {
         Gson gson = new Gson();
-        
+        boolean globalTheme = themeName.startsWith("global/");
+        if(globalTheme) {
+            themeName = themeName.substring("global/".length());
+            host = "www";
+        }
         String versionFolder = preview?"drafts":"current";
         String themeTemplatePath = String.format("themes/%s/%s/theme.html", versionFolder, themeName);
-        
         String themeContent = storageSystem.getFileContents(themeTemplatePath, host);
         
         return themeContent;
