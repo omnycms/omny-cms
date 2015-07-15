@@ -171,7 +171,7 @@ public class PageHelper {
         if(themeName.startsWith("global/")) {
             prefix += "/global";
             themeName = themeName.substring("global/".length());
-        } else if (prefix.isEmpty()) {
+        } else if (!prefix.isEmpty()) {
             site=hostname+"/";
         }
         
