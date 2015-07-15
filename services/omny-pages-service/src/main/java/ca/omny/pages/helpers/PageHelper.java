@@ -9,6 +9,7 @@ import ca.omny.pages.models.BuilderPluginInstanceInfo;
 import ca.omny.pages.models.Page;
 import ca.omny.pages.models.PageDetails;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.pages.mappers.TemplateMapper;
 import ca.omny.service.client.DiscoverableServiceClient;
 import ca.omny.storage.StorageSystem;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -42,6 +43,9 @@ public class PageHelper {
 
     @Inject
     PageTemplateMapper pageTemplateMapper;
+    
+    @Inject
+    TemplateMapper templateMapper;
 
     @Inject
     ModuleMapper moduleMapper;
@@ -87,10 +91,8 @@ public class PageHelper {
         if(globalTheme) {
             shortThemeName = themeName.substring("global/".length());
         }
-        
-        String versionFolder = preview ? "drafts" : "current";
-        String templateModuleLocation = "themes/" + versionFolder + "/" + shortThemeName + "/templates/" + page.getTemplateName() + "/modules.json";
-        
+       
+        String templateModuleLocation = templateMapper.getTemplateLocation(shortThemeName, page.getTemplateName(), hostname, preview);
         
         Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, globalTheme?"www":hostname);
 
