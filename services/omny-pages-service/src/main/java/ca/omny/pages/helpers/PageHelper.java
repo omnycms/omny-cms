@@ -120,7 +120,7 @@ public class PageHelper {
         Map siteDetails = this.getSiteDetails(hostname);
         headBuilder.append("<title>"+siteDetails.get("siteName")+" - "+pageDetails.getPage().getTitle()+"</title>");
         headBuilder.append(this.getCss(themeName,hostname));
-        headBuilder.append(this.getScriptContent(pageDetails,themeName, hostname));
+        bodyBuilder.append(this.getScriptContent(pageDetails,themeName, hostname));
         while (matcher.find()) {
             String group = matcher.group();
             if(!group.equals("site.siteName")) {
