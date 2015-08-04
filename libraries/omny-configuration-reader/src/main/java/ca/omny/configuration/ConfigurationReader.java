@@ -1,5 +1,6 @@
 package ca.omny.configuration;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,16 +9,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 public class ConfigurationReader {
     
     HashMap<String,String> cache = new HashMap<String, String>();
+    HashMap<String,String> keyCache = new HashMap<String, String>();
+    
+    public ConfigurationReader() {
+        File masterConfigDirectory = findRootDirectory("config");
+        if(keyCache.size()==0 && masterConfigDirectory!=null) {
+            try {
+                File configFile = new File(masterConfigDirectory.getAbsolutePath()+"/config.json");
+                if(configFile!=null&&configFile.exists()) {
+                    String configString = FileUtils.readFileToString(configFile);
+                    Gson gson = new Gson();
+                    keyCache = gson.fromJson(configString, HashMap.class);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ConfigurationReader.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    }
     
     public String getConfigurationString(String name) {
         if(System.getenv(name)!=null) {
             return System.getenv(name);
+        }
+        if(keyCache.containsKey(name)) {
+            return keyCache.get(name);
         }
         
         String file = "/etc/omny/"+name+".conf";

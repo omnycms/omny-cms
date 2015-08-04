@@ -42,9 +42,16 @@ public class DynamoDb implements IDocumentQuerier {
     @Inject
     public DynamoDb(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
-        config = gson.fromJson(configurationReader.getConfigurationString("dynamo_config"), DynamoDbConfig.class);
-        table = config.getTable();
-        client = new AmazonDynamoDBClient(config);
+        final String configurationString = configurationReader.getConfigurationString("dynamo_config");
+        if(configurationString!=null) {
+            config = gson.fromJson(configurationString, DynamoDbConfig.class);
+            table = config.getTable();
+            client = new AmazonDynamoDBClient(config);
+        } else {
+            table = "omny";
+            client = new AmazonDynamoDBClient();
+        }
+        
     }
 
     private String getHashKey(String key) {

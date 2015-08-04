@@ -36,6 +36,12 @@
             <version>1.1-20130403</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.4</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
   
     <licenses>

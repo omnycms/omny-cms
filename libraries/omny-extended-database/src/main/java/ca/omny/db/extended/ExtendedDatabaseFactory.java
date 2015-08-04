@@ -18,23 +18,22 @@ public class ExtendedDatabaseFactory implements IDocumentQuerierFactory {
     
     @Override
     public IDocumentQuerier getInstance() {
-        String dbType = System.getenv("omny_db_type");
+        if(db!=null) {
+            return db;
+        }
+        String dbType = configurationReader.getSimpleConfigurationString("omny_db_type");
         if (dbType != null) {
-            if (dbType.equals("storage")) {
-                if (db == null) {
-                    StorageBasedDatabase sdb = new StorageBasedDatabase();
-                    sdb.setStorage(storage);
-                    db = sdb;
-                }
-                return db;
+            if(dbType.equals("couchbase")) {
+                return null;
             } else if (dbType.equals("dynamodb")) {
-                if (db == null) {
-                    db = new DynamoDb(configurationReader);
-                }
+                db = new DynamoDb(configurationReader);
                 return db;
             }
         }
-        return null;
+        StorageBasedDatabase sdb = new StorageBasedDatabase();
+        sdb.setStorage(storage);
+        db = sdb;
+        return db;
     }
 
 }

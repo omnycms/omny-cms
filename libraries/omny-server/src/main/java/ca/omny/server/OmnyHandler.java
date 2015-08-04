@@ -42,11 +42,13 @@ public class OmnyHandler extends AbstractHandler {
     }
      
     @Override
-    public void handle(String string, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void handle(String s, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if(!request.getRequestURI().startsWith("/api")) {
             return;
         }
-        baseRequest.setHandled(true);
+        if(baseRequest!=null) {
+            baseRequest.setHandled(true);
+        }
         RequestResponseManager requestResponseManager = new RequestResponseManager();
         requestResponseManager.setSessionMapper(container.instance().select(SessionMapper.class).get());
         requestResponseManager.setRequest(request);
