@@ -6,12 +6,10 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.gson.Gson;
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.request.management.RequestResponseManager;
 import ca.omny.storage.AmazonStorageConfig;
 import ca.omny.storage.IStorage;
 import ca.omny.storage.MetaData;
 import ca.omny.storage.Mimedata;
-import static ca.omny.storage.implementation.LocalStorage.isValidUTF8;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import java.io.ByteArrayInputStream;
@@ -24,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 @Alternative

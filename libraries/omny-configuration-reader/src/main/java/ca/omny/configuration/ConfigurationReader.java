@@ -19,6 +19,15 @@ public class ConfigurationReader {
     HashMap<String,String> cache = new HashMap<String, String>();
     HashMap<String,String> keyCache = new HashMap<String, String>();
     
+    static ConfigurationReader defaultConfigurationReader;
+
+    public static ConfigurationReader getDefaultConfigurationReader() {
+        if(defaultConfigurationReader==null) {
+            defaultConfigurationReader = new ConfigurationReader();
+        }
+        return defaultConfigurationReader;
+    }
+    
     public ConfigurationReader() {
         File masterConfigDirectory = findRootDirectory("config");
         if(keyCache.size()==0 && masterConfigDirectory!=null) {
@@ -60,6 +69,9 @@ public class ConfigurationReader {
         while(!searchFolder.exists()) {
             maxSearch--;
             currentFile = currentFile.getParentFile();
+            if(currentFile==null) { 
+                return null;
+            }
             searchFolder = new File(currentFile.getAbsolutePath()+"/"+name);
             if(maxSearch<=0) {
                 return null;

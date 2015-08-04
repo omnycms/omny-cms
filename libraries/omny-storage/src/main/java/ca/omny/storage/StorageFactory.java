@@ -3,6 +3,7 @@ package ca.omny.storage;
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.CouchFactory;
 import ca.omny.logger.OmnyLogger;
+import ca.omny.logger.SimpleLogger;
 import ca.omny.storage.implementation.S3Storage;
 import ca.omny.storage.implementation.LocalStorage;
 import ca.omny.storage.implementation.DocumentDatabaseStorage;
@@ -16,12 +17,27 @@ public class StorageFactory {
     @Inject
     ConfigurationReader configurationReader;
     
-    S3Storage s3Storage;
+    static OmnyLogger logger = new SimpleLogger(StorageFactory.class.getName());
+    static S3Storage s3Storage;
     
-    DocumentDatabaseStorage documentDbStorage;
+    static DocumentDatabaseStorage documentDbStorage;
+    
+    static IStorage defaultStorage;
+    static ConfigurationReader configReader = ConfigurationReader.getDefaultConfigurationReader();
+    
+    public static IStorage getDefaultStorage() {
+        if(defaultStorage==null) {
+            defaultStorage = getDefaultStorage(logger,configReader);
+        }
+        return defaultStorage;
+    }
     
     @Produces
     public IStorage getStorage(OmnyLogger logger) {
+        return getDefaultStorage(logger, configurationReader);
+    }
+    
+    public static IStorage getDefaultStorage(OmnyLogger logger, ConfigurationReader configurationReader) {
         String storageSystemName = configurationReader.getSimpleConfigurationString("storageSystem");
         if(storageSystemName!=null) {
             if(storageSystemName.equals("db")) {
@@ -49,4 +65,6 @@ public class StorageFactory {
         return localStorage;
   
     }
+    
+    
 }

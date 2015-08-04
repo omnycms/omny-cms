@@ -20,6 +20,22 @@ public class GlobalStorage {
     @Inject
     ConfigurationReader configurationReader;
     
+    static GlobalStorage defaultGlobalStorage;
+    
+    public static GlobalStorage getDefaultGlobalStorage() {
+        if(defaultGlobalStorage==null) {
+            
+        }
+        return defaultGlobalStorage;
+    }
+
+    public GlobalStorage(IDocumentQuerier querier, StorageSystem storageSystem, IStorage storageImplementation, ConfigurationReader configurationReader) {
+        this.querier = querier;
+        this.storageSystem = storageSystem;
+        this.storageImplementation = storageImplementation;
+        this.configurationReader = configurationReader;
+    }
+    
     public String getGlobalFileContents(String path) {
         return storageImplementation.getFileContents("www/"+path);
     }

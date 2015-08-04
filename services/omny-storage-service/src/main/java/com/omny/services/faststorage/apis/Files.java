@@ -22,9 +22,6 @@ public class Files implements OmnyApi {
     @Inject
     IDocumentQuerier querier;
     
-    @Context
-    HttpServletRequest request;
-    
     @Inject
     StorageMapper storageMapper;
 
