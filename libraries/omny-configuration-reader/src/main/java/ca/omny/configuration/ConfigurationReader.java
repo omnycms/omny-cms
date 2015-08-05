@@ -45,6 +45,10 @@ public class ConfigurationReader {
         }
     }
     
+    public void setKey(String key, String value) {
+        keyCache.put(key, value);
+    }
+    
     public String getConfigurationString(String name) {
         if(System.getenv(name)!=null) {
             return System.getenv(name);

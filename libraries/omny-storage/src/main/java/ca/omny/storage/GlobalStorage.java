@@ -2,7 +2,6 @@ package ca.omny.storage;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.request.management.RequestResponseManager;
 import java.util.Collection;
 import javax.inject.Inject;
 
@@ -27,6 +26,10 @@ public class GlobalStorage {
             
         }
         return defaultGlobalStorage;
+    }
+    
+    public GlobalStorage() {
+        
     }
 
     public GlobalStorage(IDocumentQuerier querier, StorageSystem storageSystem, IStorage storageImplementation, ConfigurationReader configurationReader) {

@@ -2,6 +2,7 @@ package ca.omny.storage;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.logger.OmnyLogger;
+import ca.omny.logger.SimpleLogger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +15,13 @@ import javax.inject.Inject;
 
 public class StorageSystem {
 
-    @Inject
-    OmnyLogger logger;
-
-    @Inject
+    static OmnyLogger logger = new SimpleLogger(StorageSystem.class.getName());
+    
     IStorage storageImplementation;
+    
+    public StorageSystem() {
+        storageImplementation = StorageFactory.getDefaultStorage();
+    }
 
     @Inject
     public void injectServiceClient(IStorage storageImplementation) {

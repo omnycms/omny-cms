@@ -3,18 +3,11 @@ package ca.omny.services.sites.apis;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
-import ca.omny.service.client.PermissionChecker;
 import com.google.gson.Gson;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 
 public class Robots implements OmnyApi {
 
     Gson gson;
-    
-    @Inject
-    PermissionChecker permissionChecker;
 
     public Robots() {
         gson = new Gson();

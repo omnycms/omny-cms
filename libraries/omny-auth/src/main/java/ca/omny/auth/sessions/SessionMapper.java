@@ -2,16 +2,24 @@ package ca.omny.auth.sessions;
 
 import ca.omny.auth.token.AuthTokenParser;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 public class SessionMapper {
     
-    @Inject
     AuthTokenParser authTokenParser;
     
-    @Inject
     IDocumentQuerier querier;
+    
+    public SessionMapper() {
+        this(QuerierFactory.getDefaultQuerier());
+    }
+
+    public SessionMapper(IDocumentQuerier querier) {
+        this.querier = querier;
+        authTokenParser = new AuthTokenParser();
+    }
     
     public String getUserId(HttpServletRequest request) {
         String token = authTokenParser.getToken(request);

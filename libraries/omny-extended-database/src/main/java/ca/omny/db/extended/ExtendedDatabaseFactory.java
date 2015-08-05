@@ -3,7 +3,9 @@ package ca.omny.db.extended;
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.documentdb.IDocumentQuerierFactory;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.storage.IStorage;
+import ca.omny.storage.StorageFactory;
 import javax.inject.Inject;
 
 public class ExtendedDatabaseFactory implements IDocumentQuerierFactory {
@@ -15,6 +17,24 @@ public class ExtendedDatabaseFactory implements IDocumentQuerierFactory {
 
     @Inject
     ConfigurationReader configurationReader;
+
+    static {
+        QuerierFactory.registerFactory(new ExtendedDatabaseFactory());
+    }
+    
+    public static void register() {
+        
+    }
+    
+    public ExtendedDatabaseFactory() {
+        this(StorageFactory.getDefaultStorage(), ConfigurationReader.getDefaultConfigurationReader());
+    }
+    
+    public ExtendedDatabaseFactory(IStorage storage, ConfigurationReader configurationReader) {
+        this.storage = storage;
+        this.configurationReader = configurationReader;
+    }
+        
     
     @Override
     public IDocumentQuerier getInstance() {

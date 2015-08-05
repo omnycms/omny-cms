@@ -7,6 +7,7 @@ import ca.omny.service.client.PermissionChecker;
 import com.google.gson.Gson;
 import ca.omny.sites.mappers.SiteMapBuilder;
 import ca.omny.sites.models.SiteMap;
+import ca.omny.storage.StorageSystem;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,17 +20,11 @@ public class SiteMaps implements OmnyApi {
 
     Gson gson;
     
-    @Inject
-    PermissionChecker permissionChecker;
-    
-    @Inject
     SiteMapBuilder siteMapBuilder;
-    
-    @Inject
-    RequestResponseManager requestResponseManager;
 
     public SiteMaps() {
         gson = new Gson();
+        siteMapBuilder = new SiteMapBuilder();
     }
 
     @Override
@@ -48,7 +43,7 @@ public class SiteMaps implements OmnyApi {
             JAXBContext jaxbContext = JAXBContext.newInstance(SiteMap.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             StringWriter sw = new StringWriter();
-            jaxbMarshaller.marshal(siteMapBuilder.getSiteMap(requestResponseManager.getRequestHostname()),sw);
+            jaxbMarshaller.marshal(siteMapBuilder.getSiteMap(requestResponseManager.getRequestHostname(), new StorageSystem()),sw);
             requestResponseManager.getResponse().addHeader("Content-Type", "application/xml");
             return new ApiResponse(sw.toString(),200);
         } catch (JAXBException ex) {

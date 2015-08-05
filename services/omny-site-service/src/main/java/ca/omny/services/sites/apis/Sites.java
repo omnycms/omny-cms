@@ -15,14 +15,14 @@ public class Sites implements OmnyApi {
 
     Gson gson;
     
-    @Inject
     SiteHelper siteHelper;
     
-    @Inject
     SiteMapper siteMapper;
 
     public Sites() {
         gson = new Gson();
+        siteMapper = new SiteMapper();
+        siteHelper = new SiteHelper();
     }
 
     @Override
@@ -40,13 +40,13 @@ public class Sites implements OmnyApi {
         String siteName = requestResponseManager.getPathParameter("site");
         String userId;
         if(siteName!=null) {
-            SiteDetails site = siteMapper.getSite(siteName);
+            SiteDetails site = siteMapper.getSite(siteName, requestResponseManager.getDatabaseQuerier());
             if(site==null) {
                 return new ApiResponse("", 404);
             }
             return new ApiResponse(site, 200);
         } else {
-            return new ApiResponse(siteHelper.getSites(requestResponseManager.getUserId()),200);
+            return new ApiResponse(siteHelper.getSites(requestResponseManager.getUserId(), requestResponseManager.getDatabaseQuerier()),200);
         }
     }
 
@@ -54,7 +54,7 @@ public class Sites implements OmnyApi {
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
         try {
             SiteDetails site = requestResponseManager.getEntity(SiteDetails.class);
-            siteHelper.createSite(site.getSubdomain(),site.getSiteName(),requestResponseManager.getUserId());
+            siteHelper.createSite(site.getSubdomain(),site.getSiteName(),requestResponseManager.getUserId(), requestResponseManager.getDatabaseQuerier());
             return new ApiResponse("", 201);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(Sites.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,7 +69,7 @@ public class Sites implements OmnyApi {
 
     @Override
     public ApiResponse deleteResponse(RequestResponseManager requestResponseManager) {
-        siteMapper.deleteSite(requestResponseManager.getRequestHostname());
+        siteMapper.deleteSite(requestResponseManager.getRequestHostname(), requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
    

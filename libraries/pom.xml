@@ -19,6 +19,7 @@
         <module>omny-extended-database</module>
         <module>omny-configuration-reader</module>
         <module>omny-extension-points</module>
+        <module>omny-lambda-wrapper</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

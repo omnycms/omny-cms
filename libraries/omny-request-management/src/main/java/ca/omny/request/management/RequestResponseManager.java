@@ -1,12 +1,15 @@
 package ca.omny.request.management;
 
 import ca.omny.auth.sessions.SessionMapper;
+import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
+import ca.omny.storage.IStorage;
+import ca.omny.storage.StorageFactory;
 import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -108,5 +111,21 @@ public class RequestResponseManager {
 
     public void setPathParameters(Map<String, String> pathParameters) {
         this.pathParameters = pathParameters;
+    }
+    
+    /**
+     * Provides a context specific storage instance. Can use request information, such as hostname to provide unique storage
+     * @return A context specific storage instance
+     */
+    public IStorage getStorageDevice() {
+        return StorageFactory.getDefaultStorage();
+    }
+    
+    /**
+     * Provides a context specific database instance. Can use request information, such as hostname to provide unique DBs
+     * @return A context specific database instance
+     */
+    public IDocumentQuerier getDatabaseQuerier() {
+        return QuerierFactory.getDefaultQuerier();
     }
 }

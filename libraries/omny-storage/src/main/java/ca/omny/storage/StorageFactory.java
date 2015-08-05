@@ -7,6 +7,7 @@ import ca.omny.logger.SimpleLogger;
 import ca.omny.storage.implementation.S3Storage;
 import ca.omny.storage.implementation.LocalStorage;
 import ca.omny.storage.implementation.DocumentDatabaseStorage;
+import java.io.File;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -59,7 +60,12 @@ public class StorageFactory {
         
         String rootFolder = configurationReader.getSimpleConfigurationString("localFolder");
         if(rootFolder==null || rootFolder.equals(".")) {
-            rootFolder = ConfigurationReader.findRootDirectory("storage").getAbsolutePath();
+            File findRootDirectory = ConfigurationReader.findRootDirectory("storage");
+            if(findRootDirectory!=null) {
+                rootFolder = findRootDirectory.getAbsolutePath();
+            } else {
+                rootFolder = ".";
+            }
         }
         LocalStorage localStorage = new LocalStorage(rootFolder);
         return localStorage;
