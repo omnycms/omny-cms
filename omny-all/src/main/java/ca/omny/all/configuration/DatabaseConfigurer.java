@@ -16,14 +16,9 @@ import org.apache.commons.io.FileUtils;
 
 public class DatabaseConfigurer {
     
-    @Inject
-    UserMapper userMapper;
-    
-    @Inject
-    SiteMapper siteMapper;
-    
-    @Inject
-    IDocumentQuerier querier;
+    UserMapper userMapper = new UserMapper();
+    SiteMapper siteMapper = new SiteMapper();
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
 
     public void configure(DatabaseConfigurationValues configurationValues) throws IllegalAccessException {
         configureAdminUser(configurationValues.getAdminEmail());
@@ -62,9 +57,9 @@ public class DatabaseConfigurer {
 
     public void configureAdminUser(String adminEmail) throws IllegalAccessException {
         if (adminEmail != null) {
-            String userId = userMapper.getIdFromEmail(adminEmail);
+            String userId = userMapper.getIdFromEmail(adminEmail, querier);
             if(userId==null) {
-                userId = userMapper.createUser(adminEmail);
+                userId = userMapper.createUser(adminEmail, querier);
             }
             if(siteMapper.getSite("www",QuerierFactory.getDefaultQuerier())==null) {
                 siteMapper.saveSite("www", "Main", userId,QuerierFactory.getDefaultQuerier());
