@@ -9,20 +9,17 @@ import ca.omny.request.management.RequestResponseManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 
 public class DetailedPages implements OmnyApi {
     
     Gson gson;
-    
-    @Inject
     PageHelper pageHelper;
-    
-    @Inject
     PageMapper pageMapper;
     
     public DetailedPages() {
         gson = new Gson();
+        pageHelper = PageHelper.getDefaultPageHelper();
+        pageMapper = new PageMapper();
     }
 
     @Override
@@ -39,7 +36,7 @@ public class DetailedPages implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         try {
             String page = requestResponseManager.getQueryStringParameter("page");
-            return new ApiResponse(pageHelper.getPageDetails(requestResponseManager.getRequestHostname(),page,false),200);
+            return new ApiResponse(pageHelper.getPageDetails(requestResponseManager.getRequestHostname(),page,requestResponseManager.getStorageSystem(),requestResponseManager.getDatabaseQuerier(),false),200);
         } catch (IOException ex) {
             Logger.getLogger(DetailedPages.class.getName()).log(Level.SEVERE, null, ex);
         }

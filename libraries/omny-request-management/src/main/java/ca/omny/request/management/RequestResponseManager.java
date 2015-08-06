@@ -5,6 +5,7 @@ import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.storage.IStorage;
 import ca.omny.storage.StorageFactory;
+import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -119,6 +120,11 @@ public class RequestResponseManager {
      */
     public IStorage getStorageDevice() {
         return StorageFactory.getDefaultStorage();
+    }
+    
+    public StorageSystem getStorageSystem() {
+        StorageSystem storageSystem = new StorageSystem(this.getStorageDevice());
+        return storageSystem;
     }
     
     /**

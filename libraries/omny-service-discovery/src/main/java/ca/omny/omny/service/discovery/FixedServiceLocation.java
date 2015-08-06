@@ -17,6 +17,10 @@ public class FixedServiceLocation implements ServiceLocator {
     
     @Inject
     ConfigurationReader configurationReader;
+    
+    public FixedServiceLocation() {
+        configurationReader = ConfigurationReader.getDefaultConfigurationReader();
+    }
 
     public void setConfigurationReader(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;

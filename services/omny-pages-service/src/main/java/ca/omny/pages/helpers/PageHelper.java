@@ -30,39 +30,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class PageHelper {
 
-    @Inject
-    StorageSystem storageSystem;
-
-    @Inject
     PageMapper pageMapper;
-
-    @Inject
     PageTemplateMapper pageTemplateMapper;
-    
-    @Inject
     TemplateMapper templateMapper;
-
-    @Inject
     ModuleMapper moduleMapper;
-
-    @Inject
     ThemeMapper themeMapper;
-
-    @Inject
-    IDocumentQuerier querier;
-    
-    @Inject
+    ConfigurationReader configurationReader;
     DiscoverableServiceClient serviceClient;
     
-    @Inject 
-    ConfigurationReader configurationReader;
+    static PageHelper defaultPageHelper;
+    
+    PageHelper() {
+        pageMapper = new PageMapper();
+        pageTemplateMapper = new PageTemplateMapper();
+        templateMapper = new TemplateMapper();
+        moduleMapper = new ModuleMapper();
+        themeMapper = new ThemeMapper();
+        configurationReader = ConfigurationReader.getDefaultConfigurationReader();
+        serviceClient = new DiscoverableServiceClient();
+    }
+    
+    public static PageHelper getDefaultPageHelper() {
+        if(defaultPageHelper==null) {
+            defaultPageHelper = new PageHelper();
+        }
+        return defaultPageHelper;
+    }
 
-    public Collection<String> getPages(String path, String host) {
+    public Collection<String> getPages(String path, String host, StorageSystem storageSystem) {
         String suffix = "Data.json";
 
         Collection<String> files = storageSystem.listFiles(path, true, suffix, host);
@@ -75,16 +74,16 @@ public class PageHelper {
         return pages;
     }
 
-    public PageDetails getPageDetails(String hostname, String pageName, boolean preview) throws IOException {
-        Page page = pageMapper.getPage(pageName, hostname, preview);
+    public PageDetails getPageDetails(String hostname, String pageName, StorageSystem storageSystem, IDocumentQuerier querier, boolean preview) throws IOException {
+        Page page = pageMapper.getPage(pageName, hostname, storageSystem, preview);
 
-        String themeName = themeMapper.getThemeName(hostname, page);
+        String themeName = themeMapper.getThemeName(hostname, page, querier);
         //PageTemplate pageTemplate = pageTemplateMapper.getPageTemplate(themeName,page.getTemplateName(), preview);
-        String themeContent = themeMapper.getThemeHtml(themeName, hostname, preview);
+        String themeContent = themeMapper.getThemeHtml(themeName, hostname, storageSystem, preview);
         PageDetails details = new PageDetails();
 
         String pageModuleLocation = "pages/current/" + pageName + "Modules.json";
-        Map<String, Collection<BuilderPluginInstanceInfo>> pageModules = moduleMapper.getModules(pageModuleLocation, hostname);
+        Map<String, Collection<BuilderPluginInstanceInfo>> pageModules = moduleMapper.getModules(pageModuleLocation, hostname, storageSystem);
         
         boolean globalTheme = themeName.startsWith("global/");
         String shortThemeName = themeName;
@@ -92,9 +91,9 @@ public class PageHelper {
             shortThemeName = themeName.substring("global/".length());
         }
        
-        String templateModuleLocation = templateMapper.getTemplateLocation(shortThemeName, page.getTemplateName(), hostname, preview);
+        String templateModuleLocation = templateMapper.getTemplateLocation(shortThemeName, page.getTemplateName(), hostname, querier, preview);
         String siteForTemplate = page.getTemplateName().startsWith("site/") ? hostname : globalTheme ? "www" : hostname;
-        Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, siteForTemplate);
+        Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, siteForTemplate, storageSystem);
 
         //Collection<Module> dependencies = moduleMapper.getAllDependencies(pageModules, templateModules);
         details.setPage(page);
@@ -106,8 +105,8 @@ public class PageHelper {
         return details;
     }
 
-    public Map getPageBaseHtml(String hostname, String pageName, boolean preview) throws IOException {
-        PageDetails pageDetails = this.getPageDetails(hostname, pageName, preview);
+    public Map getPageBaseHtml(String hostname, String pageName, StorageSystem storageSystem, IDocumentQuerier querier, boolean preview) throws IOException {
+        PageDetails pageDetails = this.getPageDetails(hostname, pageName, storageSystem, querier, preview);
 
         StringBuilder headBuilder = new StringBuilder();
         StringBuilder bodyBuilder = new StringBuilder();

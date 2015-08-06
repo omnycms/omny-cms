@@ -3,30 +3,26 @@ package ca.omny.services.pages.apis;
 import com.google.gson.Gson;
 import ca.omny.pages.mappers.PageMapper;
 import ca.omny.pages.helpers.PageHelper;
-import ca.omny.pages.models.PageModulesUpdate;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 
 public class PageBaseHtml implements OmnyApi {
     
     Gson gson;
     
-    @Inject
     PageHelper pageHelper;
     
-    @Inject
     PageMapper pageMapper;
     
-    @Inject
-    RequestResponseManager requestResponseManager;
     
     public PageBaseHtml() {
         gson = new Gson();
+        pageMapper = new PageMapper();
+        pageHelper = PageHelper.getDefaultPageHelper();
     }
 
     @Override
@@ -44,7 +40,7 @@ public class PageBaseHtml implements OmnyApi {
         try {
             String page = requestResponseManager.getQueryStringParameter("page");
             
-            return new ApiResponse(pageHelper.getPageBaseHtml(requestResponseManager.getRequestHostname(),page,false),200);
+            return new ApiResponse(pageHelper.getPageBaseHtml(requestResponseManager.getRequestHostname(),page,requestResponseManager.getStorageSystem(), requestResponseManager.getDatabaseQuerier(),false),200);
         } catch (IOException ex) {
             Logger.getLogger(DetailedPages.class.getName()).log(Level.SEVERE, null, ex);
         }

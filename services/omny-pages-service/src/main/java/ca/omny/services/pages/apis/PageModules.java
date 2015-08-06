@@ -3,6 +3,7 @@ package ca.omny.services.pages.apis;
 import com.google.gson.Gson;
 import ca.omny.pages.mappers.PageMapper;
 import ca.omny.pages.helpers.PageHelper;
+import ca.omny.pages.mappers.ThemeMapper;
 import ca.omny.pages.models.PageModulesUpdate;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
@@ -12,18 +13,13 @@ import javax.inject.Inject;
 public class PageModules implements OmnyApi {
     
     Gson gson;
-    
-    @Inject
     PageHelper pageHelper;
-    
-    @Inject
     PageMapper pageMapper;
-    
-    @Inject
-    RequestResponseManager requestResponseManager;
-    
+        
     public PageModules() {
         gson = new Gson();
+        pageMapper = new PageMapper();
+        pageHelper = PageHelper.getDefaultPageHelper();
     }
 
     @Override
@@ -49,7 +45,7 @@ public class PageModules implements OmnyApi {
     @Override
     public ApiResponse putResponse(RequestResponseManager requestResponseManager) {       
         PageModulesUpdate pageModulesUpdate = requestResponseManager.getEntity(PageModulesUpdate.class);
-        pageMapper.updateModules(pageModulesUpdate, requestResponseManager.getRequestHostname());
+        pageMapper.updateModules(pageModulesUpdate, requestResponseManager.getRequestHostname(), requestResponseManager.getStorageSystem());
         return new ApiResponse("", 200);
     }
 

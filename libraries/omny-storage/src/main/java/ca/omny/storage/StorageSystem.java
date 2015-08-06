@@ -23,6 +23,10 @@ public class StorageSystem {
         storageImplementation = StorageFactory.getDefaultStorage();
     }
 
+    public StorageSystem(IStorage storageImplementation) {
+        this.storageImplementation = storageImplementation;
+    }
+
     @Inject
     public void injectServiceClient(IStorage storageImplementation) {
         this.storageImplementation = storageImplementation;
