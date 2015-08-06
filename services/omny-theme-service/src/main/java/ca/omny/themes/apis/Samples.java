@@ -39,9 +39,9 @@ public class Samples implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String theme = requestResponseManager.getPathParameter("theme");
         if(theme.equals("default")) {
-            theme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname());
+            theme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname(), requestResponseManager.getDatabaseQuerier());
         }
-        Collection<Sample> samples = sampleMapper.getSamples(theme,requestResponseManager.getRequestHostname());
+        Collection<Sample> samples = sampleMapper.getSamples(theme,requestResponseManager.getRequestHostname(), requestResponseManager.getStorageSystem());
         return new ApiResponse(samples,200);
     }
 

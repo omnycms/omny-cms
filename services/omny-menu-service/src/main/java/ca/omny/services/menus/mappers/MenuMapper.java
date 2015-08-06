@@ -1,8 +1,6 @@
 package ca.omny.services.menus.mappers;
 
-import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.service.client.DiscoverableServiceClient;
 import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;
 import ca.omny.services.menus.models.Menu;
@@ -13,23 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import javax.inject.Inject;
 
 public class MenuMapper {
     
-    @Inject
-    IDocumentQuerier querier;
-    
-    @Inject
-    ConfigurationReader configurationReader;
-    
-    @Inject
-    StorageSystem storageSystem;
-    
-    @Inject
-    DiscoverableServiceClient serviceClient;
-    
-    public Collection<String> getMenuNames(String host) {
+    public Collection<String> getMenuNames(String host, IDocumentQuerier querier) {
         String key = querier.getKey("menus", host);
         Collection<Menu> menus = querier.getRange(key, Menu.class);
         LinkedList<String> result = new LinkedList<String>();
@@ -39,31 +24,31 @@ public class MenuMapper {
         return result;
     }
     
-    public Collection<Menu> getFullMenus(String host) {
+    public Collection<Menu> getFullMenus(String host, IDocumentQuerier querier) {
         String key = querier.getKey("menus", host);
         Collection<Menu> menus = querier.getRange(key, Menu.class);
         return menus;
     }
     
-    public Menu getMenu(String host, String name) {
+    public Menu getMenu(String host, String name, IDocumentQuerier querier) {
         String key = querier.getKey("menus", host, name);
         Menu menu = querier.get(key, Menu.class);
         return menu;
     }
     
-    public void createMenu(String host,String menuName) {
+    public void createMenu(String host,String menuName, IDocumentQuerier querier) {
         Menu menu = new Menu();
         menu.setMenuName(menuName);
-        this.createMenu(host, menu);
+        this.createMenu(host, menu, querier);
     }
     
-    public void createMenu(String host, Menu menu) {
+    public void createMenu(String host, Menu menu, IDocumentQuerier querier) {
         String key = querier.getKey("menus", host, menu.getMenuName());
         querier.set(key, menu);
     }
     
-    public void addMenuEntry(String host, String menuName, String title, String link) {
-        Menu menu = this.getMenu(host, menuName);
+    public void addMenuEntry(String host, String menuName, String title, String link, IDocumentQuerier querier) {
+        Menu menu = this.getMenu(host, menuName, querier);
         
         if(menu.getMenuItems()==null) {
             menu.setMenuItems(new LinkedList<MenuEntry>());
@@ -135,7 +120,7 @@ public class MenuMapper {
         return null;
     }
     
-    public Collection<MenuEntry> getDefaultLinks(String hostname) {
+    public Collection<MenuEntry> getDefaultLinks(String hostname, StorageSystem storageSystem) {
         Gson gson = new Gson();
         String suffix = "Data.json";
         String prefix = "pages/current/";
@@ -189,8 +174,8 @@ public class MenuMapper {
         return entries;
     }
     
-    public Collection<MenuEntry> getLinks(String host, String menuName) {
-        Menu menu = this.getMenu(host, menuName);
+    public Collection<MenuEntry> getLinks(String host, String menuName, IDocumentQuerier querier) {
+        Menu menu = this.getMenu(host, menuName, querier);
         return menu.getMenuItems();
     }
 }

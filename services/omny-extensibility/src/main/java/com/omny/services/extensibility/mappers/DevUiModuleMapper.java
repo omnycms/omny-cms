@@ -8,28 +8,22 @@ import javax.inject.Inject;
 
 public class DevUiModuleMapper {
     
-    @Inject
-    IDocumentQuerier querier;
-    
-    @Inject
-    ConfigurationReader configurationReader;
-    
-    public DevUiModuleConfiguration getConfigurations(String site, String name) {
+    public DevUiModuleConfiguration getConfigurations(String site, String name, IDocumentQuerier querier) {
         String key = querier.getKey("site_data", site, "ui", "devmodules", name);
         return querier.get(key, DevUiModuleConfiguration.class);
     }
     
-    public void deleteConfiguration(String site, String name) {
+    public void deleteConfiguration(String site, String name, IDocumentQuerier querier) {
         String key = querier.getKey("site_data", site, "ui", "devmodules", name);
         querier.delete(key);
     }
     
-    public Collection<DevUiModuleConfiguration> listConfigurations(String site) {
+    public Collection<DevUiModuleConfiguration> listConfigurations(String site, IDocumentQuerier querier) {
         String key = querier.getKey("site_data", site, "ui", "devmodules");
         return querier.getRange(key, DevUiModuleConfiguration.class);
     }
     
-    public void saveConfiguration(String site, DevUiModuleConfiguration configuration) {
+    public void saveConfiguration(String site, DevUiModuleConfiguration configuration, IDocumentQuerier querier) {
         String key = querier.getKey("site_data", site, "ui", "devmodules", configuration.getName());
         querier.set(key, configuration);
     }

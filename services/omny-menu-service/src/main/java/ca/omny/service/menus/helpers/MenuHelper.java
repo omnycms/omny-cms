@@ -1,22 +1,25 @@
 package ca.omny.service.menus.helpers;
 
+import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.services.menus.mappers.MenuMapper;
 import ca.omny.services.menus.models.Menu;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class MenuHelper {
     
-    @Inject
     MenuMapper menuMapper;
     
-    public void createEntryFromPage(String host, String title, String page) {
-        Collection<Menu> menus = menuMapper.getFullMenus(host);
+    public MenuHelper() {
+        menuMapper = new MenuMapper();
+    }
+    
+    public void createEntryFromPage(String host, String title, String page, IDocumentQuerier querier) {
+        Collection<Menu> menus = menuMapper.getFullMenus(host, querier);
         String path = "/"+page+".html";
         for(Menu menu: menus) {
             if(page.startsWith(menu.getRootPath())) {
                 if(this.menuMatches(page, menu.getRootPath(), menu.getDepth())) {
-                    menuMapper.addMenuEntry(host, menu.getMenuName(), title, path);
+                    menuMapper.addMenuEntry(host, menu.getMenuName(), title, path, querier);
                     //find affected pages and update
                 }
             }

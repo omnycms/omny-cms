@@ -25,9 +25,7 @@ import org.apache.commons.io.IOUtils;
 
 public class UiModules implements OmnyApi {
 
-    @Inject
     ConfigurationReader configurationReader;
-
     AmazonStorageConfig config;
     AmazonS3Client s3Client;
     Mimedata mimeData;
@@ -35,7 +33,7 @@ public class UiModules implements OmnyApi {
     Gson gson = new Gson();
 
     public UiModules() {
-
+        configurationReader = ConfigurationReader.getDefaultConfigurationReader();
     }
 
     @Override

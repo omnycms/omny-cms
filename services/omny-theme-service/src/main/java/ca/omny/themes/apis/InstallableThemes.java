@@ -3,6 +3,7 @@ package ca.omny.themes.apis;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
+import ca.omny.storage.GlobalStorage;
 import ca.omny.themes.mappers.ThemeMapper;
 import javax.inject.Inject;
 
@@ -23,10 +24,11 @@ public class InstallableThemes implements OmnyApi{
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String theme = requestResponseManager.getPathParameter("theme");
+        GlobalStorage globalStorage = GlobalStorage.getDefaultGlobalStorage();
         if(theme==null) {
-            return new ApiResponse(themeMapper.getInstallableThemes(), 200);
+            return new ApiResponse(themeMapper.getInstallableThemes(globalStorage), 200);
         } else {
-            return new ApiResponse(themeMapper.getGlobalTheme(theme), 200);
+            return new ApiResponse(themeMapper.getGlobalTheme(theme,globalStorage), 200);
         }
     }
 

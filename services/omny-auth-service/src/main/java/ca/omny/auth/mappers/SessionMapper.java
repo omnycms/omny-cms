@@ -3,46 +3,39 @@ package ca.omny.auth.mappers;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.auth.models.Session;
 import java.util.UUID;
-import javax.inject.Inject;
 
 public class SessionMapper {
     
-    @Inject
-    IDocumentQuerier database;
+    PermissionMapper permissionMapper = new PermissionMapper();
+    UserMapper userMapper = new UserMapper();
     
-    @Inject
-    PermissionMapper permissionMapper;
-    
-    @Inject
-    UserMapper userMapper;
-    
-    public Session getSession(String sessionId) {
+    public Session getSession(String sessionId, IDocumentQuerier database) {
         String key = database.getKey("sessions",sessionId);
         Session session = database.get(key, Session.class);
        //session.setPermissions(permissionMapper.getPermissions(session.getUserId()));
         return session;
     }
     
-    public void createSession(String userId, String sessionId, String sessionType) {
+    public void createSession(String userId, String sessionId, String sessionType, IDocumentQuerier database) {
         Session session = new Session();
         session.setUserId(userId);
         session.setSessionId(sessionId);
         session.setSessionType(sessionType);
-        createSession(session);
+        createSession(session, database);
     }
     
-    public void createSession(Session session) {
+    public void createSession(Session session, IDocumentQuerier database) {
         String key = database.getKey("sessions",session.getSessionId());
         database.set(key, session);
     }
     
-    public String createSession(String email, String type) {
-        String userId = userMapper.getIdFromEmail(email);
+    public String createSession(String email, String type, IDocumentQuerier database) {
+        String userId = userMapper.getIdFromEmail(email, database);
         if(userId==null) {
-            userId = userMapper.createUser(email);
+            userId = userMapper.createUser(email, database);
         }
         String sessionId = UUID.randomUUID().toString();
-        this.createSession(userId, sessionId, type);
+        this.createSession(userId, sessionId, type, database);
         
         return sessionId;
     }

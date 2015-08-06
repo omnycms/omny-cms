@@ -5,12 +5,10 @@ import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
 import ca.omny.services.extensibility.models.InstalledUiModuleConfiguration;
 import com.omny.services.extensibility.mappers.DefaultModuleVersionMapper;
-import javax.inject.Inject;
 
 public class DefaultModuleVersion implements OmnyApi {
 
-    @Inject
-    DefaultModuleVersionMapper moduleMapper;
+    DefaultModuleVersionMapper moduleMapper = new DefaultModuleVersionMapper();
     
     @Override
     public String getBasePath() {
@@ -37,7 +35,7 @@ public class DefaultModuleVersion implements OmnyApi {
         InstalledUiModuleConfiguration entity = requestResponseManager.getEntity(InstalledUiModuleConfiguration.class);
         entity.setName(requestResponseManager.getPathParameter("module"));
         entity.setCreator(requestResponseManager.getRequestHostname());
-        moduleMapper.setDefaultVersion(entity);
+        moduleMapper.setDefaultVersion(entity, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
 

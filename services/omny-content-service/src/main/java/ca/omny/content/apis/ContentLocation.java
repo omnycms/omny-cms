@@ -14,24 +14,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.Response;
 
 public class ContentLocation implements OmnyApi {
     
-    @Inject
-    StorageSystem storageSystem;
-    
-    @Inject
     Mimedata mimedata;
-    
     Gson gson;
 
     public ContentLocation() {
         gson = new Gson();
+        mimedata = new Mimedata();
     }
 
     public String getBasePath() {
@@ -43,6 +37,7 @@ public class ContentLocation implements OmnyApi {
     }
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
+        StorageSystem storageSystem = requestResponseManager.getStorageSystem();
         String file = requestResponseManager.getQueryStringParameter("file");
         HttpServletRequest request =  requestResponseManager.getRequest();
         Map<String, String> queryParameters = new HashMap<String, String>();

@@ -6,12 +6,10 @@ import ca.omny.request.management.RequestResponseManager;
 import ca.omny.services.extensibility.models.InstalledUiModuleConfiguration;
 import com.omny.services.extensibility.mappers.InstalledUiModuleMapper;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class InstalledUiModules implements OmnyApi {
 
-    @Inject
-    InstalledUiModuleMapper moduleMapper;
+    InstalledUiModuleMapper moduleMapper = new InstalledUiModuleMapper();
             
     @Override
     public String getBasePath() {
@@ -29,9 +27,9 @@ public class InstalledUiModules implements OmnyApi {
         String name = requestResponseManager.getPathParameter("module");
         String site = requestResponseManager.getRequestHostname();
         if(name!=null&&!name.isEmpty()) {
-            return new ApiResponse(moduleMapper.getConfiguration(site, creator, name), 200);
+            return new ApiResponse(moduleMapper.getConfiguration(site, creator, name, requestResponseManager.getDatabaseQuerier()), 200);
         }
-        Collection<InstalledUiModuleConfiguration> configurations = moduleMapper.listConfigurations(site);
+        Collection<InstalledUiModuleConfiguration> configurations = moduleMapper.listConfigurations(site, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse(configurations, 200);
     }
 
@@ -47,7 +45,8 @@ public class InstalledUiModules implements OmnyApi {
         entity.setCreator(requestResponseManager.getPathParameter("creator"));
         moduleMapper.saveConfiguration(
             requestResponseManager.getRequestHostname(),
-            entity
+            entity,
+            requestResponseManager.getDatabaseQuerier()
         );
         return new ApiResponse("", 200);
     }
@@ -57,7 +56,7 @@ public class InstalledUiModules implements OmnyApi {
         String name = requestResponseManager.getPathParameter("module");
         String creator = requestResponseManager.getPathParameter("creator");
         String site = requestResponseManager.getRequestHostname();
-        moduleMapper.deleteConfiguration(site, creator, name);
+        moduleMapper.deleteConfiguration(site, creator, name, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
     

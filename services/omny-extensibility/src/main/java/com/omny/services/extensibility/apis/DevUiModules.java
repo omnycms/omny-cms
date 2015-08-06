@@ -6,12 +6,10 @@ import ca.omny.request.management.RequestResponseManager;
 import ca.omny.services.extensibility.models.DevUiModuleConfiguration;
 import com.omny.services.extensibility.mappers.DevUiModuleMapper;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class DevUiModules implements OmnyApi {
 
-    @Inject
-    DevUiModuleMapper moduleMapper;
+    DevUiModuleMapper moduleMapper = new DevUiModuleMapper();
 
     @Override
     public String getBasePath() {
@@ -28,9 +26,9 @@ public class DevUiModules implements OmnyApi {
         String name = requestResponseManager.getPathParameter("configuration");
         String site = requestResponseManager.getRequestHostname();
         if(name!=null) {
-            return new ApiResponse(moduleMapper.getConfigurations(site, name), 200);
+            return new ApiResponse(moduleMapper.getConfigurations(site, name, requestResponseManager.getDatabaseQuerier()), 200);
         }
-        Collection<DevUiModuleConfiguration> configurations = moduleMapper.listConfigurations(site);
+        Collection<DevUiModuleConfiguration> configurations = moduleMapper.listConfigurations(site, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse(configurations, 200);
     }
 
@@ -45,7 +43,8 @@ public class DevUiModules implements OmnyApi {
         entity.setName(requestResponseManager.getPathParameter("configuration"));
         moduleMapper.saveConfiguration(
             requestResponseManager.getRequestHostname(),
-            entity
+            entity,
+            requestResponseManager.getDatabaseQuerier()
         );
         return new ApiResponse("", 200);
     }
@@ -54,7 +53,7 @@ public class DevUiModules implements OmnyApi {
     public ApiResponse deleteResponse(RequestResponseManager requestResponseManager) {
         String name = requestResponseManager.getPathParameter("configuration");
         String site = requestResponseManager.getRequestHostname();
-        moduleMapper.deleteConfiguration(site, name);
+        moduleMapper.deleteConfiguration(site, name, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
 

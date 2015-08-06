@@ -4,6 +4,7 @@ import ca.omny.documentdb.IDocumentQuerier;
 import com.google.gson.Gson;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.mappers.UserMapper;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
@@ -13,7 +14,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Google2Api;
 import org.scribe.model.OAuthRequest;
@@ -29,14 +29,9 @@ public class GoogleLogin implements OmnyApi {
 
     static Logger logger = Logger.getLogger(GoogleLogin.class.getName());
 
-    @Inject
-    IDocumentQuerier querier;
-
-    @Inject
-    UserMapper userMapper;
-
-    @Inject
-    SessionMapper sessionMapper;
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+    UserMapper userMapper = new UserMapper();
+    SessionMapper sessionMapper = new SessionMapper();
     
     @Override
     public String getBasePath() {
@@ -79,7 +74,7 @@ public class GoogleLogin implements OmnyApi {
             String email = responseMap.get("email").toString();
             logger.info(uuid.toString() + " email from google " + email);
             //get user by email
-            String sessionId = sessionMapper.createSession(email, "oauth");
+            String sessionId = sessionMapper.createSession(email, "oauth", querier);
             
             return new ApiResponse(sessionId, 200);
         } catch (UnsupportedEncodingException ex) {

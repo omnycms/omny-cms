@@ -1,26 +1,15 @@
 package ca.omny.auth.apis;
 
-import ca.omny.auth.token.AuthTokenParser;
 import com.google.gson.Gson;
-import ca.omny.auth.mappers.PermissionMapper;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.models.Session;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
-import javax.inject.Inject;
 
 public class Sessions implements OmnyApi {
     
-    @Inject
-    AuthTokenParser tokenParser;
-    
-    @Inject
-    SessionMapper sessionMapper;
-    
-    @Inject
-    PermissionMapper permissionMapper;
-    
+    SessionMapper sessionMapper = new SessionMapper();
     Gson gson;
 
     public Sessions() {
@@ -40,7 +29,7 @@ public class Sessions implements OmnyApi {
     @Override
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String sessionId = requestResponseManager.getQueryStringParameter("sessionId");
-        Session session = sessionMapper.getSession(sessionId);
+        Session session = sessionMapper.getSession(sessionId, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse(session, 200);
     }
 
@@ -49,7 +38,7 @@ public class Sessions implements OmnyApi {
         
         Session session = requestResponseManager.getEntity(Session.class);
         
-        sessionMapper.createSession(session);
+        sessionMapper.createSession(session, requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
 

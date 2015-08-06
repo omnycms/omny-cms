@@ -12,18 +12,13 @@ import javax.inject.Inject;
 public class MenuEntries implements OmnyApi {
 
     Gson gson;
-    
-    @Inject
-    RequestResponseManager requestResponseManager;
-    
-    @Inject
     MenuMapper menuMapper;
-    
-    @Inject
     MenuHelper menuHelper;
 
     public MenuEntries() {
         gson = new Gson();
+        menuMapper = new MenuMapper();
+        menuHelper = new MenuHelper();
     }
 
     @Override
@@ -39,14 +34,14 @@ public class MenuEntries implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String menuName = requestResponseManager.getPathParameter("menu");
         if(menuName==null||menuName.equals("default")) {
-            return new ApiResponse(menuMapper.getDefaultLinks(requestResponseManager.getRequestHostname()),200);
+            return new ApiResponse(menuMapper.getDefaultLinks(requestResponseManager.getRequestHostname(),requestResponseManager.getStorageSystem()),200);
         }
-        return new ApiResponse(menuMapper.getLinks(requestResponseManager.getRequestHostname(), menuName),200);
+        return new ApiResponse(menuMapper.getLinks(requestResponseManager.getRequestHostname(), menuName, requestResponseManager.getDatabaseQuerier()),200);
     }
 
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
         MenuEntry entry = requestResponseManager.getEntity(MenuEntry.class);
-        menuHelper.createEntryFromPage(requestResponseManager.getRequestHostname(), entry.getTitle(), entry.getLink());
+        menuHelper.createEntryFromPage(requestResponseManager.getRequestHostname(), entry.getTitle(), entry.getLink(), requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 201);
     }
 

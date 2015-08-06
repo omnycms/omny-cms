@@ -8,20 +8,10 @@ import ca.omny.themes.models.Theme;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import javax.inject.Inject;
 
 public class ThemeMapper {
 
-    @Inject
-    IDocumentQuerier querier;
-    
-    @Inject
-    StorageSystem storageSystem;
-    
-    @Inject
-    GlobalStorage globalStorage;
-    
-    public Collection<String> getThemes(String hostname) {
+    public Collection<String> getThemes(String hostname, StorageSystem storageSystem) {
         HashMap<String,Boolean> themeMap = new HashMap<String,Boolean>();
         Collection<String> files = storageSystem.listFiles("themes/current",true,hostname);
         for(String file: files) {
@@ -32,7 +22,7 @@ public class ThemeMapper {
         return themeMap.keySet();
     }
     
-    public Collection<Theme> getInstallableThemes() {
+    public Collection<Theme> getInstallableThemes(GlobalStorage globalStorage) {
         Collection<String> files = globalStorage.getGlobalItems("site-files/themes/current", "theme.html", true);
         LinkedList<Theme> themes = new LinkedList<Theme>();
         for(String file: files) {
@@ -44,7 +34,7 @@ public class ThemeMapper {
         return themes;
     }
     
-    public Theme getGlobalTheme(String themeName) {
+    public Theme getGlobalTheme(String themeName, GlobalStorage globalStorage) {
         String themeData = globalStorage.getGlobalFileContents("site-files/themes/current/"+themeName+"/template.json");
         Gson gson = new Gson();
         Theme theme = gson.fromJson(themeData, Theme.class);
@@ -52,16 +42,16 @@ public class ThemeMapper {
         return theme;
     }
     
-    public void copyGlobalTheme(String source, String host, String destination) {
+    public void copyGlobalTheme(String source, String host, String destination, GlobalStorage globalStorage) {
         globalStorage.copyFolderFromGlobal("site-files/themes/current/"+source, host, "themes/current/"+destination);
     }
     
-    public void setDefaultTheme(String site, String theme) {
+    public void setDefaultTheme(String site, String theme, IDocumentQuerier querier) {
         String key = querier.getKey("site_data",site,"default_theme");
         querier.set(key, theme);
     }
     
-    public String getDefaultTheme(String site) {
+    public String getDefaultTheme(String site, IDocumentQuerier querier) {
         String key = querier.getKey("site_data",site,"default_theme");
         return querier.get(key, String.class);
     }

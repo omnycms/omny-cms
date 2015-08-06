@@ -1,20 +1,13 @@
 package ca.omny.themes.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.storage.StorageSystem;
 import ca.omny.themes.models.Sample;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.inject.Inject;
 
 public class SampleMapper {
-    @Inject
-    IDocumentQuerier querier;
     
-    @Inject
-    StorageSystem storage;
-    
-    public Collection<Sample> getSamples(String theme, String hostname) {
+    public Collection<Sample> getSamples(String theme, String hostname, StorageSystem storage) {
         Collection<String> sampleNames = storage.listFiles("themes/current/"+theme+"/sample-pages", false, hostname);
         Collection<Sample> samples = new LinkedList<Sample>();
         for(String sampleName: sampleNames) {

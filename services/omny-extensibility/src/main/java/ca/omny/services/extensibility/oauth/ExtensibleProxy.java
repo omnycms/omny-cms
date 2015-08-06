@@ -1,6 +1,7 @@
 package ca.omny.services.extensibility.oauth;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -33,15 +34,9 @@ import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
 public class ExtensibleProxy implements IOmnyProxyService {
-
-    @Inject
-    IDocumentQuerier querier;
     
-    @Inject
-    OauthServiceCredentialMapper serviceCredentialMapper;
-    
-    @Inject
-    OauthUserCredentialMapper userCredentialMapper;
+    OauthServiceCredentialMapper serviceCredentialMapper = new OauthServiceCredentialMapper();
+    OauthUserCredentialMapper userCredentialMapper = new OauthUserCredentialMapper();
 
     @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
@@ -51,9 +46,9 @@ public class ExtensibleProxy implements IOmnyProxyService {
         String serviceName = parts[3];
         String configName = parts[4];
         
-        ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName);
+        ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName, QuerierFactory.getDefaultQuerier());
 
-        UserCredentials userCredentials = userCredentialMapper.getCredentials(hostHeader, organization, serviceName, configName);
+        UserCredentials userCredentials = userCredentialMapper.getCredentials(hostHeader, organization, serviceName, configName, QuerierFactory.getDefaultQuerier());
 
         SignatureType signatureType = SignatureType.QueryString;
         if (serviceCredentials.getSignatureType() != null

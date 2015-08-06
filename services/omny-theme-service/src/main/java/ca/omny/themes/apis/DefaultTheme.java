@@ -23,13 +23,13 @@ public class DefaultTheme implements OmnyApi{
     }
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
-        String defaultTheme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname());
+        String defaultTheme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname(), requestResponseManager.getDatabaseQuerier());
         return new ApiResponse(defaultTheme, 200);
     }
 
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
         Theme theme = requestResponseManager.getEntity(Theme.class);
-        themeMapper.setDefaultTheme(requestResponseManager.getRequestHostname(), theme.getName());
+        themeMapper.setDefaultTheme(requestResponseManager.getRequestHostname(), theme.getName(), requestResponseManager.getDatabaseQuerier());
         return new ApiResponse("", 200);
     }
 

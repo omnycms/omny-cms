@@ -7,25 +7,22 @@ import javax.inject.Inject;
 
 public class OauthServiceCredentialMapper {
     
-    @Inject
-    IDocumentQuerier querier;
-    
-    public ServiceCredentials getServiceCredentials(String site, String serviceName) {
+    public ServiceCredentials getServiceCredentials(String site, String serviceName, IDocumentQuerier querier) {
         String key = querier.getKey("ext", "credentials", site, serviceName);
         return querier.get(key, ServiceCredentials.class);
     }
     
-    public void deleteServiceCredentials(String site, String serviceName) {
+    public void deleteServiceCredentials(String site, String serviceName, IDocumentQuerier querier) {
         String key = querier.getKey("ext", "credentials", site, serviceName);
         querier.delete(key);
     }
     
-    public Collection<ServiceCredentials> listCredentials(String site) {
+    public Collection<ServiceCredentials> listCredentials(String site, IDocumentQuerier querier) {
         String key = querier.getKey("ext", "credentials", site);
         return querier.getRange(key, ServiceCredentials.class);
     }
     
-    public void saveCredentials(String site, String serviceName, ServiceCredentials credentials) {
+    public void saveCredentials(String site, String serviceName, ServiceCredentials credentials, IDocumentQuerier querier) {
        String key = querier.getKey("ext", "credentials", site, serviceName);
         querier.set(key, credentials);
     }
