@@ -1,6 +1,6 @@
 package ca.omny.services.extensibility.oauth.apis;
 
-import com.omny.services.extensibility.apis.*;
+import ca.omny.services.extensibility.apis.ExtensibilityApiConstants;
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;

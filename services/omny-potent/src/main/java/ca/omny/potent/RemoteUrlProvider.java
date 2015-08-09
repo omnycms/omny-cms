@@ -2,6 +2,7 @@ package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.OmnyEndpoint;
@@ -20,15 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 @Alternative
 public class RemoteUrlProvider implements IRemoteUrlProvider {
     
-    @Inject
-    ConfigurationReader configurationReader;
-    
-    @Inject
-    IDocumentQuerier db;
-    
-    @Inject
-    OmnyRouteMapper routeMapper;
+    ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
+    IDocumentQuerier db = QuerierFactory.getDefaultQuerier();
+    OmnyRouteMapper routeMapper = new OmnyRouteMapper();
 
+    public RemoteUrlProvider() {
+        
+    }
+    
     public RemoteUrlProvider(ConfigurationReader configurationReader, IDocumentQuerier db, OmnyRouteMapper routeMapper) {
         this.configurationReader = configurationReader;
         this.db = db;

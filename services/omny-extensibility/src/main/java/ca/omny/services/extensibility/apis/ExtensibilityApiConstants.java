@@ -1,4 +1,4 @@
-package com.omny.services.extensibility.apis;
+package ca.omny.services.extensibility.apis;
 
 public class ExtensibilityApiConstants {
     public static String base = "/extensibility";

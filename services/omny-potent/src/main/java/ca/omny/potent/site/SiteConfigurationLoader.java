@@ -1,13 +1,12 @@
 package ca.omny.potent.site;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.models.SiteConfiguration;
-import javax.inject.Inject;
 
 public class SiteConfigurationLoader {
-    
-    @Inject
-    IDocumentQuerier querier;
+
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     
     public SiteConfiguration getConfiguration(String hostname) {
         return querier.get("site_configuration", SiteConfiguration.class);

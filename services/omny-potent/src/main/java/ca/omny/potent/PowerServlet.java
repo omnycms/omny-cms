@@ -1,6 +1,7 @@
 package ca.omny.potent;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.site.SiteConfigurationLoader;
@@ -14,38 +15,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.ProxyRoute;
+import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
 import ca.omny.routing.IRoute;
 import ca.omny.routing.RoutingTree;
-import javax.enterprise.inject.Instance;
+import java.util.Collection;
+import java.util.LinkedList;
 
 @ApplicationScoped
 public class PowerServlet extends HttpServlet {
     
-    @Inject
-    IPermissionCheck permissionChecker;
+    AuthorizationCheck authChecker = new AuthorizationCheck();
+    PermissionResolver permissionResolver = new PermissionResolver();
+    SiteConfigurationLoader siteConfigurationLoader = new SiteConfigurationLoader();
+    SiteOwnerMapper siteOwnerMapper = new SiteOwnerMapper();
+    PassThroughProxy proxy = new PassThroughProxy();
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+    IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(querier);
     
-    @Inject
-    AuthorizationCheck authChecker;
-    
-    @Inject
-    PermissionResolver permissionResolver;
-    
-    @Inject
-    SiteConfigurationLoader siteConfigurationLoader;
-    
-    @Inject 
-    SiteOwnerMapper siteOwnerMapper;
-    
-    @Inject
-    PassThroughProxy proxy;
-    
-    @Inject
-    IDocumentQuerier querier;
-    
-    @Inject
-    Instance<IOmnyProxyService> proxyServices;
+
+    static Collection<IOmnyProxyService> proxyServices = new LinkedList<IOmnyProxyService>();
     
     RoutingTree<IOmnyProxyService> router;
+    
+    static void addProxyService(IOmnyProxyService proxyService) {
+        proxyServices.add(proxyService);
+    }
+    public PowerServlet() {
+        
+    }
     
     public void initializeRouter() {
         if(router==null) {

@@ -1,4 +1,4 @@
-package com.omny.services.extensibility.mappers;
+package ca.omny.services.extensibility.mappers;
 
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.services.extensibility.oauth.models.UserCredentials;

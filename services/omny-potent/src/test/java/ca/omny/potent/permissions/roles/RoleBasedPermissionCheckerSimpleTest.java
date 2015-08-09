@@ -69,7 +69,7 @@ public class RoleBasedPermissionCheckerSimpleTest {
         Collection<AssignedRole> roles = new LinkedList<AssignedRole>();
         roles.addAll(this.roles);
         roles.addAll(this.roles);
-        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker();
+        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker(null);
        
         Collection<String> result = instance.getUniqueRoles(roles);
         assertEquals(result.size(), this.roles.size());
@@ -83,7 +83,7 @@ public class RoleBasedPermissionCheckerSimpleTest {
     public void testGetAppropriateRoles() {
         System.out.println("getAppropriateRoles");
         
-        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker();
+        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker(null);
         Collection<AssignedRole> expResult = null;
         Collection<AssignedRole> result = instance.getAppropriateRoles(permissions, roles);
         assertEquals(2, result.size());

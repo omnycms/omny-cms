@@ -2,6 +2,7 @@ package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.models.OmnyEndpoint;
@@ -40,19 +41,18 @@ public class PassThroughProxy implements IOmnyProxyService {
     public static final String HOST_HEADER = "X-Origin";
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
     public static final String[] AUTO_HEADERS = {USER_HEADER, HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
-    @Inject
-    IDocumentQuerier querier;
 
-    @Inject
-    ConfigurationReader configurationReader;
-
-    @Inject
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+    ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
     IRemoteUrlProvider remoteUrlProvider;
 
     CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Override
     public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
+        if(remoteUrlProvider==null) {
+            remoteUrlProvider = RemoteUrlProviderFactory.getDefaultProvider();
+        }
         try {
             String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
 

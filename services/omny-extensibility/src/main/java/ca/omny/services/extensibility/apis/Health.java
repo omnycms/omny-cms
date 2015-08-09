@@ -1,4 +1,4 @@
-package com.omny.services.extensibility.apis;
+package ca.omny.services.extensibility.apis;
 
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;

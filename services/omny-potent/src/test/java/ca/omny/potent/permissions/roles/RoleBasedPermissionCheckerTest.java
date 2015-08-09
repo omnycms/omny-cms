@@ -1,8 +1,7 @@
 
 package ca.omny.potent.permissions.roles;
 
-import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
-import ca.omny.potent.permissions.roles.RoleMapper;
+import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.potent.models.AssignedRole;
 import ca.omny.extension.proxy.Permission;
 import java.util.Arrays;
@@ -115,13 +114,13 @@ public class RoleBasedPermissionCheckerTest {
       
         String token = "";
         RoleMapper mockRoleMapper = mock(RoleMapper.class);
-        when(mockRoleMapper.getUid(token)).thenReturn(token);
+        when(mockRoleMapper.getUid(token,null)).thenReturn(token);
         
-        when(mockRoleMapper.getRoles(hostname, token)).thenReturn(roles);
-        when(mockRoleMapper.getRolePermissions(any(Collection.class))).thenReturn(permissionsGrantedToRoles);
+        when(mockRoleMapper.getRoles(hostname, token, null)).thenReturn(roles);
+        when(mockRoleMapper.getRolePermissions(any(Collection.class),any(IDocumentQuerier.class))).thenReturn(permissionsGrantedToRoles);
         //when(mockRoleMapper.roleHasAllPermissions(any(String.class), any(Collection.class))).thenReturn(Boolean.FALSE);
         //when(mockRoleMapper.roleHasAllPermissions(roleIdWithPermission, permissions)).thenReturn(Boolean.TRUE);
-        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker();
+        RoleBasedPermissionChecker instance = new RoleBasedPermissionChecker(null);
         instance.setRoleMapper(mockRoleMapper);
         boolean result = instance.hasPermissions(hostname, permissions, token);
         assertEquals(this.shouldHavePermission, result);

@@ -1,5 +1,6 @@
 package ca.omny.potent.permissions.roles;
 
+import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.models.AssignedRole;
 import ca.omny.extension.proxy.Permission;
@@ -12,21 +13,27 @@ import javax.inject.Inject;
 public class RoleBasedPermissionChecker implements IPermissionCheck {
     
     @Inject
-    RoleMapper roleMapper;
+    RoleMapper roleMapper = new RoleMapper();
     
+    IDocumentQuerier querier;
+
+    public RoleBasedPermissionChecker(IDocumentQuerier querier) {
+        this.querier = querier;
+    }
+ 
     @Override
     public boolean hasPermissions(String hostname, Collection<Permission> permissions, String token) {
-        Collection<AssignedRole> roles = roleMapper.getRoles(hostname,token);
+        Collection<AssignedRole> roles = roleMapper.getRoles(hostname,token, querier);
         Collection<AssignedRole> appropriateRoles = this.getAppropriateRoles(permissions, roles);
         Collection<String> uniqueRoles = this.getUniqueRoles(appropriateRoles);
-        return this.oneRoleHasPermission(uniqueRoles,permissions);
+        return this.oneRoleHasPermission(uniqueRoles,permissions, querier);
     }
     
-    public boolean oneRoleHasPermission(Collection<String> roleIds, Collection<Permission> permissions) {
+    public boolean oneRoleHasPermission(Collection<String> roleIds, Collection<Permission> permissions, IDocumentQuerier querier) {
         if(roleIds.isEmpty()) {
             return false;
         }
-        Collection<Map<String,Boolean>> rolePermissions = roleMapper.getRolePermissions(roleIds);
+        Collection<Map<String,Boolean>> rolePermissions = roleMapper.getRolePermissions(roleIds, querier);
         for(Map<String,Boolean> permissionSet: rolePermissions) {
             boolean allPassed = true;
             for(Permission permission: permissions) {

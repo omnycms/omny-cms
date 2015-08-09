@@ -1,28 +1,22 @@
 package ca.omny.potent;
 
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.extension.proxy.AccessRule;
 import ca.omny.potent.models.SiteConfiguration;
 import ca.omny.extension.proxy.IPermissionCheck;
+import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
 import ca.omny.potent.site.SiteConfigurationLoader;
 import java.io.IOException;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationCheck {
     
-    @Inject
-    IPermissionCheck permissionChecker;
-    
-    @Inject
-    PermissionResolver permissionResolver;
-    
-    @Inject
-    SiteConfigurationLoader siteConfigurationLoader;
-    
-    @Inject 
-    SiteOwnerMapper siteOwnerMapper;
+    IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(QuerierFactory.getDefaultQuerier());
+    PermissionResolver permissionResolver = new PermissionResolver();
+    SiteConfigurationLoader siteConfigurationLoader = new SiteConfigurationLoader();
+    SiteOwnerMapper siteOwnerMapper = new SiteOwnerMapper();
     
     public boolean isAuthorized(String host, String uid, HttpServletRequest req, Map<String, String> queryStringParameters) throws IOException {
         String skipCheck = System.getenv("omny_no_auth");

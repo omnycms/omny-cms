@@ -1,10 +1,10 @@
-package com.omny.services.extensibility.apis;
+package ca.omny.services.extensibility.apis;
 
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.management.RequestResponseManager;
 import ca.omny.services.extensibility.models.InstalledUiModuleConfiguration;
-import com.omny.services.extensibility.mappers.InstalledUiModuleMapper;
+import ca.omny.services.extensibility.mappers.InstalledUiModuleMapper;
 import java.util.Collection;
 
 public class InstalledUiModules implements OmnyApi {

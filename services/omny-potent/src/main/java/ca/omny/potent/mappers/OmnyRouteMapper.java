@@ -1,13 +1,12 @@
 package ca.omny.potent.mappers;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.models.OmnyRouteConfiguration;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 public class OmnyRouteMapper {
-    @Inject
-    IDocumentQuerier querier;
+    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     
     public OmnyRouteConfiguration getConfiguration() {
         return querier.get("omny_routes", OmnyRouteConfiguration.class);

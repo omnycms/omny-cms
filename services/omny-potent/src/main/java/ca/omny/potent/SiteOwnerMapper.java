@@ -1,13 +1,15 @@
 package ca.omny.potent;
 
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.documentdb.QuerierFactory;
 import java.util.Map;
-import javax.inject.Inject;
 
 public class SiteOwnerMapper {
-    
-    @Inject
     IDocumentQuerier querier;
+    
+    public SiteOwnerMapper() {
+        querier = QuerierFactory.getDefaultQuerier();
+    }
     
     public boolean isSiteOwner(String hostname, String uid) {
         String key = querier.getKey("sites",hostname);

@@ -1,4 +1,4 @@
-package com.omny.services.extensibility.apis;
+package ca.omny.services.extensibility.apis;
 
 import java.util.HashMap;
 import java.util.Map;

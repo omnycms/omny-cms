@@ -6,14 +6,10 @@ import ca.omny.extension.proxy.Permission;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
-import javax.inject.Inject;
 
 public class RoleMapper {
 
-    @Inject
-    IDocumentQuerier querier;
-
-    public boolean roleHasAllPermissions(String roleId, Collection<Permission> permissions) {
+    public boolean roleHasAllPermissions(String roleId, Collection<Permission> permissions, IDocumentQuerier querier) {
         LinkedList<String> keys = new LinkedList<String>();
         for (Permission permission : permissions) {
             String key = querier.getKey("role_permissions", roleId);
@@ -23,7 +19,7 @@ public class RoleMapper {
         return result.size() == permissions.size();
     }
 
-    public Collection<Map<String, Boolean>> getRolePermissions(Collection<String> roleIds) {
+    public Collection<Map<String, Boolean>> getRolePermissions(Collection<String> roleIds, IDocumentQuerier querier) {
         LinkedList<String> keys = new LinkedList<String>();
         for (String roleId : roleIds) {
             String key = querier.getKey("role_permissions", roleId);
@@ -37,14 +33,14 @@ public class RoleMapper {
         return result;
     }
 
-    public Collection<AssignedRole> getRoles(String hostname, String token) {
-        String uid = this.getUid(token);
+    public Collection<AssignedRole> getRoles(String hostname, String token, IDocumentQuerier querier) {
+        String uid = this.getUid(token, querier);
         String key = querier.getKey("roles", hostname, uid);
         Collection<AssignedRole> roles = querier.getRange(key, AssignedRole.class);
         return roles;
     }
 
-    public String getUid(String token) {
+    public String getUid(String token, IDocumentQuerier querier) {
         String key = querier.getKey("sessions", token);
         Map session = querier.get(key, Map.class);
         if (session != null && session.containsKey("userId")) {
