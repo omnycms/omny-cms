@@ -191,5 +191,16 @@ public class FakeHttpResponse implements HttpServletResponse {
     public Locale getLocale() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Map<String, Cookie> getCookies() {
+        return cookies;
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }

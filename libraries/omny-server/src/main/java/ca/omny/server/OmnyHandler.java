@@ -39,14 +39,9 @@ public class OmnyHandler extends AbstractHandler {
         configurationReader = ConfigurationReader.getDefaultConfigurationReader();
         if (!useInjection()) {
 
-            loadClass("ca.omny.db.extended.ExtendedDatabaseFactory");
-            String loadClassesConfig = configurationReader.getSimpleConfigurationString("OMNY_LOAD_CLASSES");
-            if(loadClassesConfig!=null) {
-                Collection<String> classesToLoad = gson.fromJson(loadClassesConfig, Collection.class);
-                for(String className: classesToLoad) {
-                    loadClass(className);
-                }
-            }
+            OmnyClassRegister register = new OmnyClassRegister();
+            register.loadClass("ca.omny.db.extended.ExtendedDatabaseFactory");
+            register.loadFromEnvironment();
             for (OmnyApi api : OmnyApiRegistry.getRegisteredApis()) {
                 for (String version : api.getVersions()) {
                     ApiRoute route = new ApiRoute(api, version);
@@ -64,22 +59,6 @@ public class OmnyHandler extends AbstractHandler {
                     router.addRoute(route);
                 }
             }
-        }
-    }
-
-    private void loadClass(String className) {
-        try {
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            Class<?> loadClass = classLoader.loadClass(className);
-            if (loadClass != null) {
-                loadClass.newInstance();
-            }
-        } catch (InstantiationException ex) {
-            Logger.getLogger(OmnyHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(OmnyHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(OmnyHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

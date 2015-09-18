@@ -37,10 +37,8 @@ import org.apache.http.message.AbstractHttpMessage;
 
 public class PassThroughProxy implements IOmnyProxyService {
 
-    public static final String USER_HEADER = "X-UserId";
-    public static final String HOST_HEADER = "X-Origin";
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
-    public static final String[] AUTO_HEADERS = {USER_HEADER, HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
+    public static final String[] AUTO_HEADERS = {HeaderManager.USER_HEADER, HeaderManager.HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
 
     IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
@@ -49,7 +47,7 @@ public class PassThroughProxy implements IOmnyProxyService {
     CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Override
-    public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
+    public void proxyRequest(String hostHeader, String uid, Map configuration, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
         if(remoteUrlProvider==null) {
             remoteUrlProvider = RemoteUrlProviderFactory.getDefaultProvider();
         }
@@ -64,16 +62,11 @@ public class PassThroughProxy implements IOmnyProxyService {
             String method = req.getMethod();
             AbstractHttpMessage message = this.getMessage(method, uriBuilder.build(), req);
 
-            Enumeration headerNames = req.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String headerName = headerNames.nextElement().toString();
-                if (!shouldNotSetHeader(headerName)) {
-                    String headerValue = req.getHeader(headerName);
-                    message.addHeader(headerName, headerValue);
-                }
+            HeaderManager manager = new HeaderManager();
+            Map<String, String> sendableHeaders = manager.getSendableHeaders(hostHeader, uid, req);
+            for(String header: sendableHeaders.keySet()) {
+                message.addHeader(header,sendableHeaders.get(header));
             }
-            message.addHeader(HOST_HEADER, hostHeader);
-            message.addHeader(USER_HEADER, uid);
             CloseableHttpResponse response = httpclient.execute((HttpUriRequest) message);
             resp.setStatus(response.getStatusLine().getStatusCode());
             try {
@@ -93,14 +86,9 @@ public class PassThroughProxy implements IOmnyProxyService {
         }
     }
     
-    private boolean shouldNotSetHeader(String headerName) {
-        headerName = headerName.toLowerCase();
-        for(String s: AUTO_HEADERS) {
-            if(s.toLowerCase().equals(headerName)) {
-                return true;
-            }
-        }
-        return false;    
+    @Override
+    public String getId() {
+        return "PASS_THROUGH";
     }
 
     public AbstractHttpMessage getMessage(String method, URI uri, HttpServletRequest req) throws IOException {

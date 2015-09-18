@@ -39,7 +39,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
     OauthUserCredentialMapper userCredentialMapper = new OauthUserCredentialMapper();
 
     @Override
-    public void proxyRequest(String hostHeader, String uid, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
+    public void proxyRequest(String hostHeader, String uid, Map cofiguration, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
         String route = getProxyRoute(req);
         String[] parts = route.substring(1).split("/");
         String organization = parts[2];
@@ -213,5 +213,10 @@ public class ExtensibleProxy implements IOmnyProxyService {
 
     public static String getProxyRoute(HttpServletRequest request) {
         return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
+    @Override
+    public String getId() {
+        return "EXTENSIBILITY";
     }
 }

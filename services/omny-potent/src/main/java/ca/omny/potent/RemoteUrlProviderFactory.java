@@ -24,7 +24,7 @@ public class RemoteUrlProviderFactory {
     static IRemoteUrlProvider defaultRemoteUrlProvider;
     static Collection<IRemoteUrlProviderFactory> remoteUrlProviderFactories = new LinkedList<>();
 
-    public static void setRemoteUrlProviderFactories(IRemoteUrlProviderFactory remoteUrlProviderFactory) {
+    public static void addRemoteUrlProviderFactory(IRemoteUrlProviderFactory remoteUrlProviderFactory) {
         remoteUrlProviderFactories.add(remoteUrlProviderFactory);
     }
     

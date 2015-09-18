@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ca.omny.potent.mappers.OmnyRouteMapper;
+import ca.omny.potent.models.ProxyAndConfiguration;
 import ca.omny.potent.models.ProxyRoute;
 import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
 import ca.omny.routing.IRoute;
@@ -31,15 +32,20 @@ public class PowerServlet extends HttpServlet {
     PassThroughProxy proxy = new PassThroughProxy();
     IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(querier);
+    OmnyRouteMapper routeMapper = new OmnyRouteMapper();
     
-
     static Collection<IOmnyProxyService> proxyServices = new LinkedList<IOmnyProxyService>();
     
     RoutingTree<IOmnyProxyService> router;
     
-    static void addProxyService(IOmnyProxyService proxyService) {
+    public static void addProxyService(IOmnyProxyService proxyService) {
         proxyServices.add(proxyService);
     }
+
+    public static Collection<IOmnyProxyService> getProxyServices() {
+        return proxyServices;
+    }
+    
     public PowerServlet() {
         
     }
@@ -49,7 +55,9 @@ public class PowerServlet extends HttpServlet {
             router = new RoutingTree<>("");
             for(IOmnyProxyService service: proxyServices) {
                 ProxyRoute route = new ProxyRoute(service);
-                router.addRoute(route);
+                if(route.getPath()!=null) {
+                    router.addRoute(route);
+                }
             }
         }
     }
@@ -78,9 +86,14 @@ public class PowerServlet extends HttpServlet {
         boolean permitted = authChecker.isAuthorized(host, uid, req, queryStringParameters);
         if(permitted) {
             initializeRouter();
-            IRoute<IOmnyProxyService> r = router.matchPath(req.getRequestURI());
-            IOmnyProxyService proxyService = r.getObject();
-            proxyService.proxyRequest(host,uid,req, resp);          
+            ProxyAndConfiguration dynamicProxy = routeMapper.getAppropriateProxy(req.getRequestURI());
+            if(dynamicProxy!=null) {
+                dynamicProxy.getProxy().proxyRequest(host, uid, dynamicProxy.getConfiguration(), req, resp);
+            } else {
+                IRoute<IOmnyProxyService> r = router.matchPath(req.getRequestURI());
+                IOmnyProxyService proxyService = r.getObject();
+                proxyService.proxyRequest(host,uid, null,req, resp);          
+            }
         } else {
             if(uid==null) {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
