@@ -4,6 +4,7 @@ jdk:
 script:
 - ./build-travis.sh
 - ./bundle.sh $TRAVIS_BUILD_NUMBER
+- ./publish-mvn.sh $TRAVIS_BUILD_NUMBER
 sudo: false
 deploy:
   provider: s3
