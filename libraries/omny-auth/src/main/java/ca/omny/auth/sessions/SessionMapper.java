@@ -3,7 +3,6 @@ package ca.omny.auth.sessions;
 import ca.omny.auth.token.AuthTokenParser;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 public class SessionMapper {
