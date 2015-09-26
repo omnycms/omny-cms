@@ -2,12 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>ConfigurationReader</artifactId>
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-lib</artifactId>
+        <version>1.0</version>
+    </parent>
+    
+    <artifactId>configuration-reader</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-
-    <name>ca.omny.ConfigurationReader</name>
+    <name>ca.omny.configuration-reader</name>
     <description>Abstraction for reading config from file system.</description>
     <url>http://about.omny.me</url>
 

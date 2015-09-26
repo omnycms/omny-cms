@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
-    <name>ca.omny.All</name>
+    <name>ca.omny.all</name>
     <url>http://maven.apache.org</url>
     
     <dependencies>
@@ -16,80 +16,62 @@
             <artifactId>gson</artifactId>
             <version>2.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyServer</artifactId>
+            <artifactId>omny-sdk</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyPages</artifactId>
+            <artifactId>page-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>  
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ContentDeliveryService</artifactId>
+            <artifactId>content-delivery-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Sites</artifactId>
+            <artifactId>site-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Menus</artifactId>
+            <artifactId>menu-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Themes</artifactId>
+            <artifactId>theme-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>ExtendedDatabase</artifactId>
+            <artifactId>auth-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>AuthService</artifactId>
+            <artifactId>omny-potent</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>OmnyPotent</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ExtensibilityService</artifactId>
+            <artifactId>extensibility-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         
-        
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.1-20130403</version>
-            <type>jar</type>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>

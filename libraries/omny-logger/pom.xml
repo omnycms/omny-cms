@@ -1,13 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-lib</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>omny-logger</artifactId>
-    <version>1.0</version>
+    <artifactId>logger</artifactId>
     <packaging>jar</packaging>
-
-    <name>ca.omny.omny-logger</name>
+    <name>ca.omny.logger</name>
     <description>Provides the ability to manage application specific logging separately from its dependencies.</description>
     <url>http://about.omny.me</url>
 
@@ -28,12 +31,6 @@
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>1.1-20130403</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
     
@@ -58,19 +55,6 @@
             <organizationUrl>http://www.omny.ca</organizationUrl>
         </developer>
     </developers>
-    
-    <scm>
-        <connection>scm:git:git@github.com:omnycms/omny-logger.git</connection>
-        <developerConnection>scm:git:git@github.com:omnycms/omny-logger.git</developerConnection>
-        <url>git@github.com:omnycms/omny-logger.git</url>
-    </scm>
-    
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
     
     <profiles>
         <profile> 

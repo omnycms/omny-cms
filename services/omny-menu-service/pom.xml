@@ -2,12 +2,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>Menus</artifactId>
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-services</artifactId>
+        <version>1.0</version>
+    </parent>
+    
+    <artifactId>menu-service</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
-
-    <name>ca.omny.Menus</name>
+    <name>ca.omny.menu-service</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>      
@@ -20,30 +23,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-     
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>DocumentDatabaseQuerier</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>ServiceClient</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Storage</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
@@ -60,7 +39,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
-    </properties>
 </project>

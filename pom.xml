@@ -7,15 +7,15 @@
     <packaging>pom</packaging>
     <modules>
         <module>libraries</module>
- 	<module>services/omny-pages-service</module>
-        <module>services/omny-content-service</module>
-        <module>services/omny-auth-service</module>
-        <module>services/omny-menu-service</module>
-        <module>services/omny-site-service</module>
-        <module>services/omny-theme-service</module>
-        <module>services/omny-potent</module>
-        <module>services/omny-extensibility</module>
+        <module>services</module>
     </modules>
+    <repositories>
+        <repository>
+            <id>omny-release-repo</id>
+            <name>Omny Release Repository</name>
+            <url>s3://maven.omny.ca/releases</url>
+        </repository>
+    </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

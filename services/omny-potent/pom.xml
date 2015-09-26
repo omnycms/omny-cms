@@ -2,12 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>OmnyPotent</artifactId>
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-services</artifactId>
+        <version>1.0</version>
+    </parent>
+    
+    <artifactId>omny-potent</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
-
-    <name>ca.omny.OmnyPotent</name>
+    
+    <name>ca.omny.omny-potent</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
@@ -16,12 +20,6 @@
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>DocumentDatabaseQuerier</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
@@ -50,24 +48,6 @@
             <groupId>org.scribe</groupId>
             <artifactId>scribe</artifactId>
             <version>1.3.5</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>ConfigurationReader</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>RoutingTree</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>ca.omny.ExtensionPoints</artifactId>
-            <version>1.0</version>
             <type>jar</type>
         </dependency>
         <dependency>

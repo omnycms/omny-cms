@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>ca.omny</groupId>
-    <artifactId>ExtendedDatabase</artifactId>
-    <name>ca.omny.ExtendedDatabase</name>
-    <version>1.0</version>
+    
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-lib</artifactId>
+        <version>1.0</version>
+    </parent>
+    
+    <artifactId>extended-database</artifactId>
+    <name>ca.omny.extended-database</name>
     <packaging>jar</packaging>
+
     <dependencies>
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -14,15 +20,15 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>DocumentDatabaseQuerier</artifactId>
-            <version>1.0</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>storage</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>Storage</artifactId>
-            <version>1.0</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>document-database-querier</artifactId>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>

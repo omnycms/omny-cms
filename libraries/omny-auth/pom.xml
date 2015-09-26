@@ -1,13 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-lib</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>omny-auth</artifactId>
-    <version>1.0</version>
+    <artifactId>auth</artifactId>
     <packaging>jar</packaging>
 
-    <name>ca.omny.OmnyAuth</name>
+    <name>ca.omny.auth</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -24,12 +28,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
@@ -43,11 +41,10 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>DocumentDatabaseQuerier</artifactId>
+            <artifactId>document-database-querier</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
-        </dependency>
-       
+        </dependency> 
     </dependencies>
     
 </project>

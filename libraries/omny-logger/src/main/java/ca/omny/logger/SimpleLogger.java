@@ -2,9 +2,7 @@ package ca.omny.logger;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Alternative;
 
-@Alternative
 public class SimpleLogger implements OmnyLogger {
     
     Logger logger; 

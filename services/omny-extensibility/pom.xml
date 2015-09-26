@@ -1,22 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>ca.omny</groupId>
+        <artifactId>omny-services</artifactId>
+        <version>1.0</version>
+    </parent>
 
-    <groupId>ca.omny</groupId>
-    <artifactId>ExtensibilityService</artifactId>
+    <artifactId>extensibility-service</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
-
-    <name>ca.omny.ExtensibilityService</name>
+    <name>ca.omny.extensibility-service</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>OmnyRequestManagement</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -29,21 +26,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>ConfigurationReader</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>org.scribe</groupId>
             <artifactId>scribe</artifactId>
             <version>1.3.5</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>ca.omny</groupId>
-            <artifactId>ca.omny.ExtensionPoints</artifactId>
-            <version>1.0</version>
             <type>jar</type>
         </dependency>
         <dependency>

@@ -7,21 +7,45 @@
     <packaging>pom</packaging>
     <modules>
         <module>omny-auth</module>
-        <module>omny-exceptions</module>
+        <module>omny-configuration-reader</module>
         <module>omny-document-database-querier</module>
+        <module>omny-exceptions</module>
+        <module>omny-extension-points</module>
+        <module>omny-extended-database</module>
+        <module>omny-lambda-wrapper</module>
         <module>omny-logger</module>
         <module>omny-request-management</module>
+        <module>omny-routing-tree</module>
+        <module>omny-server</module>
         <module>omny-service-client</module>
         <module>omny-service-discovery</module>
         <module>omny-storage</module>
-        <module>omny-server</module>
-        <module>omny-routing-tree</module>
-        <module>omny-extended-database</module>
-        <module>omny-configuration-reader</module>
-        <module>omny-extension-points</module>
-        <module>omny-lambda-wrapper</module>
+        <module>omny-sdk</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <distributionManagement>
+        <repository>
+            <id>maven-s3-release-repo</id>
+            <name>AWS Release Repository</name>
+            <url>s3://maven.omny.ca/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven-s3-snapshot-repo</id>
+            <name>AWS Snapshot Repository</name>
+            <url>s3://maven.omny.ca/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.springframework.build</groupId>
+                <artifactId>aws-maven</artifactId>
+                <version>5.0.0.RELEASE</version>
+            </extension>
+        </extensions>
+    </build>
 </project>

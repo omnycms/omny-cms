@@ -1,8 +1,5 @@
 package ca.omny.documentdb;
 
-import com.couchbase.client.CouchbaseClient;
-import com.couchbase.client.protocol.views.Query;
-import com.couchbase.client.protocol.views.View;
 import com.google.gson.Gson;
 import ca.omny.documentdb.models.PostgresConnection;
 import ca.omny.logger.OmnyLogger;
@@ -23,11 +20,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Alternative;
 import net.spy.memcached.util.StringUtils;
 import org.postgresql.util.PGobject;
 
-@Alternative
 public class Postgres implements IDocumentQuerier {
 
     PostgresConnection connectionInfo;
