@@ -13,10 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
-import javax.enterprise.inject.Alternative;
 import net.spy.memcached.util.StringUtils;
 
-@Alternative
 public class CouchQuerier implements IDocumentQuerier {
 
     CouchbaseClient client;
