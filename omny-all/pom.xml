@@ -126,7 +126,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>ca.omny.all.OmnyAllInOneServer</mainClass>
+                            <mainClass>ca.omny.all.server.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

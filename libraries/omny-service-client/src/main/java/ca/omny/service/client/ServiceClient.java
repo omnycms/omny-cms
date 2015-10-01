@@ -1,6 +1,7 @@
 package ca.omny.service.client;
 
 import ca.omny.logger.OmnyLogger;
+import ca.omny.logger.SimpleLogger;
 import ca.omny.omny.service.discovery.ServiceLocator;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
@@ -30,10 +31,10 @@ public class ServiceClient {
     
     static Client client = ClientBuilder.newClient();
 
-    @Inject
     OmnyLogger logger;
 
     public ServiceClient() {
+        logger = new SimpleLogger(this.getClass().getName());
     }
 
     public void setLogger(OmnyLogger logger) {

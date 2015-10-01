@@ -12,7 +12,6 @@
         <module>omny-menu-service</module>
         <module>omny-site-service</module>
         <module>omny-theme-service</module>
-        <module>omny-potent</module>
         <module>omny-extensibility</module>
     </modules>
     <properties>

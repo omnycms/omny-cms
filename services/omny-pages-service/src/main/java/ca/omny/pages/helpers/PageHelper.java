@@ -41,9 +41,9 @@ public class PageHelper {
     ThemeMapper themeMapper;
     ConfigurationReader configurationReader;
     DiscoverableServiceClient serviceClient;
-    
+
     static PageHelper defaultPageHelper;
-    
+
     PageHelper() {
         pageMapper = new PageMapper();
         pageTemplateMapper = new PageTemplateMapper();
@@ -53,9 +53,9 @@ public class PageHelper {
         configurationReader = ConfigurationReader.getDefaultConfigurationReader();
         serviceClient = new DiscoverableServiceClient();
     }
-    
+
     public static PageHelper getDefaultPageHelper() {
-        if(defaultPageHelper==null) {
+        if (defaultPageHelper == null) {
             defaultPageHelper = new PageHelper();
         }
         return defaultPageHelper;
@@ -84,13 +84,13 @@ public class PageHelper {
 
         String pageModuleLocation = "pages/current/" + pageName + "Modules.json";
         Map<String, Collection<BuilderPluginInstanceInfo>> pageModules = moduleMapper.getModules(pageModuleLocation, hostname, storageSystem);
-        
+
         boolean globalTheme = themeName.startsWith("global/");
         String shortThemeName = themeName;
-        if(globalTheme) {
+        if (globalTheme) {
             shortThemeName = themeName.substring("global/".length());
         }
-       
+
         String templateModuleLocation = templateMapper.getTemplateLocation(shortThemeName, page.getTemplateName(), hostname, querier, preview);
         String siteForTemplate = page.getTemplateName().startsWith("site/") ? hostname : globalTheme ? "www" : hostname;
         Map<String, Collection<BuilderPluginInstanceInfo>> templateModules = moduleMapper.getModules(templateModuleLocation, siteForTemplate, storageSystem);
@@ -115,85 +115,85 @@ public class PageHelper {
         Pattern p = Pattern.compile("\\{\\{[a-zA-Z]+\\}\\}");
         Matcher matcher = p.matcher(themeHtml);
         List<String> sections = new ArrayList<String>();
-        
+
         Map siteDetails = this.getSiteDetails(hostname);
-        headBuilder.append("<title>"+siteDetails.get("siteName")+" - "+pageDetails.getPage().getTitle()+"</title>");
-        headBuilder.append(this.getCss(themeName,hostname));
-        bodyBuilder.append(this.getScriptContent(pageDetails,themeName, hostname));
+        headBuilder.append("<title>" + siteDetails.get("siteName") + " - " + pageDetails.getPage().getTitle() + "</title>");
+        headBuilder.append(this.getCss(themeName, hostname));
+        bodyBuilder.append(this.getScriptContent(pageDetails, themeName, hostname));
         while (matcher.find()) {
             String group = matcher.group();
-            if(!group.equals("site.siteName")) {
-                group = group.substring(2,group.length()-2);
+            if (!group.equals("site.siteName")) {
+                group = group.substring(2, group.length() - 2);
                 sections.add(group);
             }
         }
         HashMap<String, Object> sectionContent = this.getSectionContent(pageDetails, sections);
         sectionContent.put("site", siteDetails);
-        
+
         StringWriter writer = new StringWriter();
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new StringReader(themeHtml),"template");
+        Mustache mustache = mf.compile(new StringReader(themeHtml), "template");
         mustache.execute(writer, sectionContent);
         bodyBuilder.append(StringEscapeUtils.unescapeHtml4(writer.toString()));
-        Map<String,String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<>();
         result.put("head", headBuilder.toString());
         result.put("body", bodyBuilder.toString());
         return result;
     }
-    
-    private Map getSiteDetails(String site) { 
-        HashMap<String,String> queryParams = new HashMap<>();
-        
+
+    private Map getSiteDetails(String site) {
+        HashMap<String, String> queryParams = new HashMap<>();
+
         try {
-            return serviceClient.get("sites", "/api/v1.0/sites/"+site, site, null, queryParams, null, Map.class);
+            return serviceClient.get("sites", "/api/v1.0/sites/" + site, site, null, queryParams, null, Map.class);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(PageHelper.class.getName()).log(Level.INFO, null, ex);
         }
         return null;
     }
-    
+
     private String getScriptContent(PageDetails details, String themeName, String hostname) {
         Gson gson = new Gson();
-        
-        return "<script>"+
-                "var omnyPageModules="+gson.toJson(details.getPageModules())+";"+
-                "var omnyTemplateModules="+gson.toJson(details.getTemplateModules())+";"+
-                "require([\""+getThemeLocation(themeName, hostname)+".js\"],function(theme){ if(theme && theme.load) { theme.load(); }});"+
-                "</script>";
+
+        return "<script>"
+                + "var omnyPageModules=" + gson.toJson(details.getPageModules()) + ";"
+                + "var omnyTemplateModules=" + gson.toJson(details.getTemplateModules()) + ";"
+                + "require([\"" + getThemeLocation(themeName, hostname) + ".js\"],function(theme){ if(theme && theme.load) { theme.load(); }});"
+                + "</script>";
     }
-    
+
     private String getThemeLocation(String themeName, String hostname) {
         String prefix = configurationReader.getSimpleConfigurationString("OMNY_THEME_ROOT");
-        String site ="";
-        if(prefix==null) {
+        String site = "";
+        if (prefix == null) {
             prefix = "";
         }
-        if(themeName.startsWith("global/")) {
+        if (themeName.startsWith("global/")) {
             prefix += "/global";
             themeName = themeName.substring("global/".length());
         } else if (!prefix.isEmpty()) {
-            site=hostname+"/";
+            site = hostname + "/";
         }
-        
-        return prefix+"/themes/"+site+themeName+"/theme";
+
+        return prefix + "/themes/" + site + themeName + "/theme";
     }
-    
+
     private String getCss(String themeName, String hostname) {
-        return "<link rel=\"stylesheet\" href=\""+getThemeLocation(themeName, hostname)+".css\" />";
+        return "<link rel=\"stylesheet\" href=\"" + getThemeLocation(themeName, hostname) + ".css\" />";
     }
-    
+
     private HashMap<String, Object> getSectionContent(PageDetails details, List<String> sections) {
         HashMap<String, Object> sectionContent = new HashMap<>();
-        for(String section: sections) {
+        for (String section : sections) {
             sectionContent.put(section, this.getSectionContent(details, section));
         }
         return sectionContent;
     }
-    
+
     private String getSectionContent(PageDetails details, String section) {
-        return "<div class=\"omny-module-section\" data-omny-type=\"section\" data-section=\""+section+"\">"
-                    +"<div class=\"omny-template-section\" ></div><div class=\"omny-page-section\" >"
-                    +"</div></div>";
+        return "<div class=\"omny-module-section\" data-omny-type=\"section\" data-section=\"" + section + "\">"
+                + "<div class=\"omny-template-section\" ></div><div class=\"omny-page-section\" >"
+                + "</div></div>";
     }
 
     public void markPagePublished(String path) {

@@ -1,7 +1,7 @@
 {
 "adminEmail": "yourEmail",
-"mappedDomains": ["omny.local"],
-"domainAliases": {"www.omny.local":"www"},
+"mappedDomains": ["local.omny.ca"],
+"domainAliases": {"www.local.omny.ca":"www"},
 "googleCredentials": {"key":"yourGoogleKey","secret":"yourGoogleSecret"},
 "updateDefaultDbValues": true
 }

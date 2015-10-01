@@ -21,6 +21,8 @@
         <module>omny-service-discovery</module>
         <module>omny-storage</module>
         <module>omny-sdk</module>
+        <module>all-in-one</module>
+        <module>omny-potent</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
