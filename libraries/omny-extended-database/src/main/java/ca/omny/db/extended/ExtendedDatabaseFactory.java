@@ -43,9 +43,9 @@ public class ExtendedDatabaseFactory implements IDocumentQuerierFactory {
         }
         String dbType = configurationReader.getSimpleConfigurationString("OMNY_DB_TYPE");
         if (dbType != null) {
-            if(dbType.equals("couchbase")) {
+            if(dbType.equals("COUCHBASE")) {
                 return null;
-            } else if (dbType.equals("dynamodb")) {
+            } else if (dbType.equals("DYNAMODB")) {
                 db = new DynamoDb(configurationReader);
                 return db;
             }
