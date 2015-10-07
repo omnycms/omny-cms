@@ -35,8 +35,15 @@ public class FixedServiceLocation implements ServiceLocator {
         Client client = ClientBuilder.newClient();
         Gson g = new Gson();
         if (serverInfo == null) {
-            String configurationString = configurationReader.getConfigurationString("service-location");
-            this.serverInfo = g.fromJson(configurationString, WebServerInfo.class);
+            String configurationString = configurationReader.getConfigurationString("OMNY_SERVICE_LOCATION");
+            if(configurationString==null) {
+                this.serverInfo = new WebServerInfo();
+                this.serverInfo.setHostname("localhost");
+                this.serverInfo.setProtocol("http");
+                this.serverInfo.setPort(8080);
+            } else {
+                this.serverInfo = g.fromJson(configurationString, WebServerInfo.class);
+            }
         }
         UriBuilder builder = UriBuilder.fromUri(serverInfo.getProtocol() + "://" + serverInfo.getHostname());
         URI uri = builder.port(serverInfo.getPort()).build();

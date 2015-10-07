@@ -1,5 +1,6 @@
 package ca.omny.potent;
 
+import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.extension.proxy.AccessRule;
@@ -19,7 +20,7 @@ public class AuthorizationCheck {
     SiteOwnerMapper siteOwnerMapper = new SiteOwnerMapper();
     
     public boolean isAuthorized(String host, String uid, HttpServletRequest req, Map<String, String> queryStringParameters) throws IOException {
-        String skipCheck = System.getenv("omny_no_auth");
+        String skipCheck = ConfigurationReader.getDefaultConfigurationReader().getConfigurationString("OMNY_NO_AUTH");
         if(skipCheck!=null && skipCheck.equals("true")) {
             return true;
         }

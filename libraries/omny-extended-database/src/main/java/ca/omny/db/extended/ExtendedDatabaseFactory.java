@@ -41,7 +41,7 @@ public class ExtendedDatabaseFactory implements IDocumentQuerierFactory {
         if(db!=null) {
             return db;
         }
-        String dbType = configurationReader.getSimpleConfigurationString("omny_db_type");
+        String dbType = configurationReader.getSimpleConfigurationString("OMNY_DB_TYPE");
         if (dbType != null) {
             if(dbType.equals("couchbase")) {
                 return null;

@@ -42,7 +42,7 @@ public class DynamoDb implements IDocumentQuerier {
     @Inject
     public DynamoDb(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
-        final String configurationString = configurationReader.getConfigurationString("dynamo_config");
+        final String configurationString = configurationReader.getConfigurationString("OMNY_DYNAMODB_CONFIG");
         if(configurationString!=null) {
             config = gson.fromJson(configurationString, DynamoDbConfig.class);
             table = config.getTable();

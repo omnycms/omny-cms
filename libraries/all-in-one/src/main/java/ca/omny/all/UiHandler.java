@@ -1,5 +1,6 @@
 package ca.omny.all;
 
+import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.request.management.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -33,13 +34,14 @@ public class UiHandler extends AbstractHandler {
     String contentRoot;
     ResourceHandler resourceHandler;
     IDocumentQuerier querier;
+    ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
 
     public UiHandler(String contentRoot, IDocumentQuerier querier) {
         this.contentRoot = contentRoot;
         this.querier = querier;
         String staticFilesDirectory = ".";
-        if(System.getenv("omny_static_location")!=null) {
-            staticFilesDirectory = System.getenv("omny_static_location");
+        if(configurationReader.getConfigurationString("OMNY_STATIC_LOCATION")!=null) {
+            staticFilesDirectory = configurationReader.getSimpleConfigurationString("OMNY_STATIC_LOCATION");
         }
         resourceHandler = new ResourceHandler();
         
@@ -150,8 +152,8 @@ public class UiHandler extends AbstractHandler {
     private String getPageContents(String site, String page) {
         try {
             int port = 8077;
-            if(System.getenv("omny_all_port")!=null) {
-                port = Integer.parseInt(System.getenv("omny_all_port"));
+            if(configurationReader.getConfigurationString("OMNY_ALL_PORT")!=null) {
+                port = Integer.parseInt(configurationReader.getSimpleConfigurationString("OMNY_ALL_PORT"));
             }
             URL url = new URL("http://localhost:"+port+"/api/v1.0/pages/basehtml?page="+page);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -174,7 +176,7 @@ public class UiHandler extends AbstractHandler {
             return;
         }
         try {
-            String cdn = System.getenv("OMNY_UI_CDN");
+            String cdn = configurationReader.getSimpleConfigurationString("OMNY_UI_CDN");
             if(cdn == null) {
                 cdn = "";
                 htmlFileContents = FileUtils.readFileToString(new File(contentRoot+"/index.html"));

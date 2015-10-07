@@ -1,5 +1,6 @@
 package ca.omny.documentdb;
 
+import ca.omny.configuration.ConfigurationReader;
 import com.google.gson.Gson;
 import ca.omny.documentdb.models.PostgresConnection;
 import ca.omny.logger.OmnyLogger;
@@ -34,7 +35,7 @@ public class QuerierFactory {
             if(defaultQuerier==null) {
                 Postgres postgres = new Postgres();
 
-                String postgresConfig = System.getenv("postgres");
+                String postgresConfig = ConfigurationReader.getDefaultConfigurationReader().getConfigurationString("OMNG_POSTGRES_CONFIG");
                 if (postgresConfig != null) {
                     postgres.setConnectionInfo(gson.fromJson(postgresConfig, PostgresConnection.class));
                     postgres.setLogger(logger);

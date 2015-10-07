@@ -39,9 +39,9 @@ public class StorageFactory {
     }
     
     public static IStorage getDefaultStorage(OmnyLogger logger, ConfigurationReader configurationReader) {
-        String storageSystemName = configurationReader.getSimpleConfigurationString("storageSystem");
+        String storageSystemName = configurationReader.getSimpleConfigurationString("OMNY_STORAGE_SYSTEM");
         if(storageSystemName!=null) {
-            if(storageSystemName.equals("db")) {
+            if(storageSystemName.equals("DATABASE")) {
                 if(documentDbStorage==null) {
                     documentDbStorage = new DocumentDatabaseStorage();
                     documentDbStorage.setConfigurationReader(configurationReader);
@@ -50,7 +50,7 @@ public class StorageFactory {
                 }
                 return documentDbStorage;   
             }
-            if(storageSystemName.equals("s3")) {
+            if(storageSystemName.equals("S3")) {
                 if(s3Storage==null) {
                     s3Storage = new S3Storage(configurationReader);
                 }
@@ -58,7 +58,7 @@ public class StorageFactory {
             }   
         }
         
-        String rootFolder = configurationReader.getSimpleConfigurationString("localFolder");
+        String rootFolder = configurationReader.getSimpleConfigurationString("OMNY_LOCAL_FOLDER");
         if(rootFolder==null || rootFolder.equals(".")) {
             File findRootDirectory = ConfigurationReader.findRootDirectory("storage");
             if(findRootDirectory!=null) {

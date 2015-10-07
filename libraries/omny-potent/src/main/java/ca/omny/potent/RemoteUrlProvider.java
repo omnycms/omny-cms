@@ -43,7 +43,7 @@ public class RemoteUrlProvider implements IRemoteUrlProvider {
             }
         } catch (UnsupportedEncodingException ex) {
         }
-        if(configurationReader.getSimpleConfigurationString("omny_route_dynamic") != null) {
+        if(configurationReader.getSimpleConfigurationString("OMNY_ROUTE_DYNAMIC") != null) {
             String key = db.getKey("omny_hosts","current");
             Type type = new TypeToken<List<RemoteHost>>(){}.getType();
             String value = db.get(key, String.class);
@@ -53,8 +53,8 @@ public class RemoteUrlProvider implements IRemoteUrlProvider {
             return remoteHost.getProtocol()+"://"+remoteHost.getHostname()+":"+remoteHost.getPort()+route+ "?" + decodedQueryString;
         }
         String host = "http://127.0.0.1:8077";
-        if (configurationReader.getConfigurationString("proxyHost") != null) {
-            host = configurationReader.getConfigurationString("proxyHost");
+        if (configurationReader.getConfigurationString("OMNY_PROXY_HOST") != null) {
+            host = configurationReader.getConfigurationString("OMNY_PROXY_HOST");
         }
         OmnyRouteConfiguration configuration = routeMapper.getConfiguration();
         String remoteRoute = OmnyRouteMapper.getProxyRoute(req);

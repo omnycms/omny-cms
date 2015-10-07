@@ -39,7 +39,7 @@ public class S3Storage implements IStorage {
     @Inject
     public S3Storage(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
-        config = gson.fromJson(configurationReader.getConfigurationString("awsStorage"), AmazonStorageConfig.class);
+        config = gson.fromJson(configurationReader.getConfigurationString("OMNY_AWS_STORAGE"), AmazonStorageConfig.class);
         s3Client = new AmazonS3Client(config);
     }
 

@@ -1,5 +1,6 @@
 package ca.omny.documentdb;
 
+import ca.omny.configuration.ConfigurationReader;
 import com.couchbase.client.CouchbaseClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -15,6 +16,7 @@ public class CouchFactory {
 
     public static CouchQuerier querier;
     public static CouchbaseClient client;
+    static ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
 
     public static CouchQuerier getQuerier() {
         if (querier != null) {
@@ -31,7 +33,7 @@ public class CouchFactory {
         try {
             List<URI> hosts = new LinkedList<URI>();
 
-            String connections = System.getenv("couchbase");
+            String connections = configurationReader.getSimpleConfigurationString("OMNY_COUCHBASE_CONFIG");
             if (connections != null) {
                 addHostsFromString(connections, hosts);
             } else {

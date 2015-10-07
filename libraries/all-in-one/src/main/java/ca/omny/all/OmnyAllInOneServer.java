@@ -22,8 +22,8 @@ public class OmnyAllInOneServer {
     public OmnyAllInOneServer() {
         server = new OmnyServer();
         int edgeRouterPort = 8080;
-        if (System.getenv("omny_edge_port") != null) {
-            edgeRouterPort = Integer.parseInt(System.getenv("omny_edge_port"));
+        if (configurationReader.getConfigurationString("OMNY_EDGE_PORT") != null) {
+            edgeRouterPort = Integer.parseInt(configurationReader.getSimpleConfigurationString("OMNY_EDGE_PORT"));
         }
         edgeServer = new Server(edgeRouterPort);
     }
@@ -38,8 +38,8 @@ public class OmnyAllInOneServer {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
         String staticFilesDirectory = ".";
-        if (System.getenv("omny_static_location") != null) {
-            staticFilesDirectory = System.getenv("omny_static_location");
+        if (configurationReader.getConfigurationString("OMNY_STATIC_LOCATION") != null) {
+            staticFilesDirectory = configurationReader.getSimpleConfigurationString("OMNY_STATIC_LOCATION");
         }
         context.addServlet(new ServletHolder(edgeServlet), "/*");
         IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
@@ -47,7 +47,7 @@ public class OmnyAllInOneServer {
 
         HandlerList handlers = new HandlerList();
         Handler[] handlerList = new Handler[]{uiHandler, context};
-        if (System.getenv("omny_no_ui") != null) {
+        if (configurationReader.getConfigurationString("OMNY_NO_UI") != null) {
             handlerList = new Handler[]{context};
         }
         handlers.setHandlers(handlerList);
@@ -55,12 +55,12 @@ public class OmnyAllInOneServer {
 
         
         int port = 8077;
-        if (System.getenv("omny_all_port") != null) {
-            port = Integer.parseInt(System.getenv("omny_all_port"));
+        if (configurationReader.getConfigurationString("OMNY_ALL_PORT") != null) {
+            port = Integer.parseInt(configurationReader.getSimpleConfigurationString("OMNY_ALL_PORT"));
         }
 
         edgeServer.start();
-        if (System.getenv("omny_route_dynamic") == null) {
+        if (configurationReader.getConfigurationString("OMNY_ROUTE_DYNAMIC") == null) {
             server.createServer(port);
         } else {
             edgeServer.join();

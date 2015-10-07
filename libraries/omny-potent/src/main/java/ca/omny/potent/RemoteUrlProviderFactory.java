@@ -36,7 +36,7 @@ public class RemoteUrlProviderFactory {
     }
     
     public static IRemoteUrlProvider getProvider(Collection<IRemoteUrlProviderFactory> remoteUrlProviderFactories) {
-        String name = System.getenv("OMNY_REMOTE_URL_PROVIDER");
+        String name = configurationReader.getSimpleConfigurationString("OMNY_REMOTE_URL_PROVIDER");
         if(name==null) {
             RemoteUrlProvider remoteProvider = new RemoteUrlProvider(configurationReader, db, routeMapper);
             return remoteProvider;
@@ -53,7 +53,7 @@ public class RemoteUrlProviderFactory {
       
     @Produces
     public IRemoteUrlProvider getProvider(@Any Instance<IRemoteUrlProviderFactory> remoteUrlProviderFactories, InjectionPoint ip) {
-        String name = System.getenv("OMNY_REMOTE_URL_PROVIDER");
+        String name = configurationReader.getSimpleConfigurationString("OMNY_REMOTE_URL_PROVIDER");
         if(name==null) {
             RemoteUrlProvider remoteProvider = new RemoteUrlProvider(configurationReader, db, routeMapper);
             return remoteProvider;

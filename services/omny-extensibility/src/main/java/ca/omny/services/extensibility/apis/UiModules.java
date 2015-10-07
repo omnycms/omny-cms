@@ -59,7 +59,7 @@ public class UiModules implements OmnyApi {
     @Override
     public ApiResponse putResponse(RequestResponseManager requestResponseManager) {
         if (config == null) {
-            String configurationString = configurationReader.getConfigurationString("UI_MODULE_CDN");
+            String configurationString = configurationReader.getConfigurationString("OMNY_UI_MODULE_CDN");
             config = gson.fromJson(configurationString, AmazonStorageConfig.class);
             s3Client = new AmazonS3Client(config);
             mimeData = new Mimedata();
