@@ -155,6 +155,9 @@ public class UiHandler extends AbstractHandler {
             if(configurationReader.getConfigurationString("OMNY_ALL_PORT")!=null) {
                 port = Integer.parseInt(configurationReader.getSimpleConfigurationString("OMNY_ALL_PORT"));
             }
+            if(configurationReader.getConfigurationString("OMNY_BIND_PORT")==null) {
+                port = 8080;
+            }
             URL url = new URL("http://localhost:"+port+"/api/v1.0/pages/basehtml?page="+page);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
