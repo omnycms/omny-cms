@@ -4,6 +4,7 @@ import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.PowerServlet;
+import ca.omny.server.OmnyClassRegister;
 import ca.omny.server.OmnyHandler;
 import ca.omny.server.OmnyServer;
 import org.eclipse.jetty.server.Handler;
@@ -30,9 +31,9 @@ public class OmnyAllInOneServer {
 
     public void start() throws Exception {
         configurationReader.setKey("OMNY_NO_INJECTION", "true");
-        OmnyHandler handler = new OmnyHandler();
+        OmnyClassRegister classRegister = new OmnyClassRegister();
+        classRegister.loadFromEnvironment();
 
-        
         PowerServlet edgeServlet = new PowerServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
@@ -61,7 +62,12 @@ public class OmnyAllInOneServer {
 
         edgeServer.start();
         if (configurationReader.getConfigurationString("OMNY_ROUTE_DYNAMIC") == null) {
-            server.createServer(port);
+            if(configurationReader.getConfigurationString("OMNY_BIND_PORT")==null) {
+                PowerServlet.addProxyService(new OmnyServiceProxy());
+                edgeServer.join();
+            } else {
+                server.createServer(port);
+            }
         } else {
             edgeServer.join();
         }
