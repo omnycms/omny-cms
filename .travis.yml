@@ -16,3 +16,4 @@ deploy:
   local-dir: output
   on:
     repo: omnycms/omny-cms
+    branch: master
