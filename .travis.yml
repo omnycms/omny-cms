@@ -17,18 +17,3 @@ deploy:
   on:
     repo: omnycms/omny-cms
     branch: master
-    
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "Hm2rURHfTnFw02CVUL41Rv0md7LzEq+Zv0Pz3ULJpwDcUtc/dMOfparRJxzQVQpGSpT48Cd8XWZz2zAB27C817ylVXYSncpmkAiVHFNdb62thss/j11jwW83h2lUQQjb72LIKphnc86EMQR5hPyWUnG/fCW5rn7cNJYTfy0BFWA="
-
-addons:
-  coverity_scan:
-    project:
-      name: "omnycms/omny-cms"
-      description: "Omny microservice CMS"
-    notification_email: alamarre@gmail.com
-    build_command:   "./build-travis.sh"
-    branch_pattern: master
