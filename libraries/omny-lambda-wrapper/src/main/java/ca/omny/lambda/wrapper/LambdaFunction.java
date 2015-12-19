@@ -8,7 +8,6 @@ public class LambdaFunction implements RequestHandler<LambdaInput, String> {
 
     @Override
     public String handleRequest(LambdaInput i, Context cntxt) {
-        
         LambdaWrapper lambdaWrapper = new LambdaWrapper(i);
         String handleRequest = lambdaWrapper.handleRequest();
         return handleRequest;
