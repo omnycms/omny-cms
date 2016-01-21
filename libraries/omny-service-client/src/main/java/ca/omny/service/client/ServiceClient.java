@@ -3,6 +3,7 @@ package ca.omny.service.client;
 import ca.omny.logger.OmnyLogger;
 import ca.omny.logger.SimpleLogger;
 import ca.omny.omny.service.discovery.ServiceLocator;
+import ca.omny.request.management.RequestInput;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,8 +13,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -131,18 +130,5 @@ public class ServiceClient {
                 return data;
         }
         
-    }
-
-    public static String getRequestHostname(HttpServletRequest request) {
-        if (request != null) {
-            if (request.getHeader("X-Origin") != null) {
-                return request.getHeader("X-Origin");
-            } else if (request.getHeader("Origin") != null) {
-                return request.getHeader("Origin");
-            } else {
-                return request.getServerName();
-            }
-        }
-        return null;
     }
 }

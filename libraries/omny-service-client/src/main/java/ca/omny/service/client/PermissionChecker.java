@@ -56,7 +56,7 @@ public class PermissionChecker {
     
     public String getContextHostname() {
         if(contextHostname==null) {
-            contextHostname = ServiceClient.getRequestHostname(requestManager.getRequest());
+            contextHostname = requestManager.getRequestHostname();
         }
         return this.contextHostname;
     }
