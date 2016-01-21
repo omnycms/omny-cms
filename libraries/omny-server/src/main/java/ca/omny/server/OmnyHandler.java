@@ -6,14 +6,15 @@ import ca.omny.request.api.ApiResponse;
 import ca.omny.request.management.RequestResponseManager;
 import ca.omny.request.api.OmnyApi;
 import ca.omny.request.api.OmnyApiRegistry;
+import ca.omny.request.management.HttpServletRequestToInternalRequest;
+import ca.omny.request.management.InternalResponseWriter;
+import ca.omny.request.management.RequestInput;
+import ca.omny.request.management.ResponseOutput;
 import ca.omny.routing.IRoute;
 import ca.omny.routing.RoutingTree;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.enterprise.inject.Instance;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,43 +22,27 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
 
 public class OmnyHandler extends AbstractHandler {
 
     Instance<OmnyApi> apis;
     RoutingTree<OmnyApi> router;
-    Weld weld;
-    WeldContainer container;
     ConfigurationReader configurationReader;
+    InternalResponseWriter responseWriter;
+    HttpServletRequestToInternalRequest requestConverter;
 
     Gson gson = new Gson();
 
     public OmnyHandler() {
         router = new RoutingTree<>("");
         configurationReader = ConfigurationReader.getDefaultConfigurationReader();
-        if (!useInjection()) {
-
-            OmnyClassRegister register = new OmnyClassRegister();
-            register.loadClass("ca.omny.db.extended.ExtendedDatabaseFactory");
-            register.loadFromEnvironment();
-            for (OmnyApi api : OmnyApiRegistry.getRegisteredApis()) {
-                for (String version : api.getVersions()) {
-                    ApiRoute route = new ApiRoute(api, version);
-                    router.addRoute(route);
-                }
-            }
-
-        } else {
-            weld = new Weld();
-            container = weld.initialize();
-            apis = container.instance().select(OmnyApi.class);
-            for (OmnyApi api : apis) {
-                for (String version : api.getVersions()) {
-                    ApiRoute route = new ApiRoute(api, version);
-                    router.addRoute(route);
-                }
+        OmnyClassRegister register = new OmnyClassRegister();
+        register.loadClass("ca.omny.db.extended.ExtendedDatabaseFactory");
+        register.loadFromEnvironment();
+        for (OmnyApi api : OmnyApiRegistry.getRegisteredApis()) {
+            for (String version : api.getVersions()) {
+                ApiRoute route = new ApiRoute(api, version);
+                router.addRoute(route);
             }
         }
     }
@@ -68,9 +53,6 @@ public class OmnyHandler extends AbstractHandler {
     }
 
     private SessionMapper getSessionMapper() {
-        if (useInjection()) {
-            return container.instance().select(SessionMapper.class).get();
-        }
         return new SessionMapper();
     }
 
@@ -84,8 +66,10 @@ public class OmnyHandler extends AbstractHandler {
         }
         RequestResponseManager requestResponseManager = new RequestResponseManager();
         requestResponseManager.setSessionMapper(getSessionMapper());
-        requestResponseManager.setRequest(request);
-        requestResponseManager.setResponse(response);
+        RequestInput requestInput = requestConverter.getInternalInput(request);
+        requestResponseManager.setRequest(requestInput);
+        ResponseOutput responseOutput = new ResponseOutput();
+        requestResponseManager.setResponse(responseOutput);
         IRoute<OmnyApi> route = router.matchPath(request.getRequestURI());
         if (route == null) {
             response.setStatus(404);

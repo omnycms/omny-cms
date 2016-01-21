@@ -14,16 +14,13 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
-@RequestScoped
 public class RequestResponseManager {
     Gson gson = new Gson();
-    HttpServletRequest request;
-    HttpServletResponse response;
+    RequestInput request;
+    ResponseOutput response;
+    String userId;
     ByteArrayOutputStream bodyStream;
     Map<String,String> queryStringCache;
     Map<String,String> pathParameters;
@@ -34,20 +31,24 @@ public class RequestResponseManager {
         this.sessionMapper = sessionMapper;
     }
 
-    public HttpServletRequest getRequest() {
+    public RequestInput getRequest() {
         return request;
         
     }
-    
+
     public String getUserId() {
-        return sessionMapper.getUserId(request);
+        return userId;
     }
-    
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getQueryStringParameter(String parameterName) {
         return request.getParameter(parameterName);
     }
 
-    public void setRequest(HttpServletRequest request) {
+    public void setRequest(RequestInput request) {
         this.request = request;
         this.bodyStream = null;
         this.queryStringCache = null;
@@ -64,11 +65,11 @@ public class RequestResponseManager {
         return null;
     }
 
-    public HttpServletResponse getResponse() {
+    public ResponseOutput getResponse() {
         return response;
     }
 
-    public void setResponse(HttpServletResponse response) {
+    public void setResponse(ResponseOutput response) {
         this.response = response;
     }
 
@@ -80,11 +81,11 @@ public class RequestResponseManager {
      */
     public InputStream getBody(boolean cache) throws IOException {
         if(!cache) {
-            return request.getInputStream();
+            return request.getContent();
         }
         if(bodyStream==null) {
             bodyStream = new ByteArrayOutputStream();
-            IOUtils.copy(request.getInputStream(),bodyStream);
+            IOUtils.copy(request.getContent(),bodyStream);
         }
         return new ByteArrayInputStream(bodyStream.toByteArray());
     }
@@ -96,7 +97,7 @@ public class RequestResponseManager {
             } else if (request.getHeader("Origin") != null) {
                 return request.getHeader("Origin");
             } else {
-                return request.getServerName();
+                return request.getHostname();
             }
         }
         return null;
