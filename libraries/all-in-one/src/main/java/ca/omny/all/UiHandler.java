@@ -2,6 +2,7 @@ package ca.omny.all;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.request.management.HttpServletRequestToInternalRequest;
 import ca.omny.request.management.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -35,6 +36,7 @@ public class UiHandler extends AbstractHandler {
     ResourceHandler resourceHandler;
     IDocumentQuerier querier;
     ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
+    HttpServletRequestToInternalRequest requestConverter = new HttpServletRequestToInternalRequest();
 
     public UiHandler(String contentRoot, IDocumentQuerier querier) {
         this.contentRoot = contentRoot;
@@ -106,7 +108,7 @@ public class UiHandler extends AbstractHandler {
             response.setHeader("Content-Type", "text/html");
             populateHtmlContents();
             RequestResponseManager manager = new RequestResponseManager();
-            manager.setRequest(request);
+            manager.setRequest(requestConverter.getInternalInput(request));
             String pageContents = this.getHtml(manager.getRequestHostname(), request.getRequestURI());
             response.getWriter().write(pageContents);
         } else {

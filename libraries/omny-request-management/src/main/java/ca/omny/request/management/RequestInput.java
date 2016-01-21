@@ -14,6 +14,7 @@ public class RequestInput {
     Map<String,String> configOverrides;
     Map<String,String> queryStringParameters;
     String hostname;
+    boolean secure;
 
     public String getUri() {
         return uri;
@@ -102,6 +103,14 @@ public class RequestInput {
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    public boolean isSecure() {
+        return secure;
+    }
+
+    public void setSecure(boolean secure) {
+        this.secure = secure;
     }
 
 }

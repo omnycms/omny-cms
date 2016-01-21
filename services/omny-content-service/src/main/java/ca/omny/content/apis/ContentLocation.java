@@ -2,7 +2,9 @@ package ca.omny.content.apis;
 
 import ca.omny.request.api.ApiResponse;
 import ca.omny.request.api.OmnyApi;
+import ca.omny.request.management.RequestInput;
 import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.management.ResponseOutput;
 import ca.omny.storage.MetaData;
 import ca.omny.storage.Mimedata;
 import ca.omny.storage.StorageSystem;
@@ -14,8 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotFoundException;
 
 public class ContentLocation implements OmnyApi {
@@ -39,7 +39,7 @@ public class ContentLocation implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         StorageSystem storageSystem = requestResponseManager.getStorageSystem();
         String file = requestResponseManager.getQueryStringParameter("file");
-        HttpServletRequest request =  requestResponseManager.getRequest();
+        RequestInput request =  requestResponseManager.getRequest();
         Map<String, String> queryParameters = new HashMap<String, String>();
         String prefix = "published/default/";
         String hostname = requestResponseManager.getRequestHostname();
@@ -79,10 +79,10 @@ public class ContentLocation implements OmnyApi {
             if(fileContents==null) {
                 throw new NotFoundException();
             }
-            HttpServletResponse response = requestResponseManager.getResponse();
-            response.addHeader("Cache-Control", "public; max-age=30");
-            response.addHeader("Last-Modified", dateFormat.format(lastModified));
-            response.addHeader("Content-Type", mimedata.getContentTypeFromName(file));
+            ResponseOutput response = requestResponseManager.getResponse();
+            response.setHeader("Cache-Control", "public; max-age=30");
+            response.setHeader("Last-Modified", dateFormat.format(lastModified));
+            response.setHeader("Content-Type", mimedata.getContentTypeFromName(file));
             if(fileContents instanceof String) {
                 return new ApiResponse(fileContents.toString(), 200);
             }

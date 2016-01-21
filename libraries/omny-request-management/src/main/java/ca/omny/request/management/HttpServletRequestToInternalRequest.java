@@ -11,7 +11,7 @@ public class HttpServletRequestToInternalRequest {
         RequestInput input = new RequestInput();
         input.setQueryString(request.getQueryString());
         input.setContent(request.getInputStream());
-        
+        input.setSecure(request.isSecure());
         HashMap<String,String> headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         String next = headerNames.nextElement();

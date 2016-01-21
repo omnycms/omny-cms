@@ -44,7 +44,7 @@ public class SiteMaps implements OmnyApi {
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             StringWriter sw = new StringWriter();
             jaxbMarshaller.marshal(siteMapBuilder.getSiteMap(requestResponseManager.getRequestHostname(), new StorageSystem()),sw);
-            requestResponseManager.getResponse().addHeader("Content-Type", "application/xml");
+            requestResponseManager.getResponse().setHeader("Content-Type", "application/xml");
             return new ApiResponse(sw.toString(),200);
         } catch (JAXBException ex) {
             Logger.getLogger(SiteMaps.class.getName()).log(Level.SEVERE, null, ex);

@@ -105,6 +105,7 @@ public class OmnyHandler extends AbstractHandler {
             }
 
         }
+        responseWriter.write(responseOutput, response);
     }
 
     private void injectPathParameters(HttpServletRequest request, OmnyApi api, RequestResponseManager requestResponseManager) {

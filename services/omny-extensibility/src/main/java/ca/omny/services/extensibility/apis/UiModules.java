@@ -65,40 +65,30 @@ public class UiModules implements OmnyApi {
             mimeData = new Mimedata();
         }
         try {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
 
-            File repository = new File(System.getProperty("java.io.tmpdir"));
-            factory.setRepository(repository);
-
-            ServletFileUpload servletFileUpload = new ServletFileUpload(factory);
-            List<FileItem> files = servletFileUpload.parseRequest(requestResponseManager.getRequest());
-            for (FileItem file : files) {
-                if (file.getFieldName().equals("file")) {
-                    String provider = requestResponseManager.getRequestHostname();
-                    String module = requestResponseManager.getPathParameter("module");
-                    String version = requestResponseManager.getPathParameter("version");
-                    final String format = "%s/%s/%s/%s";
-                    ZipInputStream zis = new ZipInputStream(file.getInputStream());
-                    //get the zipped file list entry
-                    for (ZipEntry ze = zis.getNextEntry(); ze != null; ze = zis.getNextEntry()) {
-                        if(!ze.isDirectory()) {
-                            String fileName = ze.getName();
-                            String key = String.format(format, provider, module, version, fileName);
-                            File tempFile = File.createTempFile("uitemp", fileName);
-                            IOUtils.copy(zis, new FileOutputStream(tempFile));
-                            s3Client.putObject(config.getBucket(), key, tempFile);
-                            tempFile.delete();
-                        }
-                    }
-                    return new ApiResponse("", 200);
+            String provider = requestResponseManager.getRequestHostname();
+            String module = requestResponseManager.getPathParameter("module");
+            String version = requestResponseManager.getPathParameter("version");
+            final String format = "%s/%s/%s/%s";
+            ZipInputStream zis = new ZipInputStream(requestResponseManager.getBody(false));
+            //get the zipped file list entry
+            for (ZipEntry ze = zis.getNextEntry(); ze != null; ze = zis.getNextEntry()) {
+                if (!ze.isDirectory()) {
+                    String fileName = ze.getName();
+                    String key = String.format(format, provider, module, version, fileName);
+                    File tempFile = File.createTempFile("uitemp", fileName);
+                    IOUtils.copy(zis, new FileOutputStream(tempFile));
+                    s3Client.putObject(config.getBucket(), key, tempFile);
+                    tempFile.delete();
                 }
             }
-        } catch (FileUploadException ex) {
-            Logger.getLogger(UiModules.class.getName()).log(Level.SEVERE, null, ex);
+            return new ApiResponse("", 200);
         } catch (IOException ex) {
             Logger.getLogger(UiModules.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new ApiResponse("", 500);
+
+        return new ApiResponse(
+                "", 500);
     }
 
     @Override
