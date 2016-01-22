@@ -14,16 +14,20 @@ public class HttpServletRequestToInternalRequest {
         input.setSecure(request.isSecure());
         HashMap<String,String> headers = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
-        String next = headerNames.nextElement();
-        while(next!=null) {
+        
+        while(headerNames.hasMoreElements()) {
+            String next = headerNames.nextElement();
             headers.put(next, request.getHeader(next));
-            next = headerNames.nextElement();
         }
+        
         input.setHeaders(headers);
         
         HashMap<String,String> cookies = new HashMap<>();
-        for(Cookie cookie: request.getCookies()) {
-            cookies.put(cookie.getName(), cookie.getValue());
+        final Cookie[] inputCookies = request.getCookies();
+        if(inputCookies !=null && inputCookies.length>0) {
+            for(Cookie cookie: inputCookies) {
+                cookies.put(cookie.getName(), cookie.getValue());
+            }
         }
         input.setCookies(cookies);
         

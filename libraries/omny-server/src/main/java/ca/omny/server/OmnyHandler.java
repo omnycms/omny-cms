@@ -39,6 +39,8 @@ public class OmnyHandler extends AbstractHandler {
         OmnyClassRegister register = new OmnyClassRegister();
         register.loadClass("ca.omny.db.extended.ExtendedDatabaseFactory");
         register.loadFromEnvironment();
+        requestConverter = new HttpServletRequestToInternalRequest();
+        responseWriter = new InternalResponseWriter();
         for (OmnyApi api : OmnyApiRegistry.getRegisteredApis()) {
             for (String version : api.getVersions()) {
                 ApiRoute route = new ApiRoute(api, version);
