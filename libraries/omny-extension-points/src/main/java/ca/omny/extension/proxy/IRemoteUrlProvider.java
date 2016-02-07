@@ -1,7 +1,7 @@
 package ca.omny.extension.proxy;
 
-import javax.servlet.http.HttpServletRequest;
+import ca.omny.request.RequestResponseManager;
 
 public interface IRemoteUrlProvider extends IdentifiableProvider {
-    String getRemoteUrl(String route, HttpServletRequest req);
+    String getRemoteUrl(String route, RequestResponseManager req);
 }

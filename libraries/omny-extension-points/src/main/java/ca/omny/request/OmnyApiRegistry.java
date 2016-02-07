@@ -1,4 +1,4 @@
-package ca.omny.request.api;
+package ca.omny.request;
 
 import java.util.Collection;
 import java.util.LinkedList;

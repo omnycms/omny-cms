@@ -1,7 +1,7 @@
 package ca.omny.storage.implementation;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.logger.OmnyLogger;
 import com.google.gson.Gson;
 import ca.omny.storage.IStorage;
@@ -209,6 +209,6 @@ public class DocumentDatabaseStorage implements IStorage {
     @Override
     public void deleteFolder(String source) {
         String key = querier.getKey("storage",source);
-        querier.deleteAll(key);
+        //querier.deleteAll(key);
     }
 }

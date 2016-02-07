@@ -1,13 +1,12 @@
 package ca.omny.extension.proxy;
 
+import ca.omny.request.RequestResponseManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public interface IOmnyProxyService {
-    void proxyRequest(String hostHeader, String uid, Map configuration, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException;
+    void proxyRequest(RequestResponseManager requestResponseManager, Map<String, String> configuration) throws MalformedURLException, IOException;
     String getRoutingPattern();
     String getId();
 }

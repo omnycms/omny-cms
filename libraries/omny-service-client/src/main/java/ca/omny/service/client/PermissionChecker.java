@@ -1,15 +1,12 @@
 package ca.omny.service.client;
 
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.RequestResponseManager;
 import ca.omny.service.client.models.User;
 import ca.omny.service.client.models.UserData;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import javax.enterprise.context.RequestScoped;
-import javax.servlet.http.HttpServletRequest;
 
-@RequestScoped
 public class PermissionChecker {
 
     UserData userData;
@@ -20,11 +17,6 @@ public class PermissionChecker {
     
     public PermissionChecker() {
        
-    }
-
-    public void setRequest(HttpServletRequest request) {
-        //this.request = request;
-        //authClient.setRequest(request);
     }
     
     public PermissionChecker(UserData userData) {

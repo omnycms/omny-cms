@@ -1,5 +1,6 @@
 package ca.omny.potent;
 
+import ca.omny.request.RequestResponseManager;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,12 +13,11 @@ public class HeaderManager {
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
     public static final String[] AUTO_HEADERS = {USER_HEADER, HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
 
-    public Map<String, String> getSendableHeaders(String host, String uid, HttpServletRequest request) {
+    public Map<String, String> getSendableHeaders(String host, String uid, RequestResponseManager request) {
         HashMap<String, String> requestHeaders = new HashMap<>();
-        Enumeration headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement().toString();
-            String headerValue = request.getHeader(headerName);
+
+        for(String headerName: request.getRequest().getHeaders().keySet()) {
+            String headerValue = request.getRequest().getHeader(headerName);
             requestHeaders.put(headerName, headerValue);
         }
 

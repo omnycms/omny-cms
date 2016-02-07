@@ -1,9 +1,9 @@
 package ca.omny.themes.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
-import ca.omny.service.client.ServiceClient;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
+import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;
 import ca.omny.themes.mappers.SampleMapper;
 import ca.omny.themes.mappers.ThemeMapper;
@@ -41,7 +41,8 @@ public class Samples implements OmnyApi {
         if(theme.equals("default")) {
             theme = themeMapper.getDefaultTheme(requestResponseManager.getRequestHostname(), requestResponseManager.getDatabaseQuerier());
         }
-        Collection<Sample> samples = sampleMapper.getSamples(theme,requestResponseManager.getRequestHostname(), requestResponseManager.getStorageSystem());
+        StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
+        Collection<Sample> samples = sampleMapper.getSamples(theme,requestResponseManager.getRequestHostname(), storageSystem);
         return new ApiResponse(samples,200);
     }
 

@@ -1,15 +1,14 @@
 package ca.omny.services.sites.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import com.google.gson.Gson;
 import ca.omny.sites.SiteHelper;
 import ca.omny.sites.mappers.SiteMapper;
 import ca.omny.sites.models.SiteDetails;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 
 public class Sites implements OmnyApi {
 

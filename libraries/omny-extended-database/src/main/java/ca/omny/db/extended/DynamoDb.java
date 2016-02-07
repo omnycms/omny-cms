@@ -1,8 +1,8 @@
 package ca.omny.db.extended;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.documentdb.KeyValuePair;
+import ca.omny.db.IDocumentQuerier;
+import ca.omny.db.KeyValuePair;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.BatchGetItemRequest;
@@ -85,21 +85,11 @@ public class DynamoDb implements IDocumentQuerier {
         return keys;
     }
 
-    @Override
-    public Future<Boolean> delete(String key) {
+    public void delete(String key) {
         DeleteItemRequest request = new DeleteItemRequest();
         request.setTableName(table);
         request.setKey(this.getKeys(key));
         client.deleteItem(request);
-        return null;
-    }
-
-    @Override
-    public void deleteAll(String prefix) {
-        Collection<String> keys = this.getKeysInRange(prefix, true);
-        for (String key : keys) {
-            this.delete(key);
-        }
     }
 
     @Override
@@ -254,11 +244,6 @@ public class DynamoDb implements IDocumentQuerier {
             keys.put("value", new AttributeValue(gson.toJson(value)));
         }
         client.putItem(table, keys);
-    }
-
-    @Override
-    public void set(String key, Object value, int expires) {
-        this.set(key, value);
     }
 
     @Override

@@ -3,9 +3,10 @@ package ca.omny.services.pages.apis;
 import com.google.gson.Gson;
 import ca.omny.pages.mappers.PageMapper;
 import ca.omny.pages.helpers.PageHelper;
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
+import ca.omny.storage.StorageSystem;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +37,8 @@ public class DetailedPages implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         try {
             String page = requestResponseManager.getQueryStringParameter("page");
-            return new ApiResponse(pageHelper.getPageDetails(requestResponseManager.getRequestHostname(),page,requestResponseManager.getStorageSystem(),requestResponseManager.getDatabaseQuerier(),false),200);
+            StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
+            return new ApiResponse(pageHelper.getPageDetails(requestResponseManager.getRequestHostname(),page,storageSystem,requestResponseManager.getDatabaseQuerier(),false),200);
         } catch (IOException ex) {
             Logger.getLogger(DetailedPages.class.getName()).log(Level.SEVERE, null, ex);
         }

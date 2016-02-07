@@ -40,8 +40,16 @@ public class ConfigurationReader {
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ConfigurationReader.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+            }  
+        }
+    }
+    
+    public void loadFromFile(String file) throws IOException {
+        Gson gson = new Gson();
+        String contents = FileUtils.readFileToString(new File(file));
+        Map<String,String> parameters = gson.fromJson(contents, Map.class);
+        for(String key: parameters.keySet()) {
+            this.setKey(key, parameters.get(key).toString());
         }
     }
     

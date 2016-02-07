@@ -8,7 +8,7 @@ import ca.omny.pages.mappers.ThemeMapper;
 import ca.omny.pages.models.BuilderPluginInstanceInfo;
 import ca.omny.pages.models.Page;
 import ca.omny.pages.models.PageDetails;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.pages.mappers.TemplateMapper;
 import ca.omny.service.client.DiscoverableServiceClient;
 import ca.omny.storage.StorageSystem;

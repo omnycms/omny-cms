@@ -28,12 +28,7 @@ public class Main {
         CommandLine cmd = parser.parse( options, args);
         if(cmd.hasOption("e")) {
             String file = cmd.getOptionValue("e");
-            Gson gson = new Gson();
-            String contents = FileUtils.readFileToString(new File(file));
-            Map<String,String> parameters = gson.fromJson(contents, Map.class);
-            for(String key: parameters.keySet()) {
-                configurationReader.setKey(key, parameters.get(key).toString());
-            }
+            configurationReader.loadFromFile(file);
         }
         configurationReader.setKey("OMNY_LOAD_CLASSES", "[\"ca.omny.db.extended.ExtendedDatabaseFactory\",\"ca.omny.services.sites.apis.RegisterApis\",\"ca.omny.potent.RegisterApis\",\"ca.omny.content.apis.RegisterApis\",\"ca.omny.services.extensibility.apis.RegisterApis\",\"ca.omny.services.menus.apis.RegisterApis\",\"ca.omny.services.pages.apis.RegisterApis\",\"ca.omny.themes.apis.RegisterApis\"]");
         OmnyClassRegister classRegister = new OmnyClassRegister();

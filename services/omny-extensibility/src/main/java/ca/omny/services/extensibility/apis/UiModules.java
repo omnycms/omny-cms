@@ -1,9 +1,9 @@
 package ca.omny.services.extensibility.apis;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.google.gson.Gson;

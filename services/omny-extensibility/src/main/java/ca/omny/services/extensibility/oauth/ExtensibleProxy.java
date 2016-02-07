@@ -1,8 +1,8 @@
 package ca.omny.services.extensibility.oauth;
 
-import ca.omny.documentdb.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
+import ca.omny.request.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -22,9 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
@@ -39,8 +37,8 @@ public class ExtensibleProxy implements IOmnyProxyService {
     OauthUserCredentialMapper userCredentialMapper = new OauthUserCredentialMapper();
 
     @Override
-    public void proxyRequest(String hostHeader, String uid, Map cofiguration, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
-        String route = getProxyRoute(req);
+    public void proxyRequest(RequestResponseManager requestResponseManager, Map cofiguration) throws MalformedURLException, IOException {
+        String route = getProxyRoute(requestResponseManager);
         String[] parts = route.substring(1).split("/");
         String organization = parts[2];
         String serviceName = parts[3];
@@ -48,7 +46,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
         
         ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName, QuerierFactory.getDefaultQuerier());
 
-        UserCredentials userCredentials = userCredentialMapper.getCredentials(hostHeader, organization, serviceName, configName, QuerierFactory.getDefaultQuerier());
+        UserCredentials userCredentials = userCredentialMapper.getCredentials(requestResponseManager.getRequestHostname(), organization, serviceName, configName, requestResponseManager.getDatabaseQuerier());
 
         SignatureType signatureType = SignatureType.QueryString;
         if (serviceCredentials.getSignatureType() != null
@@ -70,7 +68,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
         Token accessToken = new Token(this.getRefreshedAccessToken(service, credentials), serviceCredentials.getSecret());
 
         Verb verb;
-        switch (req.getMethod().toLowerCase()) {
+        switch (requestResponseManager.getRequest().getMethod().toLowerCase()) {
             case "post":
                 verb = Verb.POST;
                 break;
@@ -88,7 +86,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
         if (route.endsWith("/")) {
             relative += "/";
         }
-        String requestUrl = serviceCredentials.getApiPrefix() + relative + "?" + getSafeQueryString(req);
+        String requestUrl = serviceCredentials.getApiPrefix() + relative + "?" + getSafeQueryString(requestResponseManager);
 
         OAuthRequest request = new OAuthRequest(verb, requestUrl);
         if (signatureType == SignatureType.Header) {
@@ -100,13 +98,13 @@ public class ExtensibleProxy implements IOmnyProxyService {
 
         for (String header : response.getHeaders().keySet()) {
             if (isLegitHeader(header)) {
-                resp.setHeader(header, response.getHeaders().get(header));
+                requestResponseManager.getResponse().setHeader(header, response.getHeaders().get(header));
             }
         }
 
-        resp.setStatus(response.getCode());
+        requestResponseManager.getResponse().setStatus(response.getCode());
         String body = response.getBody();
-        resp.getWriter().print(body);
+        requestResponseManager.getResponse().getWriter().print(body);
 
     }
 
@@ -118,8 +116,8 @@ public class ExtensibleProxy implements IOmnyProxyService {
         return header.equals("Content-Type");
     }
 
-    public static String getSafeQueryString(HttpServletRequest req) {
-        Map<String, String> queryStringParameters = getQueryStringParameters(req.getQueryString());
+    public static String getSafeQueryString(RequestResponseManager req) {
+        Map<String, String> queryStringParameters = req.getRequest().getQueryStringParameters();
         StringBuilder sb = new StringBuilder();
         boolean started = false;
         for (String parameter : queryStringParameters.keySet()) {
@@ -137,23 +135,6 @@ public class ExtensibleProxy implements IOmnyProxyService {
             }
         }
         return sb.toString();
-    }
-
-    public static Map<String, String> getQueryStringParameters(String queryString) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        if (queryString == null) {
-            return params;
-        }
-        for (String group : queryString.split("&")) {
-            String[] parts = group.split("=");
-            if (parts.length == 1) {
-                params.put(group, "true");
-            } else {
-                params.put(parts[0], parts[1]);
-            }
-        }
-
-        return params;
     }
 
     public String getRelativeUrl(String[] parts) {
@@ -211,8 +192,8 @@ public class ExtensibleProxy implements IOmnyProxyService {
         return "/api/external/*";
     }
 
-    public static String getProxyRoute(HttpServletRequest request) {
-        return request.getRequestURI().substring(request.getContextPath().length());
+    public static String getProxyRoute(RequestResponseManager request) {
+        return request.getRequest().getUri();
     }
 
     @Override

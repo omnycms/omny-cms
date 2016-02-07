@@ -3,9 +3,9 @@ package ca.omny.auth.apis;
 import com.google.gson.Gson;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.models.Session;
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 
 public class Sessions implements OmnyApi {
     

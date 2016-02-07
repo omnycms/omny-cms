@@ -1,5 +1,6 @@
 package ca.omny.request.management;
 
+import ca.omny.request.ResponseOutput;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,13 +33,14 @@ public class InternalResponseWriter {
     }
     
     private void writeCoookies(ResponseOutput ro, HttpServletResponse r) {
-        Map<String,Cookie> cookies = ro.getCookies();
+        Map<String,String> cookies = ro.getCookies();
         if(cookies ==null) {
             return;
         }
         
-        for(Cookie cookie: cookies.values()) {
-            r.addCookie(cookie);
+        for(String cookie: cookies.keySet()) {
+            Cookie c = new Cookie(cookie, cookies.get(cookie));
+            r.addCookie(c);
         }
     }
    

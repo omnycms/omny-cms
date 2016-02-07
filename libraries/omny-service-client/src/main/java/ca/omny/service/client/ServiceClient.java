@@ -3,7 +3,6 @@ package ca.omny.service.client;
 import ca.omny.logger.OmnyLogger;
 import ca.omny.logger.SimpleLogger;
 import ca.omny.omny.service.discovery.ServiceLocator;
-import ca.omny.request.management.RequestInput;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -23,7 +21,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import org.apache.commons.io.IOUtils;
 
-@ApplicationScoped
 public class ServiceClient {
 
     ServiceLocator locator;

@@ -1,6 +1,6 @@
 package ca.omny.potent;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import java.util.Map;
 

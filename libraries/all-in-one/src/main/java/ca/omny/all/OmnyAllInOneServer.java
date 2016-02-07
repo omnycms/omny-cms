@@ -1,11 +1,10 @@
 package ca.omny.all;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.PowerServlet;
 import ca.omny.server.OmnyClassRegister;
-import ca.omny.server.OmnyHandler;
 import ca.omny.server.OmnyServer;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;

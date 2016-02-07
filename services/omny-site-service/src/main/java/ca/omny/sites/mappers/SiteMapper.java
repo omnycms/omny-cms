@@ -1,6 +1,6 @@
 package ca.omny.sites.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.sites.models.Site;
 import ca.omny.sites.models.SiteDetails;
 import ca.omny.sites.models.SiteUserAssociation;
@@ -66,7 +66,7 @@ public class SiteMapper {
             querier.delete(key);
         }
         key = querier.getKey("site_data",siteName);
-        querier.deleteAll(key);
+        // querier.deleteAll(key);
         key = querier.getKey("sites",siteName);
         querier.delete(key);
         

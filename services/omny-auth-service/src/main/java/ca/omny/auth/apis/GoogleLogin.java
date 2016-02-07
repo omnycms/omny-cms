@@ -1,13 +1,13 @@
 package ca.omny.auth.apis;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import com.google.gson.Gson;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.mappers.UserMapper;
 import ca.omny.documentdb.QuerierFactory;
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;

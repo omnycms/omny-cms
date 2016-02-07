@@ -1,7 +1,7 @@
 package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.extension.proxy.IRemoteUrlProviderFactory;

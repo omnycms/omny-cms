@@ -1,11 +1,12 @@
 package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.models.OmnyEndpoint;
+import ca.omny.request.RequestResponseManager;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,7 +31,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.AbstractHttpMessage;
@@ -47,19 +50,21 @@ public class PassThroughProxy implements IOmnyProxyService {
     CloseableHttpClient httpclient = HttpClients.createDefault();
 
     @Override
-    public void proxyRequest(String hostHeader, String uid, Map configuration, HttpServletRequest req, HttpServletResponse resp) throws MalformedURLException, IOException {
+    public void proxyRequest(RequestResponseManager req, Map<String,String> configuration) throws MalformedURLException, IOException {
         if(remoteUrlProvider==null) {
             remoteUrlProvider = RemoteUrlProviderFactory.getDefaultProvider();
         }
         try {
-            String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequestURI(), req);
+            String hostHeader = req.getRequestHostname();
+            String uid = req.getUserId();
+            String remoteUrl = remoteUrlProvider.getRemoteUrl(req.getRequest().getUri(), req);
 
             if (remoteUrl == null) {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                req.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             URIBuilder uriBuilder = new URIBuilder(remoteUrl);
-            String method = req.getMethod();
+            String method = req.getRequest().getMethod();
             AbstractHttpMessage message = this.getMessage(method, uriBuilder.build(), req);
 
             HeaderManager manager = new HeaderManager();
@@ -68,15 +73,15 @@ public class PassThroughProxy implements IOmnyProxyService {
                 message.addHeader(header,sendableHeaders.get(header));
             }
             CloseableHttpResponse response = httpclient.execute((HttpUriRequest) message);
-            resp.setStatus(response.getStatusLine().getStatusCode());
+            req.getResponse().setStatus(response.getStatusLine().getStatusCode());
             try {
                 HttpEntity entity = response.getEntity();
                 Header[] allHeaders = response.getAllHeaders();
                 for (Header header : allHeaders) {
-                    resp.addHeader(header.getName(), header.getValue());
+                    req.getResponse().setHeader(header.getName(), header.getValue());
                 }
                 if (entity != null) {
-                    IOUtils.copy(entity.getContent(), resp.getOutputStream());
+                    req.getResponse().getWriter().print(entity.getContent());                    
                 }
             } finally {
                 response.close();
@@ -91,17 +96,17 @@ public class PassThroughProxy implements IOmnyProxyService {
         return "PASS_THROUGH";
     }
 
-    public AbstractHttpMessage getMessage(String method, URI uri, HttpServletRequest req) throws IOException {
+    public AbstractHttpMessage getMessage(String method, URI uri, RequestResponseManager req) throws IOException {
         switch (method.toLowerCase()) {
             case "get":
                 return new HttpGet(uri);
             case "post":
                 HttpPost post = new HttpPost(uri);
-                post.setEntity(new InputStreamEntity(req.getInputStream()));
+                post.setEntity(new InputStreamEntity(req.getBody(false)));
                 return post;
             case "put":
                 HttpPut put = new HttpPut(uri);
-                put.setEntity(new InputStreamEntity(req.getInputStream()));
+                put.setEntity(new InputStreamEntity(req.getBody(false)));
                 return put;
             case "delete":
                 HttpDelete httpDelete = new HttpDelete(uri);

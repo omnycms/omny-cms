@@ -1,5 +1,7 @@
 package ca.omny.documentdb;
 
+import ca.omny.db.IDocumentQuerier;
+import ca.omny.db.KeyValuePair;
 import com.couchbase.client.CouchbaseClient;
 import com.couchbase.client.protocol.views.Query;
 import com.couchbase.client.protocol.views.Stale;
@@ -12,7 +14,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import net.spy.memcached.util.StringUtils;
 
 public class CouchQuerier implements IDocumentQuerier {
@@ -56,12 +57,6 @@ public class CouchQuerier implements IDocumentQuerier {
         client.set(key, gsonValue);
     }
 
-    @Override
-    public void set(String key, Object value, int expires) {
-        String gsonValue = this.getGson().toJson(value);
-        client.set(key, expires, gsonValue);
-    }
-    
     @Override
     public Object getRaw(String key) {
         return client.get(key);
@@ -177,12 +172,10 @@ public class CouchQuerier implements IDocumentQuerier {
         return results;
     }
 
-    @Override
-    public Future<Boolean> delete(String key) {
-        return client.delete(key);
+    public void delete(String key) {
+        client.delete(key);
     }
 
-    @Override
     public void deleteAll(String prefix) {
         View view = client.getView("all", "all");
         Query query = new Query();
@@ -203,5 +196,10 @@ public class CouchQuerier implements IDocumentQuerier {
     @Override
     public void finalize() {
         client.shutdown();
+    }
+    
+    public void set(String key, Object value, int expires) {
+        String gsonValue = this.getGson().toJson(value);
+        client.set(key, expires, gsonValue);
     }
 }

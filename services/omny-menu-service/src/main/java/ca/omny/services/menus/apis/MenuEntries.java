@@ -1,13 +1,13 @@
 package ca.omny.services.menus.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import com.google.gson.Gson;
 import ca.omny.service.menus.helpers.MenuHelper;
 import ca.omny.services.menus.mappers.MenuMapper;
 import ca.omny.services.menus.models.MenuEntry;
-import javax.inject.Inject;
+import ca.omny.storage.StorageSystem;
 
 public class MenuEntries implements OmnyApi {
 
@@ -34,7 +34,8 @@ public class MenuEntries implements OmnyApi {
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String menuName = requestResponseManager.getPathParameter("menu");
         if(menuName==null||menuName.equals("default")) {
-            return new ApiResponse(menuMapper.getDefaultLinks(requestResponseManager.getRequestHostname(),requestResponseManager.getStorageSystem()),200);
+            StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
+            return new ApiResponse(menuMapper.getDefaultLinks(requestResponseManager.getRequestHostname(), storageSystem),200);
         }
         return new ApiResponse(menuMapper.getLinks(requestResponseManager.getRequestHostname(), menuName, requestResponseManager.getDatabaseQuerier()),200);
     }

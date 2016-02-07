@@ -1,6 +1,6 @@
 package ca.omny.services.extensibility.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.services.extensibility.models.InstalledUiModuleConfiguration;
 
 public class DefaultModuleVersionMapper {

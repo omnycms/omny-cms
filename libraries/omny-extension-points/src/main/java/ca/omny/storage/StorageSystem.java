@@ -1,8 +1,6 @@
 package ca.omny.storage;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.logger.OmnyLogger;
-import ca.omny.logger.SimpleLogger;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,29 +9,13 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Inject;
 
 public class StorageSystem {
-
-    static OmnyLogger logger = new SimpleLogger(StorageSystem.class.getName());
     
     IStorage storageImplementation;
     
-    public StorageSystem() {
-        storageImplementation = StorageFactory.getDefaultStorage();
-    }
-
     public StorageSystem(IStorage storageImplementation) {
         this.storageImplementation = storageImplementation;
-    }
-
-    @Inject
-    public void injectServiceClient(IStorage storageImplementation) {
-        this.storageImplementation = storageImplementation;
-    }
-
-    public void setLogger(OmnyLogger logger) {
-        this.logger = logger;
     }
 
     public String getExtension(String filename) {

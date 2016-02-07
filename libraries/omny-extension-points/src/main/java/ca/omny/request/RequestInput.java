@@ -1,18 +1,19 @@
-package ca.omny.request.management;
+package ca.omny.request;
 
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestInput {
+
     String uri;
     String method;
     InputStream content;
     String queryString;
-    Map<String,String> headers;
-    Map<String,String> cookies;
-    Map<String,String> configOverrides;
-    Map<String,String> queryStringParameters;
+    Map<String, String> headers;
+    Map<String, String> cookies;
+    Map<String, String> configOverrides;
+    Map<String, String> queryStringParameters;
     String hostname;
     boolean secure;
 
@@ -23,27 +24,34 @@ public class RequestInput {
     public void setUri(String uri) {
         this.uri = uri;
     }
-    
+
     public String getMethod() {
         return method;
     }
-    
+
+    public Map<String, String> getQueryStringParameters() {
+        populateQueryStringParameters();
+        return queryStringParameters;
+    }
+
     public String getParameter(String parameter) {
         populateQueryStringParameters();
-        if(queryStringParameters.containsKey(parameter)) {
+        if (queryStringParameters.containsKey(parameter)) {
             return queryStringParameters.get(parameter);
         }
         return null;
     }
-    
+
     private void populateQueryStringParameters() {
-        if(queryStringParameters==null) {
+        if (queryStringParameters == null) {
             queryStringParameters = new HashMap<>();
-            String[] groups = queryString.split("&");
-            for(String group: groups) {
-                String[] values = group.split("=");
-                if(values.length==2) {
-                    queryStringParameters.put(values[0], values[1]);
+            if (queryString != null) {
+                String[] groups = queryString.split("&");
+                for (String group : groups) {
+                    String[] values = group.split("=");
+                    if (values.length == 2) {
+                        queryStringParameters.put(values[0], values[1]);
+                    }
                 }
             }
         }
@@ -68,7 +76,7 @@ public class RequestInput {
     public void setQueryString(String queryString) {
         this.queryString = queryString;
     }
-    
+
     public String getHeader(String header) {
         return headers.get(header);
     }

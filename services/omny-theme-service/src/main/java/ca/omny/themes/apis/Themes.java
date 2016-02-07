@@ -1,9 +1,11 @@
 package ca.omny.themes.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.configuration.ConfigurationReader;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import ca.omny.storage.GlobalStorage;
+import ca.omny.storage.StorageSystem;
 import ca.omny.themes.mappers.ThemeMapper;
 import ca.omny.themes.models.ThemeInstallRequest;
 import java.util.Collection;
@@ -25,14 +27,17 @@ public class Themes implements OmnyApi {
     }
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
-        Collection<String> themes = themeMapper.getThemes(requestResponseManager.getRequestHostname(), requestResponseManager.getStorageSystem());
+        StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
+        Collection<String> themes = themeMapper.getThemes(requestResponseManager.getRequestHostname(), storageSystem);
         return new ApiResponse(themes, 200);
     }
 
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
         ThemeInstallRequest themeInstallRequest = requestResponseManager.getEntity(ThemeInstallRequest.class);
         String theme = requestResponseManager.getPathParameter("theme");
-        themeMapper.copyGlobalTheme(themeInstallRequest.getFromTheme(), requestResponseManager.getRequestHostname(), theme, GlobalStorage.getDefaultGlobalStorage());
+        StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
+        GlobalStorage globalStorage = new GlobalStorage(requestResponseManager.getDatabaseQuerier(), storageSystem, requestResponseManager.getStorageDevice(), ConfigurationReader.getDefaultConfigurationReader());
+        themeMapper.copyGlobalTheme(themeInstallRequest.getFromTheme(), requestResponseManager.getRequestHostname(), theme, globalStorage);
         return new ApiResponse("", 200);
     }
 

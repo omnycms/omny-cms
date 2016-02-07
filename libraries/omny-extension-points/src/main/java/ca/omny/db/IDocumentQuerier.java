@@ -1,14 +1,8 @@
-
-package ca.omny.documentdb;
+package ca.omny.db;
 
 import java.util.Collection;
-import java.util.concurrent.Future;
 
 public interface IDocumentQuerier {
-
-    Future<Boolean> delete(String key);
-
-    void deleteAll(String prefix);
 
     <T extends Object> T get(String key, Class<T> type);
 
@@ -27,10 +21,10 @@ public interface IDocumentQuerier {
     <T extends Object> Collection<T> multiGetCollection(Collection<String> keys, Class<T> type);
     
     String getKey(String... keyParts);
+    
+    void delete(String key);
 
     void set(String key, Object value);
-
-    void set(String key, Object value, int expires);
 
     void setRaw(String key, Object value);
     

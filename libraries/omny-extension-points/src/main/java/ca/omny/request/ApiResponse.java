@@ -1,4 +1,4 @@
-package ca.omny.request.api;
+package ca.omny.request;
 
 public class ApiResponse {
     Object response;

@@ -1,6 +1,6 @@
 package ca.omny.potent;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IPermissionCheck;
@@ -17,12 +17,17 @@ import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.ProxyAndConfiguration;
 import ca.omny.potent.models.ProxyRoute;
 import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
+import ca.omny.request.RequestInput;
+import ca.omny.request.RequestResponseManager;
+import ca.omny.request.ResponseOutput;
 import ca.omny.routing.IRoute;
 import ca.omny.routing.RoutingTree;
+import ca.omny.storage.StorageFactory;
 import java.util.Collection;
 import java.util.LinkedList;
+import ca.omny.request.management.HttpServletRequestToInternalRequest;
+import ca.omny.request.management.InternalResponseWriter;
 
-@ApplicationScoped
 public class PowerServlet extends HttpServlet {
     
     AuthorizationCheck authChecker = new AuthorizationCheck();
@@ -33,6 +38,8 @@ public class PowerServlet extends HttpServlet {
     IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(querier);
     OmnyRouteMapper routeMapper = new OmnyRouteMapper();
+    InternalResponseWriter responseWriter;
+    HttpServletRequestToInternalRequest requestConverter;
     
     static Collection<IOmnyProxyService> proxyServices = new LinkedList<IOmnyProxyService>();
     
@@ -47,7 +54,8 @@ public class PowerServlet extends HttpServlet {
     }
     
     public PowerServlet() {
-        
+        requestConverter = new HttpServletRequestToInternalRequest();
+        responseWriter = new InternalResponseWriter();
     }
     
     public void initializeRouter() {
@@ -73,34 +81,46 @@ public class PowerServlet extends HttpServlet {
     }
     
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException { 
-        String host = getHost(req);
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+        String host = getHost(request);
         System.out.println("processing request for "+host);
         
-        String route = OmnyRouteMapper.getProxyRoute(req);
-        Map<String, String> queryStringParameters = this.getQueryStringParameters(req.getQueryString());
+       
+        Map<String, String> queryStringParameters = this.getQueryStringParameters(request.getQueryString());
         String securityToken = queryStringParameters.get("access_token");
         
         String uid = siteOwnerMapper.getUid(securityToken);
-  
-        boolean permitted = authChecker.isAuthorized(host, uid, req, queryStringParameters);
+        RequestResponseManager requestResponseManager = new RequestResponseManager();
+        requestResponseManager.setUserId(uid);
+
+        RequestInput requestInput = requestConverter.getInternalInput(request);
+        requestResponseManager.setRequest(requestInput);
+        requestResponseManager.setDatabaseQuerier(QuerierFactory.getDefaultQuerier());
+        requestResponseManager.setStorageDevice(StorageFactory.getDefaultStorage());
+        ResponseOutput responseOutput = new ResponseOutput();
+        requestResponseManager.setResponse(responseOutput);
+        requestResponseManager.getRequest().setHostname(host);
+        
+        String route = OmnyRouteMapper.getProxyRoute(requestResponseManager);
+        boolean permitted = authChecker.isAuthorized(requestResponseManager);
         if(permitted) {
             initializeRouter();
-            ProxyAndConfiguration dynamicProxy = routeMapper.getAppropriateProxy(req.getRequestURI());
+            ProxyAndConfiguration dynamicProxy = routeMapper.getAppropriateProxy(request.getRequestURI());
             if(dynamicProxy!=null) {
-                dynamicProxy.getProxy().proxyRequest(host, uid, dynamicProxy.getConfiguration(), req, resp);
+                dynamicProxy.getProxy().proxyRequest(requestResponseManager, dynamicProxy.getConfiguration());
             } else {
-                IRoute<IOmnyProxyService> r = router.matchPath(req.getRequestURI());
+                IRoute<IOmnyProxyService> r = router.matchPath(request.getRequestURI());
                 IOmnyProxyService proxyService = r.getObject();
-                proxyService.proxyRequest(host,uid, null,req, resp);          
+                proxyService.proxyRequest(requestResponseManager, null);          
             }
+            responseWriter.write(responseOutput, response);
         } else {
             if(uid==null) {
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             } else {
-                resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             }
-            resp.getWriter().write("Not Permitted");
+            response.getWriter().write("Not Permitted");
         }   
     }
 

@@ -1,5 +1,7 @@
 package ca.omny.documentdb;
 
+import ca.omny.db.IDocumentQuerier;
+import ca.omny.db.KeyValuePair;
 import com.google.gson.Gson;
 import ca.omny.documentdb.models.PostgresConnection;
 import ca.omny.logger.OmnyLogger;
@@ -17,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.spy.memcached.util.StringUtils;
@@ -57,16 +58,6 @@ public class Postgres implements IDocumentQuerier {
 
     public void setConnectionInfo(PostgresConnection connectionInfo) {
         this.connectionInfo = connectionInfo;
-    }
-    
-    @Override
-    public Future<Boolean> delete(String key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void deleteAll(String prefix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -177,10 +168,12 @@ public class Postgres implements IDocumentQuerier {
         return null;
     }
     
+    @Override
     public List<String> getKeysInRange(String prefix, boolean allowStale) {
         return this.getKeysInRange(prefix + "/", prefix + "0", allowStale);
     }
     
+    @Override
     public List<String> getKeysInRange(String start, String end, boolean allowStale) {
         return this.getKeysInRange("all","all",start, end, allowStale);
     }
@@ -343,11 +336,6 @@ public class Postgres implements IDocumentQuerier {
         }
     }
 
-    @Override
-    public void set(String key, Object value, int expires) {
-        this.set(key, value);
-    }
-
     public static byte[] serialize(Object obj) throws IOException {
         ByteArrayOutputStream b = new ByteArrayOutputStream();
         ObjectOutputStream o = new ObjectOutputStream(b);
@@ -361,7 +349,6 @@ public class Postgres implements IDocumentQuerier {
         return o.readObject();
     }
 
-    @Override
     public void setRaw(String key, Object value) {       
         if (key.endsWith(".json")) {
             this.set(key, value);
@@ -410,6 +397,11 @@ public class Postgres implements IDocumentQuerier {
             } catch (SQLException ex) {
             }
         }
+    }
+
+    @Override
+    public void delete(String key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

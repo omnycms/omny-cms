@@ -1,6 +1,6 @@
 package ca.omny.potent.site;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.models.SiteConfiguration;
 

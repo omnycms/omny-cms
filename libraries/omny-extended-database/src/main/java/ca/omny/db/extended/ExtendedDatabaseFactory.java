@@ -1,8 +1,8 @@
 package ca.omny.db.extended;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.documentdb.IDocumentQuerierFactory;
+import ca.omny.db.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerierFactory;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.storage.IStorage;
 import ca.omny.storage.StorageFactory;

@@ -1,6 +1,6 @@
 package ca.omny.services.menus.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;
 import ca.omny.services.menus.models.Menu;

@@ -1,6 +1,6 @@
 package ca.omny.sites;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.sites.mappers.SiteMapper;
 import ca.omny.sites.models.SiteDetails;
 import ca.omny.sites.models.SiteUserAssociation;

@@ -1,7 +1,7 @@
 
 package ca.omny.potent.permissions.roles;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.potent.models.AssignedRole;
 import ca.omny.extension.proxy.Permission;
 import java.util.Arrays;

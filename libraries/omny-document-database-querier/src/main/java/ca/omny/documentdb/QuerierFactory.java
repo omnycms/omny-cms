@@ -1,6 +1,8 @@
 package ca.omny.documentdb;
 
+import ca.omny.db.IDocumentQuerierFactory;
 import ca.omny.configuration.ConfigurationReader;
+import ca.omny.db.IDocumentQuerier;
 import com.google.gson.Gson;
 import ca.omny.documentdb.models.PostgresConnection;
 import ca.omny.logger.OmnyLogger;

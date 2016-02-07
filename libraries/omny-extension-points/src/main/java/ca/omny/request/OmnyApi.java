@@ -1,6 +1,6 @@
-package ca.omny.request.api;
+package ca.omny.request;
 
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.RequestResponseManager;
 
 public interface OmnyApi {
     

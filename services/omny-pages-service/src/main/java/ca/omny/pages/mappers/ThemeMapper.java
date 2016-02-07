@@ -2,7 +2,7 @@ package ca.omny.pages.mappers;
 
 import com.google.gson.Gson;
 import ca.omny.pages.models.Page;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.storage.StorageSystem;
 import java.io.IOException;
 import java.net.MalformedURLException;

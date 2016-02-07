@@ -1,6 +1,6 @@
 package ca.omny.service.menus.helpers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.services.menus.mappers.MenuMapper;
 import ca.omny.services.menus.models.Menu;
 import java.util.Collection;

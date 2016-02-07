@@ -1,10 +1,10 @@
 package ca.omny.content.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestInput;
-import ca.omny.request.management.RequestResponseManager;
-import ca.omny.request.management.ResponseOutput;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestInput;
+import ca.omny.request.RequestResponseManager;
+import ca.omny.request.ResponseOutput;
 import ca.omny.storage.MetaData;
 import ca.omny.storage.Mimedata;
 import ca.omny.storage.StorageSystem;
@@ -37,7 +37,7 @@ public class ContentLocation implements OmnyApi {
     }
 
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
-        StorageSystem storageSystem = requestResponseManager.getStorageSystem();
+        StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
         String file = requestResponseManager.getQueryStringParameter("file");
         RequestInput request =  requestResponseManager.getRequest();
         Map<String, String> queryParameters = new HashMap<String, String>();

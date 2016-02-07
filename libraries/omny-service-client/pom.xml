@@ -48,7 +48,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>request-management</artifactId>
+            <artifactId>extension-points</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

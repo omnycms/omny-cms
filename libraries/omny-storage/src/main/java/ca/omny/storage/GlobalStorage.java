@@ -1,38 +1,21 @@
 package ca.omny.storage;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
+import ca.omny.db.IDocumentQuerier;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class GlobalStorage {
     
-    @Inject
     IDocumentQuerier querier;
     
-    @Inject
     StorageSystem storageSystem;
     
-    @Inject
     IStorage storageImplementation;
     
-    @Inject
     ConfigurationReader configurationReader;
     
     static GlobalStorage defaultGlobalStorage;
-    
-    public static GlobalStorage getDefaultGlobalStorage() {
-        if(defaultGlobalStorage==null) {
-            defaultGlobalStorage = new GlobalStorage();
-        }
-        return defaultGlobalStorage;
-    }
-    
-    public GlobalStorage() {
-        this(QuerierFactory.getDefaultQuerier(), new StorageSystem(), StorageFactory.getDefaultStorage(), ConfigurationReader.getDefaultConfigurationReader());
-    }
-
+   
     public GlobalStorage(IDocumentQuerier querier, StorageSystem storageSystem, IStorage storageImplementation, ConfigurationReader configurationReader) {
         this.querier = querier;
         this.storageSystem = storageSystem;

@@ -1,4 +1,4 @@
-package ca.omny.documentdb;
+package ca.omny.db;
 
 public class KeyValuePair<T> {
     public String key;

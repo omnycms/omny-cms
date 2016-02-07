@@ -1,18 +1,17 @@
-package ca.omny.request.management;
+package ca.omny.request;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.Cookie;
 
 public class ResponseOutput {
 
     transient StringWriter sw = new StringWriter();
     transient PrintWriter writer = new PrintWriter(sw);
-    Map<String,String> headers = new HashMap<String,String>();
-    Map<String,Cookie> cookies = new HashMap<String,Cookie>();
+    Map<String,String> headers = new HashMap<>();
+    Map<String,String> cookies = new HashMap<>();
     int status = 0;
     String body;
 
@@ -24,8 +23,8 @@ public class ResponseOutput {
         body = sw.toString();
     }
     
-    public void addCookie(Cookie cookie) {
-        cookies.put(cookie.getName(), cookie);
+    public void addCookie(String cookie, String value) {
+        cookies.put(cookie, value);
     }
 
     public boolean containsHeader(String string) {
@@ -48,7 +47,7 @@ public class ResponseOutput {
         return headers;
     }
 
-    public Map<String, Cookie> getCookies() {
+    public Map<String, String> getCookies() {
         return cookies;
     }
 

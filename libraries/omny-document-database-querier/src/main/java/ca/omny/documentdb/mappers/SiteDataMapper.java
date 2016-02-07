@@ -1,6 +1,6 @@
 package ca.omny.documentdb.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import java.util.Collection;
 
 public class SiteDataMapper<T>  {

@@ -1,11 +1,7 @@
-package ca.omny.request.management;
+package ca.omny.request;
 
-import ca.omny.auth.sessions.SessionMapper;
-import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.storage.IStorage;
-import ca.omny.storage.StorageFactory;
-import ca.omny.storage.StorageSystem;
 import com.google.gson.Gson;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,12 +20,8 @@ public class RequestResponseManager {
     ByteArrayOutputStream bodyStream;
     Map<String,String> queryStringCache;
     Map<String,String> pathParameters;
-    
-    SessionMapper sessionMapper;
-
-    public void setSessionMapper(SessionMapper sessionMapper) {
-        this.sessionMapper = sessionMapper;
-    }
+    IStorage storageDevice;
+    IDocumentQuerier database;
 
     public RequestInput getRequest() {
         return request;
@@ -120,12 +112,11 @@ public class RequestResponseManager {
      * @return A context specific storage instance
      */
     public IStorage getStorageDevice() {
-        return StorageFactory.getDefaultStorage();
+        return storageDevice;
     }
     
-    public StorageSystem getStorageSystem() {
-        StorageSystem storageSystem = new StorageSystem(this.getStorageDevice());
-        return storageSystem;
+    public void setStorageDevice(IStorage storage) {
+        storageDevice = storage;
     }
     
     /**
@@ -133,6 +124,10 @@ public class RequestResponseManager {
      * @return A context specific database instance
      */
     public IDocumentQuerier getDatabaseQuerier() {
-        return QuerierFactory.getDefaultQuerier();
+        return database;
+    }
+    
+    public void setDatabaseQuerier(IDocumentQuerier documentQuerier) {
+        database = documentQuerier;
     }
 }

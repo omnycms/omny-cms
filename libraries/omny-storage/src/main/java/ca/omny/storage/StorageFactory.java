@@ -8,14 +8,10 @@ import ca.omny.storage.implementation.S3Storage;
 import ca.omny.storage.implementation.LocalStorage;
 import ca.omny.storage.implementation.DocumentDatabaseStorage;
 import java.io.File;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
-@ApplicationScoped
 public class StorageFactory {
     
-    @Inject
     ConfigurationReader configurationReader;
     
     static OmnyLogger logger = new SimpleLogger(StorageFactory.class.getName());

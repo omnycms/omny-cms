@@ -1,6 +1,6 @@
 package ca.omny.pages.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 
 public class TemplateMapper {
 

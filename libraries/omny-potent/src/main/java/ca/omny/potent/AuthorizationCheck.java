@@ -8,9 +8,8 @@ import ca.omny.potent.models.SiteConfiguration;
 import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.permissions.roles.RoleBasedPermissionChecker;
 import ca.omny.potent.site.SiteConfigurationLoader;
+import ca.omny.request.RequestResponseManager;
 import java.io.IOException;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 
 public class AuthorizationCheck {
     
@@ -19,17 +18,19 @@ public class AuthorizationCheck {
     SiteConfigurationLoader siteConfigurationLoader = new SiteConfigurationLoader();
     SiteOwnerMapper siteOwnerMapper = new SiteOwnerMapper();
     
-    public boolean isAuthorized(String host, String uid, HttpServletRequest req, Map<String, String> queryStringParameters) throws IOException {
+    public boolean isAuthorized(RequestResponseManager requestResponseManager) throws IOException {
         String skipCheck = ConfigurationReader.getDefaultConfigurationReader().getConfigurationString("OMNY_NO_AUTH");
         if(skipCheck!=null && skipCheck.equals("true")) {
             return true;
         }
+        String host = requestResponseManager.getRequestHostname();
+        String uid = requestResponseManager.getUserId();
         SiteConfiguration configuration = siteConfigurationLoader.getConfiguration(host);
         
-        String route = OmnyRouteMapper.getProxyRoute(req);
-        AccessRule rule = permissionResolver.getMostRelevantAccessRule(route, req.getMethod(), configuration);
-        permissionResolver.injectParameters(host, req.getRequestURI(), queryStringParameters, rule);
-        String securityToken = req.getParameter("access_token");
+        String route = OmnyRouteMapper.getProxyRoute(requestResponseManager);
+        AccessRule rule = permissionResolver.getMostRelevantAccessRule(route, requestResponseManager.getRequest().getMethod(), configuration);
+        permissionResolver.injectParameters(host, requestResponseManager.getRequest().getUri(), requestResponseManager.getRequest().getQueryStringParameters(), rule);
+        String securityToken = requestResponseManager.getRequest().getParameter("access_token");
         boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, uid);
         boolean isSiteUser = siteOwnerMapper.isSiteUser(host, uid);
         

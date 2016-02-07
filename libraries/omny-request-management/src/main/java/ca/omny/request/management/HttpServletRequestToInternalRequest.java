@@ -1,5 +1,6 @@
 package ca.omny.request.management;
 
+import ca.omny.request.RequestInput;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class HttpServletRequestToInternalRequest {
             }
         }
         input.setCookies(cookies);
-        
+        input.setHostname(request.getServerName());
         input.setMethod(request.getMethod());
         input.setUri(request.getRequestURI());
         input.setQueryString(request.getQueryString());

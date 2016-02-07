@@ -1,6 +1,6 @@
 package ca.omny.services.pages.apis;
 
-import ca.omny.request.api.OmnyApiRegistry;
+import ca.omny.request.OmnyApiRegistry;
 
 public class RegisterApis {
     static {

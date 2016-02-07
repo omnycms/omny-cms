@@ -7,7 +7,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>omny-auth</module>
-        <module>omny-configuration-reader</module>
         <module>omny-document-database-querier</module>
         <module>omny-exceptions</module>
         <module>omny-extension-points</module>

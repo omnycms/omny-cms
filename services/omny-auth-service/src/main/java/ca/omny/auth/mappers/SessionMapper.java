@@ -1,6 +1,6 @@
 package ca.omny.auth.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.auth.models.Session;
 import java.util.UUID;
 

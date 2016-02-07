@@ -1,6 +1,6 @@
 package ca.omny.potent.permissions.roles;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.extension.proxy.IPermissionCheck;
 import ca.omny.potent.models.AssignedRole;
 import ca.omny.extension.proxy.Permission;
@@ -8,11 +8,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import javax.inject.Inject;
 
 public class RoleBasedPermissionChecker implements IPermissionCheck {
     
-    @Inject
     RoleMapper roleMapper = new RoleMapper();
     
     IDocumentQuerier querier;

@@ -1,9 +1,9 @@
 package ca.omny.all;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.request.management.HttpServletRequestToInternalRequest;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;

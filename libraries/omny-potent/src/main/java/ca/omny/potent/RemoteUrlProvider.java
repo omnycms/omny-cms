@@ -1,12 +1,13 @@
 package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.OmnyEndpoint;
 import ca.omny.potent.models.OmnyRouteConfiguration;
+import ca.omny.request.RequestResponseManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.UnsupportedEncodingException;
@@ -35,8 +36,8 @@ public class RemoteUrlProvider implements IRemoteUrlProvider {
         this.routeMapper = routeMapper;
     }
 
-    public String getRemoteUrl(String route, HttpServletRequest req) {  
-        String decodedQueryString = req.getQueryString();
+    public String getRemoteUrl(String route, RequestResponseManager req) {  
+        String decodedQueryString = req.getRequest().getQueryString();
         try {
             if(decodedQueryString != null) {
                 decodedQueryString = URLDecoder.decode(decodedQueryString, "UTF-8");

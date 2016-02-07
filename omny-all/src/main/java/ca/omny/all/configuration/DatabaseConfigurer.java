@@ -2,7 +2,7 @@ package ca.omny.all.configuration;
 
 import ca.omny.auth.mappers.UserMapper;
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import ca.omny.sites.mappers.SiteMapper;
 import java.io.File;

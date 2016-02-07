@@ -4,7 +4,7 @@ import ca.omny.auth.token.AuthTokenParser;
 import ca.omny.auth.mappers.PermissionMapper;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.models.Session;
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import ca.omny.documentdb.QuerierFactory;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;

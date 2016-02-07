@@ -1,7 +1,7 @@
 package ca.omny.db.extended;
 
-import ca.omny.documentdb.IDocumentQuerier;
-import ca.omny.documentdb.KeyValuePair;
+import ca.omny.db.IDocumentQuerier;
+import ca.omny.db.KeyValuePair;
 import ca.omny.storage.IStorage;
 import com.google.gson.Gson;
 import java.io.File;
@@ -28,12 +28,10 @@ public class StorageBasedDatabase implements IDocumentQuerier {
     Gson gson = new Gson();
     
     @Override
-    public Future<Boolean> delete(String key) {
+    public void delete(String key) {
         storage.delete(DB_PREFIX+key);
-        return null;
     }
 
-    @Override
     public void deleteAll(String prefix) {
         storage.deleteFolder(DB_PREFIX+prefix);
     }
@@ -92,11 +90,6 @@ public class StorageBasedDatabase implements IDocumentQuerier {
     @Override
     public void set(String key, Object value) {
         storage.saveFile(DB_PREFIX+key, value);
-    }
-
-    @Override
-    public void set(String key, Object value, int expires) {
-        this.set(key, value);
     }
 
     @Override

@@ -91,7 +91,8 @@ public class LocalStorage implements IStorage {
     public Object getFileContents(String fullPath, boolean isJson) {
         if (!isJson) {
             try {
-                byte[] bytes = FileUtils.readFileToByteArray(this.getFile(fullPath));
+                final File file = this.getFile(fullPath);
+                byte[] bytes = FileUtils.readFileToByteArray(file);
                 if (isValidUTF8(bytes)) {
                     return new String(bytes);
                 }

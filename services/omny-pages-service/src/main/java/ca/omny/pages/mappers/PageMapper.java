@@ -1,6 +1,6 @@
 package ca.omny.pages.mappers;
 
-import ca.omny.documentdb.IDocumentQuerier;
+import ca.omny.db.IDocumentQuerier;
 import com.google.gson.Gson;
 import ca.omny.pages.models.CreatePageRequest;
 import ca.omny.pages.models.Page;

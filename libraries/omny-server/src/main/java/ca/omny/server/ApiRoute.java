@@ -1,6 +1,6 @@
 package ca.omny.server;
 
-import ca.omny.request.api.OmnyApi;
+import ca.omny.request.OmnyApi;
 import ca.omny.routing.IRoute;
 
 public class ApiRoute implements IRoute<OmnyApi> {

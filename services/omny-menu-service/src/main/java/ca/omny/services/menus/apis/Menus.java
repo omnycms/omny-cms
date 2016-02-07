@@ -1,8 +1,8 @@
 package ca.omny.services.menus.apis;
 
-import ca.omny.request.api.ApiResponse;
-import ca.omny.request.api.OmnyApi;
-import ca.omny.request.management.RequestResponseManager;
+import ca.omny.request.ApiResponse;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.RequestResponseManager;
 import com.google.gson.Gson;
 import ca.omny.services.menus.mappers.MenuMapper;
 import ca.omny.services.menus.models.Menu;

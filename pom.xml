@@ -8,6 +8,7 @@
     <modules>
         <module>libraries</module>
         <module>services</module>
+        <module>utilities</module>
     </modules>
     <repositories>
         <repository>
