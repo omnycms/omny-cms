@@ -20,11 +20,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
 import org.apache.commons.io.IOUtils;
 
-@Alternative
 public class S3Storage implements IStorage {
 
     ConfigurationReader configurationReader;
@@ -36,7 +33,6 @@ public class S3Storage implements IStorage {
     Gson gson = new Gson();
     Mimedata mimedata = new Mimedata();
 
-    @Inject
     public S3Storage(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
         config = gson.fromJson(configurationReader.getConfigurationString("OMNY_AWS_STORAGE"), AmazonStorageConfig.class);

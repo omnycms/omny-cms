@@ -15,11 +15,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.inject.Alternative;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-@Alternative
 public class LocalStorage implements IStorage {
 
     String rootFolder;

@@ -17,12 +17,6 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>configuration-reader</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>document-database-querier</artifactId>
             <version>${project.version}</version>
             <type>jar</type>

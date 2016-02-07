@@ -1,12 +1,11 @@
 package ca.omny.omny.service.discovery;
 
-import com.google.gson.Gson;
 import ca.omny.configuration.ConfigurationReader;
+import com.google.gson.Gson;
 import ca.omny.omny.service.discovery.models.WebServerInfo;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
-import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.UriBuilder;
@@ -15,7 +14,6 @@ public class FixedServiceLocation implements ServiceLocator {
 
     WebServerInfo serverInfo;
     
-    @Inject
     ConfigurationReader configurationReader;
     
     public FixedServiceLocation() {

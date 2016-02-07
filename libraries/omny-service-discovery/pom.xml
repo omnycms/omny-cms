@@ -39,12 +39,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>configuration-reader</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>com.google.http-client</groupId>
             <artifactId>google-http-client</artifactId>
             <version>1.17.0-rc</version>
@@ -54,6 +48,12 @@
                     <groupId>org.apache.httpcomponents</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>extension-points</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

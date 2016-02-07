@@ -8,7 +8,6 @@ import ca.omny.storage.implementation.S3Storage;
 import ca.omny.storage.implementation.LocalStorage;
 import ca.omny.storage.implementation.DocumentDatabaseStorage;
 import java.io.File;
-import javax.enterprise.inject.Produces;
 
 public class StorageFactory {
     
@@ -28,8 +27,7 @@ public class StorageFactory {
         }
         return defaultStorage;
     }
-    
-    @Produces
+ 
     public IStorage getStorage(OmnyLogger logger) {
         return getDefaultStorage(logger, configurationReader);
     }

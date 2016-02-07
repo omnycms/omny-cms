@@ -48,12 +48,6 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>configuration-reader</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

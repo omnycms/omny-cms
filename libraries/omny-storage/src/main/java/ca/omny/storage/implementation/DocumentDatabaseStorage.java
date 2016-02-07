@@ -9,19 +9,13 @@ import ca.omny.storage.MetaData;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
 
-@Alternative
 public class DocumentDatabaseStorage implements IStorage {
-    
-    @Inject
+
     IDocumentQuerier querier;
     
-    @Inject
     OmnyLogger logger;
     
-    @Inject
     ConfigurationReader configurationReader;
     
     public void setQuerier(IDocumentQuerier querier) {
