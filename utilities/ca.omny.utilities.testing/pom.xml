@@ -3,15 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ca.omny</groupId>
-        <artifactId>omny</artifactId>
+        <artifactId>utilities</artifactId>
         <version>1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>ca.omny.utilities.testing</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
     
     <repositories>
