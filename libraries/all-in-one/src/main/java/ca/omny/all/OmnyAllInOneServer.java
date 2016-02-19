@@ -1,11 +1,13 @@
 package ca.omny.all;
 
 import ca.omny.configuration.ConfigurationReader;
+import ca.omny.configuration.IEnvironmentToolsProvider;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.PowerServlet;
+import ca.omny.request.OmnyApi;
 import ca.omny.server.OmnyClassRegister;
 import ca.omny.server.OmnyServer;
+import java.util.Collection;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -18,8 +20,12 @@ public class OmnyAllInOneServer {
 
     OmnyServer server;
     Server edgeServer;
+    IEnvironmentToolsProvider toolsProvider;
+    Collection<OmnyApi> apis;
     
-    public OmnyAllInOneServer() {
+    public OmnyAllInOneServer(IEnvironmentToolsProvider toolsProvider, Collection<OmnyApi> apis) {
+        this.toolsProvider = toolsProvider;
+        this.apis = apis;
         server = new OmnyServer();
         int edgeRouterPort = 8080;
         if (configurationReader.getConfigurationString("OMNY_EDGE_PORT") != null) {
@@ -29,11 +35,10 @@ public class OmnyAllInOneServer {
     }
 
     public void start() throws Exception {
-        configurationReader.setKey("OMNY_NO_INJECTION", "true");
         OmnyClassRegister classRegister = new OmnyClassRegister();
         classRegister.loadFromEnvironment();
 
-        PowerServlet edgeServlet = new PowerServlet();
+        PowerServlet edgeServlet = new PowerServlet(toolsProvider);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");
@@ -42,7 +47,7 @@ public class OmnyAllInOneServer {
             staticFilesDirectory = configurationReader.getSimpleConfigurationString("OMNY_STATIC_LOCATION");
         }
         context.addServlet(new ServletHolder(edgeServlet), "/*");
-        IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+        IDocumentQuerier querier = toolsProvider.getDefaultDocumentQuerier();
         UiHandler uiHandler = new UiHandler(staticFilesDirectory, querier);
 
         HandlerList handlers = new HandlerList();
@@ -62,10 +67,10 @@ public class OmnyAllInOneServer {
         edgeServer.start();
         if (configurationReader.getConfigurationString("OMNY_ROUTE_DYNAMIC") == null) {
             if(configurationReader.getConfigurationString("OMNY_BIND_PORT")==null) {
-                PowerServlet.addProxyService(new OmnyServiceProxy());
+                PowerServlet.addProxyService(new OmnyServiceProxy(toolsProvider, apis));
                 edgeServer.join();
             } else {
-                server.createServer(port);
+                server.createServer(port, toolsProvider, apis);
             }
         } else {
             edgeServer.join();

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ws.rs.NotFoundException;
 
 public class ContentLocation implements OmnyApi {
     
@@ -77,7 +76,7 @@ public class ContentLocation implements OmnyApi {
             }
             Object fileContents = storageSystem.getFileContents(prefix + file, hostname, file.endsWith(".json"));
             if(fileContents==null) {
-                throw new NotFoundException();
+                return new ApiResponse("", 404);
             }
             ResponseOutput response = requestResponseManager.getResponse();
             response.setHeader("Cache-Control", "public; max-age=30");

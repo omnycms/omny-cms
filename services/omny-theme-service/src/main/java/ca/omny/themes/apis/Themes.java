@@ -9,12 +9,14 @@ import ca.omny.storage.StorageSystem;
 import ca.omny.themes.mappers.ThemeMapper;
 import ca.omny.themes.models.ThemeInstallRequest;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class Themes implements OmnyApi {
-    
-    @Inject
+
     ThemeMapper themeMapper;
+    
+    public Themes() {
+        themeMapper = new ThemeMapper();
+    }
     
     @Override
     public String getBasePath() {

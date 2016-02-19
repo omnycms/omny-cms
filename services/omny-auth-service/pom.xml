@@ -24,7 +24,13 @@
             <artifactId>scribe</artifactId>
             <version>1.3.5</version>
             <type>jar</type>
-        </dependency>       
+        </dependency>    
+        <dependency>
+            <groupId>ca.omny</groupId>
+            <artifactId>auth</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>    
     </dependencies>
 
     <build>

@@ -1,6 +1,7 @@
 package ca.omny.db.extended;
 
 import ca.omny.configuration.ConfigurationReader;
+import ca.omny.configuration.StringUtils;
 import ca.omny.db.IDocumentQuerier;
 import ca.omny.db.KeyValuePair;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -14,18 +15,12 @@ import com.amazonaws.services.dynamodbv2.model.KeysAndAttributes;
 import com.amazonaws.services.dynamodbv2.model.QueryRequest;
 import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.google.gson.Gson;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import net.spy.memcached.util.StringUtils;
 
-@Alternative
 public class DynamoDb implements IDocumentQuerier {
 
     ConfigurationReader configurationReader;
@@ -39,7 +34,6 @@ public class DynamoDb implements IDocumentQuerier {
     private final static char DB_NEXT_CHARACTER = '/' + 1;
     String table;
 
-    @Inject
     public DynamoDb(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
         final String configurationString = configurationReader.getConfigurationString("OMNY_DYNAMODB_CONFIG");
@@ -170,8 +164,10 @@ public class DynamoDb implements IDocumentQuerier {
 
     @Override
     public Object getRaw(String key) {
+        System.out.println("fetching "+key);
         Map<String, AttributeValue> keys = this.getKeys(key);
         Map<String, AttributeValue> item = client.getItem(table, keys).getItem();
+        System.out.println("fetched "+key);
         if (item == null) {
             return null;
         }
@@ -228,9 +224,9 @@ public class DynamoDb implements IDocumentQuerier {
         return results;
     }
 
-    @Override
+   @Override
     public String getKey(String... keyParts) {
-        String key = StringUtils.join(Arrays.asList(keyParts), "/");
+        String key = StringUtils.join(keyParts, "/");
         return key;
     }
 

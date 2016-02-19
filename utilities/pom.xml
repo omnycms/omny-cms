@@ -10,5 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>ca.omny.utilities.testing</module>
+        <module>ca.omny.utilities.providers</module>
     </modules>
 </project>

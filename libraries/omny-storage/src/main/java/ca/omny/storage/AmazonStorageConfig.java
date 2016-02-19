@@ -24,4 +24,12 @@ public class AmazonStorageConfig implements AWSCredentials {
     public void setBucket(String bucket) {
         this.bucket = bucket;
     }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
 }

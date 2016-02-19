@@ -1,23 +1,21 @@
 package ca.omny.db.extended;
 
+import ca.omny.configuration.StringUtils;
 import ca.omny.db.IDocumentQuerier;
 import ca.omny.db.KeyValuePair;
 import ca.omny.storage.IStorage;
 import com.google.gson.Gson;
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.concurrent.Future;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import net.spy.memcached.util.StringUtils;
 
-@Alternative
 public class StorageBasedDatabase implements IDocumentQuerier {
 
-    @Inject
     IStorage storage;
+
+    public StorageBasedDatabase(IStorage storage) {
+        this.storage = storage;
+    }
 
     public void setStorage(IStorage storage) {
         this.storage = storage;
@@ -83,7 +81,7 @@ public class StorageBasedDatabase implements IDocumentQuerier {
 
     @Override
     public String getKey(String... keyParts) {
-        String key = StringUtils.join(Arrays.asList(keyParts), "/");
+        String key = StringUtils.join(keyParts, "/");
         return key;
     }
 

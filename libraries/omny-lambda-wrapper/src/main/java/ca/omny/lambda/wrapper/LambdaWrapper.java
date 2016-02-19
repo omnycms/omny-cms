@@ -1,24 +1,26 @@
 package ca.omny.lambda.wrapper;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.lambda.wrapper.models.FakeHttpRequest;
-import ca.omny.lambda.wrapper.models.FakeHttpResponse;
-import ca.omny.lambda.wrapper.models.LambdaInput;
-import ca.omny.server.OmnyHandler;
+import ca.omny.request.OmnyBaseHandler;
+import ca.omny.request.RequestInput;
+import ca.omny.request.RequestResponseManager;
+import ca.omny.request.ResponseOutput;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import org.eclipse.jetty.server.Request;
 
 public class LambdaWrapper {
     
-    OmnyHandler omnyHandler;
-    LambdaInput input;
+    OmnyBaseHandler omnyHandler;
+    RequestInput input;
     
-    public LambdaWrapper(LambdaInput input) {
+    public LambdaWrapper(RequestInput input) {
+        this(input, new OmnyBaseHandler(new AwsToolsProvider()));
+    }
+    
+    public LambdaWrapper(RequestInput input, OmnyBaseHandler handler) {
+        this.omnyHandler = handler;
         this.input = input;
         ConfigurationReader defaultConfigurationReader = ConfigurationReader.getDefaultConfigurationReader();
         defaultConfigurationReader.setKey("OMNY_NO_INJECTION", "true");
@@ -28,22 +30,18 @@ public class LambdaWrapper {
                 defaultConfigurationReader.setKey(key, value);
             }
         }
-        omnyHandler = new OmnyHandler();
     }
     
     public String handleRequest() {
         try {
-            Request r = null;
-            HttpServletRequest fakeServletRequest = new FakeHttpRequest(input);
-            FakeHttpResponse fakeServletResponse = new FakeHttpResponse();
+            ResponseOutput response = new ResponseOutput();
+            RequestResponseManager manager = new RequestResponseManager(input, response, new AwsToolsProvider());
             
-            omnyHandler.handle(null, r, fakeServletRequest, fakeServletResponse);
+            omnyHandler.handle(manager);
             Gson gson = new Gson();
-            fakeServletResponse.writeBody();
-            return gson.toJson(fakeServletResponse);
+            response.writeBody();
+            return gson.toJson(response);
         } catch (IOException ex) {
-            Logger.getLogger(LambdaWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ServletException ex) {
             Logger.getLogger(LambdaWrapper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

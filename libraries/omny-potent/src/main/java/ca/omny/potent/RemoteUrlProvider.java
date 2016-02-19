@@ -2,7 +2,6 @@ package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.potent.models.OmnyEndpoint;
@@ -15,19 +14,15 @@ import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
-@Alternative
 public class RemoteUrlProvider implements IRemoteUrlProvider {
     
     ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
-    IDocumentQuerier db = QuerierFactory.getDefaultQuerier();
+    IDocumentQuerier db;
     OmnyRouteMapper routeMapper = new OmnyRouteMapper();
 
-    public RemoteUrlProvider() {
-        
+    public RemoteUrlProvider(IDocumentQuerier db) {
+        this.db = db;
     }
     
     public RemoteUrlProvider(ConfigurationReader configurationReader, IDocumentQuerier db, OmnyRouteMapper routeMapper) {
@@ -57,7 +52,7 @@ public class RemoteUrlProvider implements IRemoteUrlProvider {
         if (configurationReader.getConfigurationString("OMNY_PROXY_HOST") != null) {
             host = configurationReader.getConfigurationString("OMNY_PROXY_HOST");
         }
-        OmnyRouteConfiguration configuration = routeMapper.getConfiguration();
+        OmnyRouteConfiguration configuration = routeMapper.getConfiguration(req.getDatabaseQuerier());
         String remoteRoute = OmnyRouteMapper.getProxyRoute(req);
         OmnyEndpoint bestMatch = this.getBestMatch(route, configuration.getEndpoints());
         if (bestMatch == null) {

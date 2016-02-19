@@ -1,7 +1,5 @@
 package ca.omny.service.client;
 
-import ca.omny.logger.OmnyLogger;
-import ca.omny.logger.SimpleLogger;
 import ca.omny.omny.service.discovery.ServiceLocator;
 import com.google.gson.Gson;
 import java.io.FileNotFoundException;
@@ -23,18 +21,12 @@ import org.apache.commons.io.IOUtils;
 
 public class ServiceClient {
 
+    private static Logger logger = Logger.getLogger(ServiceClient.class.getName());
     ServiceLocator locator;
     
     static Client client = ClientBuilder.newClient();
 
-    OmnyLogger logger;
-
     public ServiceClient() {
-        logger = new SimpleLogger(this.getClass().getName());
-    }
-
-    public void setLogger(OmnyLogger logger) {
-        this.logger = logger;
     }
     
     public String get(String path, String hostname, String token, Map<String, String> queryParams, Map<String, String> headers) throws FileNotFoundException {

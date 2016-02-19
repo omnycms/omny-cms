@@ -1,20 +1,28 @@
 package ca.omny.all.server;
 
+import ca.omny.request.ApiCollector;
 import ca.omny.all.OmnyAllInOneServer;
 import ca.omny.all.configuration.DatabaseConfigurationValues;
 import ca.omny.all.configuration.DatabaseConfigurer;
+import ca.omny.auth.apis.AuthApiRegistrar;
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.server.OmnyClassRegister;
+import ca.omny.configuration.IEnvironmentToolsProvider;
+import ca.omny.content.apis.ContentApiRegistrar;
+import ca.omny.services.extensibility.apis.ExtensibilityApiRegistrar;
+import ca.omny.services.menus.apis.MenuApiRegistrar;
+import ca.omny.services.pages.apis.PageApiRegistrar;
+import ca.omny.services.sites.apis.registration.SiteApiRegistrar;
+import ca.omny.themes.apis.ThemeApiRegistrar;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import ca.omny.utilities.providers.FlexibleToolsProvider;
+import ca.omny.services.ui.apis.UiApiRegistrar;
 
 public class Main {
 
@@ -30,20 +38,27 @@ public class Main {
             String file = cmd.getOptionValue("e");
             configurationReader.loadFromFile(file);
         }
-        configurationReader.setKey("OMNY_LOAD_CLASSES", "[\"ca.omny.db.extended.ExtendedDatabaseFactory\",\"ca.omny.services.sites.apis.RegisterApis\",\"ca.omny.potent.RegisterApis\",\"ca.omny.content.apis.RegisterApis\",\"ca.omny.services.extensibility.apis.RegisterApis\",\"ca.omny.services.menus.apis.RegisterApis\",\"ca.omny.services.pages.apis.RegisterApis\",\"ca.omny.themes.apis.RegisterApis\"]");
-        OmnyClassRegister classRegister = new OmnyClassRegister();
-        classRegister.loadFromEnvironment();
         
+        IEnvironmentToolsProvider provider = new FlexibleToolsProvider(configurationReader);
         if (cmd.hasOption("c")) {
             //read from JSON file
             String configString = IOUtils.toString(new FileInputStream(new File(cmd.getOptionValue("c"))));
             Gson gson = new Gson();
             DatabaseConfigurationValues configurationValues = gson.fromJson(configString, DatabaseConfigurationValues.class);
-            DatabaseConfigurer configurer = new DatabaseConfigurer();
+            DatabaseConfigurer configurer = new DatabaseConfigurer(provider.getDefaultDocumentQuerier());
             configurer.configure(configurationValues);
         }
-        
-        OmnyAllInOneServer server = new OmnyAllInOneServer();
+        ApiCollector apiCollector = new ApiCollector(
+                new SiteApiRegistrar(),
+                new AuthApiRegistrar(),
+                new ContentApiRegistrar(),
+                new ExtensibilityApiRegistrar(),
+                new PageApiRegistrar(),
+                new ThemeApiRegistrar(),
+                new MenuApiRegistrar(),
+                new UiApiRegistrar()
+        );
+        OmnyAllInOneServer server = new OmnyAllInOneServer(provider, apiCollector.getApis());
         server.start();
     }
 }

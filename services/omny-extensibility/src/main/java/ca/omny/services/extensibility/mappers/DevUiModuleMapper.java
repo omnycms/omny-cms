@@ -1,10 +1,8 @@
 package ca.omny.services.extensibility.mappers;
 
-import ca.omny.configuration.ConfigurationReader;
 import ca.omny.db.IDocumentQuerier;
 import ca.omny.services.extensibility.models.DevUiModuleConfiguration;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class DevUiModuleMapper {
     

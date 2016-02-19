@@ -26,20 +26,14 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>logger</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>document-database-querier</artifactId>
+            <artifactId>extension-points</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.10.17</version>
+            <version>1.10.47</version>
         </dependency>
     </dependencies>
 </project>

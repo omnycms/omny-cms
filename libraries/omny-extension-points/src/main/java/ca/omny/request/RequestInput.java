@@ -1,5 +1,6 @@
 package ca.omny.request;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ public class RequestInput {
     String uri;
     String method;
     InputStream content;
+    String body;
     String queryString;
     Map<String, String> headers;
     Map<String, String> cookies;
@@ -62,6 +64,9 @@ public class RequestInput {
     }
 
     public InputStream getContent() {
+        if(content ==null && body!= null) {
+            content = new ByteArrayInputStream(body.getBytes());
+        }
         return content;
     }
 

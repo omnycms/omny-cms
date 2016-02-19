@@ -2,32 +2,23 @@ package ca.omny.service.client;
 
 import com.google.gson.Gson;
 import ca.omny.auth.token.AuthTokenParser;
-import ca.omny.logger.OmnyLogger;
 import ca.omny.omny.service.discovery.ServiceLocator;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Map;
-import javax.inject.Inject;
 
 public class BaseServiceClient {
     
-    @Inject
     ServiceClient serviceClient;
     
-    @Inject
     AuthTokenParser authTokenParser;
     
-    @Inject
     ServiceLocator locator;
 
     public BaseServiceClient() {
         if(serviceClient==null) {
             serviceClient = new ServiceClient();
         }
-    }
-    
-    public void setLogger(OmnyLogger omnyLogger) {
-        serviceClient.setLogger(omnyLogger);
     }
     
     public <T extends Object> T getApiResponse(String method, String serviceName, String path, String hostname, String token, Map<String, String> queryParameters, Object formBody, Map<String, String> headers, Class<T> type) throws FileNotFoundException {

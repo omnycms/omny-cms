@@ -2,7 +2,6 @@ package ca.omny.auth.sessions;
 
 import ca.omny.auth.token.AuthTokenParser;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import javax.servlet.http.HttpServletRequest;
 
 public class SessionMapper {
@@ -11,10 +10,6 @@ public class SessionMapper {
     
     IDocumentQuerier querier;
     
-    public SessionMapper() {
-        this(QuerierFactory.getDefaultQuerier());
-    }
-
     public SessionMapper(IDocumentQuerier querier) {
         this.querier = querier;
         authTokenParser = new AuthTokenParser();

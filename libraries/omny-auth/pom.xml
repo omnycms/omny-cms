@@ -41,7 +41,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>document-database-querier</artifactId>
+            <artifactId>extension-points</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency> 

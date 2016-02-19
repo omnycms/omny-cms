@@ -9,19 +9,11 @@ import ca.omny.themes.mappers.SampleMapper;
 import ca.omny.themes.mappers.ThemeMapper;
 import ca.omny.themes.models.Sample;
 import java.util.Collection;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
 
 public class Samples implements OmnyApi {
     
-    @Context
-    HttpServletRequest request;
-    
-    @Inject
     ThemeMapper themeMapper;
     
-    @Inject
     SampleMapper sampleMapper;
     
     Gson gson = new Gson();

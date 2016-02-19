@@ -1,6 +1,5 @@
 package ca.omny.services.extensibility.oauth;
 
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.request.RequestResponseManager;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -22,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
@@ -44,7 +42,7 @@ public class ExtensibleProxy implements IOmnyProxyService {
         String serviceName = parts[3];
         String configName = parts[4];
         
-        ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName, QuerierFactory.getDefaultQuerier());
+        ServiceCredentials serviceCredentials = serviceCredentialMapper.getServiceCredentials(organization, serviceName, requestResponseManager.getDatabaseQuerier());
 
         UserCredentials userCredentials = userCredentialMapper.getCredentials(requestResponseManager.getRequestHostname(), organization, serviceName, configName, requestResponseManager.getDatabaseQuerier());
 

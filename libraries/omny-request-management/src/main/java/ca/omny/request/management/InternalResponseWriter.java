@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 public class InternalResponseWriter {
     public void write(ResponseOutput ro, HttpServletResponse r) {
         writeCoookies(ro, r);
-        r.setStatus(r.getStatus());
+        r.setStatus(ro.getStatus());
         for(String header: ro.getHeaders().keySet()) {
             String value = ro.getHeaders().get(header);
             r.addHeader(header, value);

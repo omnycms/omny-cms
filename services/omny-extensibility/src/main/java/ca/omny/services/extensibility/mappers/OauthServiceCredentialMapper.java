@@ -3,7 +3,6 @@ package ca.omny.services.extensibility.mappers;
 import ca.omny.db.IDocumentQuerier;
 import ca.omny.services.extensibility.oauth.models.ServiceCredentials;
 import java.util.Collection;
-import javax.inject.Inject;
 
 public class OauthServiceCredentialMapper {
     

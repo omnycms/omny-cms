@@ -1,7 +1,7 @@
 package ca.omny.potent;
 
+import ca.omny.request.management.SiteOwnerMapper;
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.potent.mappers.OmnyRouteMapper;
 import ca.omny.extension.proxy.AccessRule;
 import ca.omny.potent.models.SiteConfiguration;
@@ -13,26 +13,26 @@ import java.io.IOException;
 
 public class AuthorizationCheck {
     
-    IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(QuerierFactory.getDefaultQuerier());
     PermissionResolver permissionResolver = new PermissionResolver();
     SiteConfigurationLoader siteConfigurationLoader = new SiteConfigurationLoader();
     SiteOwnerMapper siteOwnerMapper = new SiteOwnerMapper();
     
     public boolean isAuthorized(RequestResponseManager requestResponseManager) throws IOException {
+        IPermissionCheck permissionChecker = new RoleBasedPermissionChecker(requestResponseManager.getDatabaseQuerier());
         String skipCheck = ConfigurationReader.getDefaultConfigurationReader().getConfigurationString("OMNY_NO_AUTH");
         if(skipCheck!=null && skipCheck.equals("true")) {
             return true;
         }
         String host = requestResponseManager.getRequestHostname();
         String uid = requestResponseManager.getUserId();
-        SiteConfiguration configuration = siteConfigurationLoader.getConfiguration(host);
+        SiteConfiguration configuration = siteConfigurationLoader.getConfiguration(host, requestResponseManager.getDatabaseQuerier());
         
         String route = OmnyRouteMapper.getProxyRoute(requestResponseManager);
         AccessRule rule = permissionResolver.getMostRelevantAccessRule(route, requestResponseManager.getRequest().getMethod(), configuration);
         permissionResolver.injectParameters(host, requestResponseManager.getRequest().getUri(), requestResponseManager.getRequest().getQueryStringParameters(), rule);
         String securityToken = requestResponseManager.getRequest().getParameter("access_token");
-        boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, uid);
-        boolean isSiteUser = siteOwnerMapper.isSiteUser(host, uid);
+        boolean isSiteOwner = siteOwnerMapper.isSiteOwner(host, uid, requestResponseManager.getDatabaseQuerier());
+        boolean isSiteUser = siteOwnerMapper.isSiteUser(host, uid, requestResponseManager.getDatabaseQuerier());
         
         boolean permitted = false;
         switch(rule.getAuthorizationLevel()) {

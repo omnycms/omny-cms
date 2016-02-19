@@ -1,8 +1,6 @@
 package ca.omny.potent;
 
 import ca.omny.configuration.ConfigurationReader;
-import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.extension.proxy.IRemoteUrlProvider;
 import ca.omny.potent.models.OmnyEndpoint;
@@ -12,15 +10,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -31,9 +24,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.AbstractHttpMessage;
@@ -43,7 +34,6 @@ public class PassThroughProxy implements IOmnyProxyService {
     public static final String CONTENT_LENGTH_HEADER = "Content-Length";
     public static final String[] AUTO_HEADERS = {HeaderManager.USER_HEADER, HeaderManager.HOST_HEADER, CONTENT_LENGTH_HEADER, "Transfer-encoding"};
 
-    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
     IRemoteUrlProvider remoteUrlProvider;
 

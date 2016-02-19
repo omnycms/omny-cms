@@ -1,5 +1,6 @@
 package ca.omny.request;
 
+import ca.omny.configuration.IEnvironmentToolsProvider;
 import ca.omny.db.IDocumentQuerier;
 import ca.omny.storage.IStorage;
 import com.google.gson.Gson;
@@ -22,7 +23,19 @@ public class RequestResponseManager {
     Map<String,String> pathParameters;
     IStorage storageDevice;
     IDocumentQuerier database;
+    IEnvironmentToolsProvider provider;
+    
+    public RequestResponseManager() {
+    }
 
+    public RequestResponseManager(RequestInput request, ResponseOutput response, IEnvironmentToolsProvider provider) {
+        this.request = request;
+        this.response = response;
+        this.provider = provider;
+        this.storageDevice = provider.getStorage(request);
+        this.database = provider.getDocumentQuerier(request);
+    }
+   
     public RequestInput getRequest() {
         return request;
         
@@ -83,13 +96,14 @@ public class RequestResponseManager {
     }
     
     public String getRequestHostname() {
+        if(request.getHostname() != null) {
+            return request.getHostname();
+        }
         if (request != null) {
             if (request.getHeader("X-Origin") != null) {
                 return request.getHeader("X-Origin");
             } else if (request.getHeader("Origin") != null) {
                 return request.getHeader("Origin");
-            } else {
-                return request.getHostname();
             }
         }
         return null;

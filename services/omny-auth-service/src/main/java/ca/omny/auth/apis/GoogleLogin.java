@@ -4,7 +4,6 @@ import ca.omny.db.IDocumentQuerier;
 import com.google.gson.Gson;
 import ca.omny.auth.mappers.SessionMapper;
 import ca.omny.auth.mappers.UserMapper;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.request.ApiResponse;
 import ca.omny.request.OmnyApi;
 import ca.omny.request.RequestResponseManager;
@@ -28,8 +27,7 @@ public class GoogleLogin implements OmnyApi {
     protected static Map<String, Class> acceptedProviders;
 
     static Logger logger = Logger.getLogger(GoogleLogin.class.getName());
-
-    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+    
     UserMapper userMapper = new UserMapper();
     SessionMapper sessionMapper = new SessionMapper();
     
@@ -48,7 +46,7 @@ public class GoogleLogin implements OmnyApi {
         try {
             String oauthToken = requestResponseManager.getQueryStringParameter("oauth_token");
             UUID uuid = UUID.randomUUID();
-            
+            IDocumentQuerier querier = requestResponseManager.getDatabaseQuerier();
             String getState = URLEncoder.encode(requestResponseManager.getRequest().getQueryString(), "UTF-8");
             String key = querier.getKey("credentials","oauth","google");
             Map credentials = querier.get(key, Map.class);

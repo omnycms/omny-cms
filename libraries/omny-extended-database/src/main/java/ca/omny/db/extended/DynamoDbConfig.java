@@ -24,4 +24,12 @@ public class DynamoDbConfig implements AWSCredentials {
     public void setTable(String table) {
         this.table = table;
     }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
 }

@@ -2,7 +2,6 @@ package ca.omny.storage.implementation;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.logger.OmnyLogger;
 import com.google.gson.Gson;
 import ca.omny.storage.IStorage;
 import ca.omny.storage.MetaData;
@@ -14,17 +13,12 @@ public class DocumentDatabaseStorage implements IStorage {
 
     IDocumentQuerier querier;
     
-    OmnyLogger logger;
-    
     ConfigurationReader configurationReader;
     
     public void setQuerier(IDocumentQuerier querier) {
         this.querier = querier;
     }
 
-    public void setLogger(OmnyLogger logger) {
-        this.logger = logger;
-    }
 
     public void setConfigurationReader(ConfigurationReader configurationReader) {
         this.configurationReader = configurationReader;
@@ -82,7 +76,6 @@ public class DocumentDatabaseStorage implements IStorage {
             //content = new String((byte[]) contentBytes);
         }
         long endTime = System.currentTimeMillis();
-        logger.info("took " + (endTime - startTime) + "ms to receive contents of " + fullPath);
         return contentBytes;
     }
     

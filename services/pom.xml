@@ -13,6 +13,7 @@
         <module>omny-site-service</module>
         <module>omny-theme-service</module>
         <module>omny-extensibility</module>
+        <module>omny-ui-service</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,8 +30,13 @@
     <dependencies>
         <dependency>
             <groupId>ca.omny</groupId>
-            <artifactId>omny-sdk</artifactId>
+            <artifactId>extension-points</artifactId>
             <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>storage</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

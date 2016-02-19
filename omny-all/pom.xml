@@ -25,6 +25,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>providers</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>page-service</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -61,6 +67,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>ui-service</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>omny-potent</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
@@ -71,7 +83,13 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
-        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>providers</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>

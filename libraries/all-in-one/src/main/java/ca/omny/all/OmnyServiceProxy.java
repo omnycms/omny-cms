@@ -1,18 +1,21 @@
 package ca.omny.all;
 
+import ca.omny.configuration.IEnvironmentToolsProvider;
 import ca.omny.extension.proxy.IOmnyProxyService;
+import ca.omny.request.OmnyApi;
+import ca.omny.request.OmnyBaseHandler;
 import ca.omny.request.RequestResponseManager;
-import ca.omny.server.OmnyHandler;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
 public class OmnyServiceProxy implements IOmnyProxyService {
 
-    OmnyHandler handler;
-    
-    public OmnyServiceProxy() {
-        handler = new OmnyHandler();
+    OmnyBaseHandler handler;
+
+    public OmnyServiceProxy(IEnvironmentToolsProvider provider, Collection<OmnyApi> apis) {
+        handler = new OmnyBaseHandler(provider, apis);
     }
     
     @Override

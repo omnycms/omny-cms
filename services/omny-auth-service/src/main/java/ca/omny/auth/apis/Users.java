@@ -10,22 +10,16 @@ import ca.omny.db.IDocumentQuerier;
 import ca.omny.request.ApiResponse;
 import ca.omny.request.OmnyApi;
 import ca.omny.request.RequestResponseManager;
-import javax.inject.Inject;
-import javax.ws.rs.QueryParam;
 
 public class Users implements OmnyApi {
     
-    @Inject
-    AuthTokenParser tokenParser;
+    AuthTokenParser tokenParser = new AuthTokenParser();
     
-    @Inject
-    UserMapper userMapper;
+    UserMapper userMapper = new UserMapper();
     
-    @Inject
-    SessionMapper sessionMapper;
-    
-    @Inject
-    PermissionMapper permissionMapper;
+    SessionMapper sessionMapper = new SessionMapper();
+
+    PermissionMapper permissionMapper = new PermissionMapper();
     
     Gson gson;
 
@@ -33,7 +27,7 @@ public class Users implements OmnyApi {
         gson = new Gson();
     }
 
-    public String getUser(@QueryParam("sessionId") String sessionId, IDocumentQuerier database) {
+    public String getUser(String sessionId, IDocumentQuerier database) {
         Session session = sessionMapper.getSession(sessionId, database);
         if(session==null) {
             return gson.toJson(null);

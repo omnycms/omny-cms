@@ -5,12 +5,10 @@ import ca.omny.request.OmnyApi;
 import ca.omny.request.RequestResponseManager;
 import ca.omny.themes.mappers.ThemeMapper;
 import ca.omny.themes.models.Theme;
-import javax.inject.Inject;
 
 public class DefaultTheme implements OmnyApi{
     
-    @Inject
-    ThemeMapper themeMapper;
+    ThemeMapper themeMapper = new ThemeMapper();
 
     @Override
     public String getBasePath() {

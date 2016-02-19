@@ -20,13 +20,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>request-management</artifactId>
+            <artifactId>extension-points</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>server</artifactId>
+            <artifactId>extended-database</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>

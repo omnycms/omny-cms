@@ -7,12 +7,10 @@ import ca.omny.request.RequestResponseManager;
 import ca.omny.storage.GlobalStorage;
 import ca.omny.storage.StorageSystem;
 import ca.omny.themes.mappers.ThemeMapper;
-import javax.inject.Inject;
 
 public class InstallableThemes implements OmnyApi{
     
-    @Inject
-    ThemeMapper themeMapper;
+    ThemeMapper themeMapper = new ThemeMapper();
 
     @Override
     public String getBasePath() {

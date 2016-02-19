@@ -1,13 +1,13 @@
 package ca.omny.lambda.wrapper;
 
-import ca.omny.lambda.wrapper.models.LambdaInput;
+import ca.omny.request.RequestInput;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class LambdaFunction implements RequestHandler<LambdaInput, String> {
+public class LambdaFunction implements RequestHandler<RequestInput, String> {
 
     @Override
-    public String handleRequest(LambdaInput i, Context cntxt) {
+    public String handleRequest(RequestInput i, Context cntxt) {
         LambdaWrapper lambdaWrapper = new LambdaWrapper(i);
         String handleRequest = lambdaWrapper.handleRequest();
         return handleRequest;

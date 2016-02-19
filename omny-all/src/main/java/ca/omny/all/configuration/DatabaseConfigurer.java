@@ -3,7 +3,6 @@ package ca.omny.all.configuration;
 import ca.omny.auth.mappers.UserMapper;
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.sites.mappers.SiteMapper;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +16,11 @@ public class DatabaseConfigurer {
     
     UserMapper userMapper = new UserMapper();
     SiteMapper siteMapper = new SiteMapper();
-    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
+    IDocumentQuerier querier;
+
+    public DatabaseConfigurer(IDocumentQuerier querier) {
+        this.querier = querier;
+    }
 
     public void configure(DatabaseConfigurationValues configurationValues) throws IllegalAccessException {
         configureAdminUser(configurationValues.getAdminEmail());
@@ -60,8 +63,8 @@ public class DatabaseConfigurer {
             if(userId==null) {
                 userId = userMapper.createUser(adminEmail, querier);
             }
-            if(siteMapper.getSite("www",QuerierFactory.getDefaultQuerier())==null) {
-                siteMapper.saveSite("www", "Main", userId,QuerierFactory.getDefaultQuerier());
+            if(siteMapper.getSite("www",querier)==null) {
+                siteMapper.saveSite("www", "Main", userId, querier);
             }
         }
     }

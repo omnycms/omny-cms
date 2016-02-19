@@ -30,6 +30,4 @@ public class Theme {
     public void setScreenshots(Collection<String> screenshots) {
         this.screenshots = screenshots;
     }
-    
-    
 }

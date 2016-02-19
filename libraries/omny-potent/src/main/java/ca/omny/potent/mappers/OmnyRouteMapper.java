@@ -2,7 +2,6 @@ package ca.omny.potent.mappers;
 
 import ca.omny.configuration.ConfigurationReader;
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.documentdb.QuerierFactory;
 import ca.omny.extension.proxy.IOmnyProxyService;
 import ca.omny.potent.PowerServlet;
 import ca.omny.potent.models.ConfigurableProxyRoute;
@@ -16,10 +15,9 @@ import java.util.Map;
 
 public class OmnyRouteMapper {
 
-    IDocumentQuerier querier = QuerierFactory.getDefaultQuerier();
     ConfigurationReader configurationReader = ConfigurationReader.getDefaultConfigurationReader();
 
-    public OmnyRouteConfiguration getConfiguration() {
+    public OmnyRouteConfiguration getConfiguration(IDocumentQuerier querier) {
         return querier.get("omny_routes", OmnyRouteConfiguration.class);
     }
 
@@ -27,7 +25,7 @@ public class OmnyRouteMapper {
         return request.getRequest().getUri();
     }
 
-    public ProxyAndConfiguration getAppropriateProxy(String url) {
+    public ProxyAndConfiguration getAppropriateProxy(String url, IDocumentQuerier querier) {
         if (configurationReader.getConfigurationString("OMNY_USE_DYNAMIC_PROXY") != null) {
             Map routes = querier.get("proxy_routes", Map.class);
             RoutingTree<Map> router = new RoutingTree<>("");
