@@ -21,7 +21,9 @@ public class Page implements OmnyApi {
     @Override
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String page = requestResponseManager.getQueryStringParameter("page");
-        String content = new PageMapper().getPageContent(requestResponseManager.getRequestHostname(), page, requestResponseManager.getStorageDevice(),requestResponseManager.getDatabaseQuerier());
+        String theme = requestResponseManager.getQueryStringParameter("theme");
+        String template = requestResponseManager.getQueryStringParameter("template");
+        String content = new PageMapper().getPageContent(requestResponseManager.getRequestHostname(), page, theme, template, requestResponseManager.getStorageDevice(),requestResponseManager.getDatabaseQuerier());
         return new ApiResponse(content, 200);
     }
 

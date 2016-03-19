@@ -198,4 +198,14 @@ public class DocumentDatabaseStorage implements IStorage {
         String key = querier.getKey("storage",source);
         //querier.deleteAll(key);
     }
+
+    @Override
+    public Collection<String> listFolders(String path) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<String> listFolders(String path, boolean recursive) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

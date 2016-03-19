@@ -1,44 +1,27 @@
 package ca.omny.services.ui.themes.mappers;
 
 import ca.omny.db.IDocumentQuerier;
-import ca.omny.storage.GlobalStorage;
-import ca.omny.storage.StorageSystem;
-import com.google.gson.Gson;
+import ca.omny.storage.IStorage;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class ThemeMapper {
 
-    public Collection<String> getThemes(String hostname, StorageSystem storageSystem) {
-        HashMap<String,Boolean> themeMap = new HashMap<String,Boolean>();
-        Collection<String> files = storageSystem.listFiles("ui/themes",false,hostname);
-        for(String file: files) {
-            String[] parts = file.split("/");
-            themeMap.put(parts[0], Boolean.TRUE);
-        }
-        
-        return themeMap.keySet();
+    public Collection<String> getThemes(String hostname, IStorage storageSystem) {
+        LinkedList<Theme> themes = new LinkedList<Theme>();
+        Collection<String> files = storageSystem.listFolders(String.format("%s/ui/themes",hostname), false);        
+        return files;
     }
     
-    public Collection<Theme> getInstallableThemes(GlobalStorage globalStorage) {
-        Collection<String> files = globalStorage.getGlobalItems("global/ui/themes", "", false);
+    public Collection<Theme> getInstallableThemes(IStorage storage) {
+        Collection<String> folders = storage.listFolders("www/global/ui/themes", false);
         LinkedList<Theme> themes = new LinkedList<Theme>();
-        for(String file: files) {
-            String[] parts = file.split("/");
+        for(String file: folders) {           
             Theme theme = new Theme();
-            theme.setName(parts[0]);
+            theme.setName(file);
             themes.add(theme);
         }
         return themes;
-    }
-    
-    public Theme getGlobalTheme(String themeName, GlobalStorage globalStorage) {
-        String themeData = globalStorage.getGlobalFileContents("global/ui/themes/"+themeName+"/info.json");
-        Gson gson = new Gson();
-        Theme theme = gson.fromJson(themeData, Theme.class);
-        
-        return theme;
     }
     
     public void setDefaultTheme(String site, String theme, IDocumentQuerier querier) {

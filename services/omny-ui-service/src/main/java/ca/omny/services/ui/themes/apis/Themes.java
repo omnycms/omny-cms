@@ -9,7 +9,7 @@ public class Themes implements OmnyApi {
 
     @Override
     public String getBasePath() {
-        return UiApiConstants.base+"/themes";
+        return UiApiConstants.base+"/themes/{theme}";
     }
 
     @Override

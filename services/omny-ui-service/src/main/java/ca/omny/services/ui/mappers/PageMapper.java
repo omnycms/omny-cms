@@ -23,10 +23,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class PageMapper {
-    
+
     ThemeMapper themeMapper = new ThemeMapper();
 
-    public String getPageContent(String host, String page, IStorage storage, IDocumentQuerier querier) {
+    public String getPageContent(String host, String page, String themeName, String templateName, IStorage storage, IDocumentQuerier querier) {
         String baseUrl = ConfigurationReader.getDefaultConfigurationReader().getSimpleConfigurationString("OMNY_UI_CDN");
         if (baseUrl == null) {
             baseUrl = "";
@@ -36,10 +36,12 @@ public class PageMapper {
         if (page.startsWith("/")) {
             page = page.substring(1);
         }
-        PageInfo info = getPageInfo(host, page, storage);
-        String templateName = info.getTemplate() != null ? info.getTemplate() : "default";
-        String themeName = info.getTheme() != null ? info.getTheme() : "default";
-        if(themeName.equals("default")&&!host.equals("www")) {
+        if (themeName == null || templateName == null) {
+            PageInfo info = getPageInfo(host, page, storage);
+            templateName = templateName != null ? templateName : info.getTemplate() != null ? info.getTemplate() : "default";
+            themeName = themeName != null ? themeName : info.getTheme() != null ? info.getTheme() : "default";
+        }
+        if (themeName.equals("default") && !host.equals("www")) {
             themeName = themeMapper.getDefaultTheme(host, querier);
         }
         String templateContent = getTemplateContent(host, themeName, templateName, storage);
@@ -74,8 +76,8 @@ public class PageMapper {
     }
 
     public String getTemplateContent(String host, String theme, String template, IStorage storage) {
-        if(theme.startsWith("global")) {
-            theme = theme.substring("global".length()+1);
+        if (theme.startsWith("global")) {
+            theme = theme.substring("global".length() + 1);
             host = "www/global";
         }
         String themeFile = String.format("%s/ui/themes/%s/templates/%s/template.html", host, theme, template);
@@ -91,10 +93,10 @@ public class PageMapper {
         }
         return new PageInfo();
     }
-    
-    public void writeSections(String host, String page, Map<String,String> sections, IStorage storage) {
+
+    public void writeSections(String host, String page, Map<String, String> sections, IStorage storage) {
         String sectionsFolder = String.format("%s/ui/pages/%s", host, page);
-        for(String section: sections.keySet()) {
+        for (String section : sections.keySet()) {
             String file = String.format("%s/%s.html", sectionsFolder, section);
             storage.saveFile(file, sections.get(section));
         }
@@ -106,10 +108,10 @@ public class PageMapper {
         Collection<String> fileList = storage.getFileList(sectionsFolder, false, ".html");
         for (String file : fileList) {
             String contents = storage.getFileContents(sectionsFolder + "/" + file);
-            
+
             final String section = file.substring(0, file.lastIndexOf(".html"));
             contents = String.format("<omny-section data-section=\"%s\">%s</omny-section>", section, contents);
-            
+
             sections.put(section, contents);
         }
         return sections;

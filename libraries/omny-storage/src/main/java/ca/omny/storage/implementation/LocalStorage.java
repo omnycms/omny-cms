@@ -137,9 +137,15 @@ public class LocalStorage implements IStorage {
             if (subfile.getName().equals(".DS_Store")) {
                 continue;
             }
-            if (fileSuffix == null || subfile.getName().endsWith(fileSuffix)) {
-                files.add(relativePath + subfile.getName());
+            
+            String name = subfile.getName();
+            if(subfile.isDirectory() && !name.endsWith("/")) {
+                name += "/";
             }
+            if(fileSuffix == null || name.endsWith(fileSuffix)) {
+                files.add(relativePath + name);
+            }
+
             if (subfile.isDirectory() && recursive) {
                 files.addAll(this.getFileList(rootPath, path + subfile.getName() + "/", recursive, fileSuffix));
             }
@@ -204,6 +210,21 @@ public class LocalStorage implements IStorage {
         } catch (IOException ex) {
             Logger.getLogger(LocalStorage.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public Collection<String> listFolders(String path) {
+        return listFolders(path, false);
+    }
+
+    @Override
+    public Collection<String> listFolders(String path, boolean recursive) {
+        Collection<String> folders = this.getFileList(path, recursive, "/");
+        LinkedList<String> result = new LinkedList<>();
+        for(String folder: folders) {
+            result.add(folder.substring(0,folder.length()-1));
+        }
+        return result;
     }
 
 }

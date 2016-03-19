@@ -4,17 +4,13 @@ import ca.omny.request.ApiResponse;
 import ca.omny.request.OmnyApi;
 import ca.omny.request.RequestResponseManager;
 import ca.omny.services.ui.apis.UiApiConstants;
-import ca.omny.services.ui.themes.mappers.ThemeMapper;
-import ca.omny.storage.IStorage;
-import ca.omny.storage.StorageSystem;
+import ca.omny.services.ui.themes.mappers.TemplateMapper;
 
-public class InstallableThemes implements OmnyApi{
-    
-    ThemeMapper themeMapper = new ThemeMapper();
+public class Templates implements OmnyApi {
 
     @Override
     public String getBasePath() {
-        return UiApiConstants.base+"/themes/installable/{theme}";
+        return UiApiConstants.base+"/themes/{theme}/templates/{template}";
     }
 
     @Override
@@ -22,24 +18,23 @@ public class InstallableThemes implements OmnyApi{
         return UiApiConstants.versions;
     }
 
+    @Override
     public ApiResponse getResponse(RequestResponseManager requestResponseManager) {
         String theme = requestResponseManager.getPathParameter("theme");
-        StorageSystem storageSystem = new StorageSystem(requestResponseManager.getStorageDevice());
-        IStorage storage = requestResponseManager.getStorageDevice();
-        if(theme==null) {
-            return new ApiResponse(themeMapper.getInstallableThemes(storage), 200);
-        }
-        return new ApiResponse("", 404);
+        return new ApiResponse(new TemplateMapper().listTemplates(requestResponseManager.getRequestHostname(), theme, requestResponseManager.getStorageDevice()), 200);
     }
 
+    @Override
     public ApiResponse postResponse(RequestResponseManager requestResponseManager) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public ApiResponse putResponse(RequestResponseManager requestResponseManager) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
     public ApiResponse deleteResponse(RequestResponseManager requestResponseManager) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

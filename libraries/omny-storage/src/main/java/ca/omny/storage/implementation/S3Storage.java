@@ -115,10 +115,9 @@ public class S3Storage implements IStorage {
         
         if(!recursive) {
             for(String directory: listObjects.getCommonPrefixes()) {
-                results.add(directory.substring(prefixIndex,directory.length()-1));
+                results.add(directory.substring(prefixIndex,directory.length()));
             }
         }
-        
 
         return results;
     }
@@ -186,5 +185,19 @@ public class S3Storage implements IStorage {
         }
         s3Client.deleteObject(config.getBucket(), source);
     }
+    
+    @Override
+    public Collection<String> listFolders(String path) {
+        return listFolders(path, false);
+    }
 
+    @Override
+    public Collection<String> listFolders(String path, boolean recursive) {
+        Collection<String> folders = this.getFileList(path, recursive, "/");
+        LinkedList<String> result = new LinkedList<>();
+        for(String folder: folders) {
+            result.add(folder.substring(0,folder.length()-1));
+        }
+        return result;
+    }
 }

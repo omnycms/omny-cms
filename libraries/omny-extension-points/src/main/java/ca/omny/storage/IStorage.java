@@ -19,6 +19,10 @@ public interface IStorage {
     Object getFileContents(String fullPath, boolean isJson);
 
     Collection<String> getFileList(String path, boolean recursive, String fileSuffix);
+    
+    Collection<String> listFolders(String path);
+    
+    Collection<String> listFolders(String path, boolean recursive);
 
     MetaData getMetaData(String path);
 
