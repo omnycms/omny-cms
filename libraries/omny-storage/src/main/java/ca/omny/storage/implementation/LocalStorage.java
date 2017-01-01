@@ -56,7 +56,11 @@ public class LocalStorage implements IStorage {
             if (!f.isDirectory()) {
                 String contents = this.getFileContents(basePath + key);
                 if (contents != null) {
-                    results.add(gson.fromJson(contents, type));
+                    if(type == String.class) {
+                        results.add((T)contents);
+                    } else {
+                        results.add(gson.fromJson(contents, type));
+                    }
                 }
             }
         }
