@@ -5,3 +5,8 @@ mvn versions:set -DnewVersion=1.0.$1
 mvn versions:commit
 mvn deploy
 cd ..
+cd utilities
+mvn versions:set -DnewVersion=1.0.$1
+mvn versions:commit
+mvn deploy
+cd ..
